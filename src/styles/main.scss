@@ -1,0 +1,55 @@
+@import 'header.scss';
+@import 'homepage.scss';
+
+$body-font: Helvetica;
+
+$bg-dark: #455A64;
+$white: #fff;
+
+body, html {
+    padding: 0;
+    margin: 0;
+
+    vertical-align: middle;
+
+    font-family: $body-font;
+
+    background-color: $bg-dark;
+    color: $white;
+
+    text-align: center;
+}
+
+.layout_main {
+	height: 100vh;
+	display: grid;
+	grid-template-areas: "header" "header_separator" "content";
+	grid-template-columns: 100%;
+	grid-template-rows: fit-content(100%) fit-content(100%) auto;
+}
+
+main.content {
+	background-color: $bg-dark;
+
+    animation:          fade_in 0.5s cubic-bezier(.36,.07,.19,.97);
+    -webkit-animation:  fade_in 0.5s cubic-bezier(.36,.07,.19,.97); /* Safari 4+ */
+    -moz-animation:     fade_in 0.5s cubic-bezier(.36,.07,.19,.97); /* Fx 5+ */
+    -o-animation:       fade_in 0.5s cubic-bezier(.36,.07,.19,.97); /* Opera 12+ */
+}
+
+@-webkit-keyframes fade_in {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+@-moz-keyframes fade_in{
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+@-o-keyframes fade_in {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+@keyframes fade_in {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
