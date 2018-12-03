@@ -2,6 +2,7 @@ import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 
 import Header from './header';
+import Footer from './footer';
 
 interface LayoutState {
 	headerSize: string;
@@ -9,7 +10,7 @@ interface LayoutState {
 
 class Layout extends React.Component<any, LayoutState> {
 
-	state = {
+	state: LayoutState = {
 		headerSize: 'large'
 	};
 
@@ -19,10 +20,13 @@ class Layout extends React.Component<any, LayoutState> {
 
 	componentDidUpdate(prevProps: any) {
 		if (this.props.location !== prevProps.location) {//routed
-			console.log('new path:', this.props.location.pathname);
+			//console.log('new path:', this.props.location.pathname);
 			switch(this.props.location.pathname) {
-				case '/': 	return this.setState({headerSize: 'large'});
-				case '/wl': return this.setState({headerSize: 'small'});
+				case '/': 	
+					return this.setState({headerSize: 'large'});
+				case '/wl': 
+				case '/rules':
+					return this.setState({headerSize: 'small'});
 			}
 		}
 	}
@@ -31,6 +35,7 @@ class Layout extends React.Component<any, LayoutState> {
 		return <div className='layout_main'>
 			<Header type={this.state.headerSize} />
 			{this.props.children}
+			<Footer />
 		</div>;
 	}
 }

@@ -1,0 +1,41 @@
+.footer {
+	background-color: #37474F;
+}
+
+.footer .long_desc {
+	text-align: left;
+	padding: 10px;
+	display: inline-block;
+	font-size: 14px;
+	// float: left;
+}
+
+.footer_bottom {
+	grid-area: footer;
+	background-color: #263238;
+	text-align: center;
+	font-size: 11px;
+	color: #546E7A;
+	height: 20px;
+
+	display: grid;
+	grid-template-columns: auto auto;
+	align-items: center;
+	justify-content: end;
+}
+
+.footer_bottom .more_icon {
+	background-color: red;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	padding: 0px;
+	margin: 0px 5px;
+	background: url('./../img/more_vert.svg') center no-repeat;
+	background-size: 80%;
+	opacity: 0.2;
+}
+
+.footer_bottom .more_icon:hover {
+	opacity: 1;
+}

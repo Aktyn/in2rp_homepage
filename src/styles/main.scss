@@ -1,11 +1,12 @@
 $max_w1: 768px;
-$body-font: Helvetica;
+$body-font: Helvetica, Arial;
 
 $bg-dark: #455A64;
 
 @import 'header.scss';
+@import 'footer.scss';
 @import 'homepage.scss';
-
+@import 'rules.scss';
 
 body, html {
     padding: 0;
@@ -20,25 +21,38 @@ body, html {
 
     background-color: $bg-dark;
     color: #fff;
+    text-shadow: 0px 1px 5px #0003;
 
     text-align: center;
 }
 
 a {
     text-decoration: none;
+    color: inherit;
+}
+
+button.clean {
+    background-color: #fff;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0px;
+    margin: 0px;
 }
 
 .layout_main {
 	height: 100vh;
 	display: grid;
-	grid-template-areas: "header" "header_separator" "content";
+	grid-template-areas: "header" "header_separator" "content" "footer";
 	grid-template-columns: 100%;
-	grid-template-rows: fit-content(100%) fit-content(100%) auto;
+	grid-template-rows: fit-content(100%) fit-content(100%) auto fit-content(100%);
 }
 
 main.content {
-	background-color: $bg-dark;
+    background-color: $bg-dark;
+}
 
+.fader_in {
     animation:          fade_in 0.5s cubic-bezier(.36,.07,.19,.97);
     -webkit-animation:  fade_in 0.5s cubic-bezier(.36,.07,.19,.97); /* Safari 4+ */
     -moz-animation:     fade_in 0.5s cubic-bezier(.36,.07,.19,.97); /* Fx 5+ */

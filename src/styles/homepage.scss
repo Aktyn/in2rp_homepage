@@ -1,3 +1,5 @@
+$delay: 50ms;
+
 .main_links {
 	width: 100%;
 	min-height: 240px;
@@ -5,11 +7,17 @@
 	// display: flex;
 	// justify-content: space-evenly;
 	display: grid;
-	grid-template-rows: auto;
-	grid-auto-flow: column;
+	grid-template-rows: 240px;//240px
+	grid-template-columns: repeat(4, auto);
+	// grid-auto-flow: column;
 	align-items: center;
     justify-content: center;
     justify-items: stretch;
+
+    @media screen and (max-width: 1000px) {
+    	grid-template-columns: repeat(2, auto);
+    	grid-template-rows: repeat(2, 140px);
+    }
 
     @media screen and (max-width: $max_w1) {
        	grid-auto-flow: dense;
@@ -33,8 +41,8 @@
 
 	cursor: pointer;
 
-	transition: height 500ms cubic-bezier(.87,-.41,.19,1.44), 
-		border-radius 500ms cubic-bezier(.87,-.41,.19,1.44);
+	transition: height 500ms $delay cubic-bezier(.87,-.41,.19,1.44), 
+		border-radius 500ms $delay cubic-bezier(.87,-.41,.19,1.44);
 
 	position: relative;
 	overflow: hidden;
@@ -55,6 +63,10 @@
 	background: linear-gradient(135deg, #8c9eff 0%, #8c9eff 50%, #8192e9 50%, #8192e9 100%);
 }
 
+.main_links > *.rules {
+	background: linear-gradient(135deg, #f65746 0%, #f65746 50%, #f44336 50%, #f44336 100%);
+}
+
 .main_links > *::after {
 	content: " ";
 	display: block;
@@ -69,12 +81,12 @@
 	background-position: center;
 
 	opacity: 0;
-	transition: opacity 500ms ease-in-out, height 500ms ease-in-out;
+	transition: opacity 500ms $delay ease-in-out, height 500ms $delay ease-in-out;
 
 	position: absolute;
 	left: 0px; right: 0px;
-	top: 0px;
-	bottom: 0px;
+	top: 0px; 
+	// bottom: 0px;
 }
 
 .main_links > *.forum::after {
@@ -85,6 +97,9 @@
 }
 .main_links > *.whitelist::after {
 	background-image: url('../img/whitelist_icon.png');
+}
+.main_links > *.rules::after {
+	background-image: url('../img/rules_icon.png');
 }
 
 

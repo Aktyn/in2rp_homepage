@@ -6,6 +6,6 @@ export default class extends React.Component<any, any> {
 	}
 
 	render() {
-		return <main className='content'>{this.props.children}</main>;
+		return <main className='content fader_in'>{this.props.children}</main>;
 	}
 }

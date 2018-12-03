@@ -1,6 +1,8 @@
 import * as React from 'react';
-
+// import { Link } from 'react-router-dom';
 import Content from './content';
+
+import Rules from './../rules_template';
 
 export default class extends React.Component<any, any> {
 	constructor(props: any) {
@@ -8,6 +10,10 @@ export default class extends React.Component<any, any> {
 	}
 
 	render() {
-		return <Content>TODO</Content>;
+		return <Content>
+			<main className='rules_main'>
+				<Rules />
+			</main>
+		</Content>;
 	}
 }

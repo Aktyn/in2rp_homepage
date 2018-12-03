@@ -1,15 +1,15 @@
 {
-  "name": "hello",
+  "name": "xrp_homepage",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Homepage project",
+  "main": "src/index.tsx",
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.js",
     "build": "webpack --config ./webpack.config.js",
-    "publish": "NODE_ENV='production' webpack --config ./webpack.config.js -p"
+    "publish": "rm -rf dist && NODE_ENV='production' webpack --config ./webpack.config.js -p"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Aktyn",
+  "license": "UNLICENSED",
   "devDependencies": {
     "autoprefixer": "^9.3.1",
     "awesome-typescript-loader": "^5.2.1",
