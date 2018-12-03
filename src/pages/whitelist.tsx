@@ -9,7 +9,7 @@ export default class extends React.Component<any, any> {
 
 	render() {
 		return <React.Fragment>
-			<Content>content</Content>
+			<Content>TODO</Content>
 		</React.Fragment>;
 	}
 }

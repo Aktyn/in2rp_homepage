@@ -1,5 +1,5 @@
 import * as React from 'react';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Content from './content';
 
 export default class extends React.Component<any, any> {
@@ -8,13 +8,13 @@ export default class extends React.Component<any, any> {
 	}
 
 	render() {
-		// <Link to='/wl'>Whiitelist</Link>
 		return <React.Fragment>
 			<Content>
 				<section className='main_links'>
-					<article>Forum</article>
-					<article>Discord</article>
-					<article>Whitelist</article>
+					<Link to='/forum' className='forum'>Forum</Link>
+					<a target="_blank" href="https://discord.gg/Ge2ZGq"
+						className='discord'>Discord</a>
+					<Link to='/wl' className='whitelist'>Whitelist</Link>
 				</section>
 			</Content>
 		</React.Fragment>;

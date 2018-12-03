@@ -110,6 +110,9 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             hash: isDevelopment,
+            favicon: './src/img/icon.png',
+            title: 'X-RP.pl',
+            minify: !isDevelopment,
             template: './src/index.html',
             filename: './index.html'
         })

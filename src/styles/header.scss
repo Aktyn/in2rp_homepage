@@ -13,7 +13,7 @@ $header-large: 250px;
 	padding: 0px;
 	margin: 0px;
 
-	transition: height 500ms ease-in-out;
+	transition: height 500ms ease-in-out, font-size 500ms ease-in-out;
 }
 
 .main_header_container a.logo {
@@ -36,10 +36,15 @@ $header-large: 250px;
 
 h1.small {
 	height: $header-small;
+	font-size: 20px;
 }
 
 h1.large {
 	height: $header-large;
+	@media screen and (max-width: $max_w1) {
+		height: $header-small;
+		font-size: 20px;
+	}
 }
 
 a.logo {
