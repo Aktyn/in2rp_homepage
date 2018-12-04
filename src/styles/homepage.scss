@@ -1,8 +1,9 @@
-$delay: 50ms;
+$max_w1: 768px;
+// $delay: 50ms;
 
 .main_links {
 	width: 100%;
-	min-height: 240px;
+	min-height: 200px;
 	max-height: 100%;
 	// display: flex;
 	// justify-content: space-evenly;
@@ -22,102 +23,6 @@ $delay: 50ms;
     @media screen and (max-width: $max_w1) {
        	grid-auto-flow: dense;
        	grid-template-columns: auto;
+       	grid-template-rows: auto;
     }
-    
-}
-
-.main_links > * {
-	background-color: #03A9F4;
-	color: #fff;
-	font-weight: bold;
-
-	width: 200px;
-	height: 50px;
-	line-height: 50px;
-	margin: 0px 20px;
-	display: inline-block;
-	border-radius: 5px;
-	box-shadow: 0px 2px 6px #0004;
-
-	cursor: pointer;
-
-	transition: height 500ms $delay cubic-bezier(.87,-.41,.19,1.44), 
-		border-radius 500ms $delay cubic-bezier(.87,-.41,.19,1.44);
-
-	position: relative;
-	overflow: hidden;
-}
-
-// tan(14 deg) == 1/4
-//180 - 14 = 166
-
-.main_links > *.forum {
-	background: linear-gradient(135deg, #03b3f6 0%, #03b3f6 50%, #03A9F4 50%, #03A9F4 100%);
-}
-
-.main_links > *.whitelist {
-	background: linear-gradient(135deg, #96ca54 0%, #96ca54 50%, #8BC34A 50%, #8BC34A 100%);
-}
-
-.main_links > *.discord {
-	background: linear-gradient(135deg, #8c9eff 0%, #8c9eff 50%, #8192e9 50%, #8192e9 100%);
-}
-
-.main_links > *.rules {
-	background: linear-gradient(135deg, #f65746 0%, #f65746 50%, #f44336 50%, #f44336 100%);
-}
-
-.main_links > *::after {
-	content: " ";
-	display: block;
-	width: 200px;
-	height: 50px;
-	// background-image: url('../img/whitelist_icon.png');
-	background-size: 100%;
-	@media screen and (max-width: $max_w1) {
-		background-size: auto 100%;
-	}
-	background-repeat: no-repeat;
-	background-position: center;
-
-	opacity: 0;
-	transition: opacity 500ms $delay ease-in-out, height 500ms $delay ease-in-out;
-
-	position: absolute;
-	left: 0px; right: 0px;
-	top: 0px; 
-	// bottom: 0px;
-}
-
-.main_links > *.forum::after {
-	background-image: url('../img/forum_icon.png');
-}
-.main_links > *.discord::after {
-	background-image: url('../img/discord_icon.png');
-}
-.main_links > *.whitelist::after {
-	background-image: url('../img/whitelist_icon.png');
-}
-.main_links > *.rules::after {
-	background-image: url('../img/rules_icon.png');
-}
-
-
-.main_links > *:hover {
-	// background-color: #fff0;
-	@media screen and (min-width: $max_w1) {
-		height: 200px;
-		border-radius: 200px;
-	}
-	@media screen and (max-width: $max_w1) {
-		color: transparent;
-	}
-	// color: #03A9F4;
-}
-
-.main_links > *:hover::after {
-	opacity: 1;
-	@media screen and (min-width: $max_w1) {
-		height: 200px;
-	}
 }

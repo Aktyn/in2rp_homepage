@@ -4,6 +4,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 
 import './styles/normalize.css';
 import './styles/main.scss';
+import './styles/common.scss';
 
 import Layout from './pages/layout';
 import Home from './pages/home';

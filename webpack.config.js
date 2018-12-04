@@ -24,6 +24,9 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.json', '.ts', '.tsx'],
     },
+    /*node: {
+        fs: "empty"
+    },*/
 
     module: {
         rules: [
@@ -94,9 +97,9 @@ module.exports = {
                           gifsicle: {
                             interlaced: false,
                           },
-                          webp: {
+                          /*webp: {
                             quality: 75
-                          }
+                          }*/
                         }
                     }
                 ]

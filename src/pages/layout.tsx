@@ -18,16 +18,25 @@ class Layout extends React.Component<any, LayoutState> {
 		super(props);
 	}
 
+	componentDidMount() {
+		this.update();
+	}
+
 	componentDidUpdate(prevProps: any) {
 		if (this.props.location !== prevProps.location) {//routed
 			//console.log('new path:', this.props.location.pathname);
-			switch(this.props.location.pathname) {
-				case '/': 	
-					return this.setState({headerSize: 'large'});
-				case '/wl': 
-				case '/rules':
-					return this.setState({headerSize: 'small'});
-			}
+			this.update();
+		}
+	}
+
+	update() {
+		switch(this.props.location.pathname) {
+			default:
+			case '/': 	
+				return this.setState({headerSize: 'large'});
+			case '/wl': 
+			case '/rules':
+				return this.setState({headerSize: 'small'});
 		}
 	}
 

@@ -1,0 +1,41 @@
+.info_label {
+	display: block;
+	margin: 20px 0px;
+	font-weight: bold;
+}
+
+.wl_container {
+	color: #455a64;
+	background-color: #fff;
+	padding: 20px;
+	margin: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 5px;
+	box-shadow: 0px 3px 6px #0006;
+
+	max-width: 600px;
+}
+
+.wl_container h2 .user_nick {
+	font-weight: bold;
+}
+
+.wl_container .questions {
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-template-rows: auto;
+
+	align-items: center;
+    justify-content: center;
+    // align-content: stretch;
+}
+
+.wl_container .questions > * {
+	padding: 10px 5px;
+}
+
+.wl_container .questions > div > input {//answer input
+	display: block;
+    width: 100%;
+}

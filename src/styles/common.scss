@@ -1,0 +1,140 @@
+$max_w1: 768px;
+$delay: 50ms;
+
+/* FANCY BUTTON HOLDER */
+.fancy_button_holder {
+	height: 200px;
+	display: grid;
+	align-items: center;
+    justify-content: center;
+    // justify-items: stretch;
+}
+
+/* FANCY BUTTON */
+.fancy_button {
+	background-color: #03A9F4;
+	color: #fff;
+	text-shadow: none;
+	font-weight: bold;
+
+	width: 200px;
+	height: 50px;
+	line-height: 50px;
+	margin: 0px 20px;
+	display: inline-block;
+	border-radius: 5px;
+	box-shadow: 0px 2px 6px #0004;
+
+	cursor: pointer;
+	vertical-align: middle;
+	box-sizing: border-box;
+
+	transition: height 500ms $delay cubic-bezier(.87,-.41,.19,1.44), 
+		border-radius 500ms $delay cubic-bezier(.87,-.41,.19,1.44),
+		color 500ms $delay cubic-bezier(.87,-.41,.19,1.44);
+
+	position: relative;
+	overflow: hidden;
+
+	@media screen and (max-width: $max_w1) {
+		margin-top: 15px;
+	}
+}
+
+.fancy_button::after {
+	content: " ";
+	display: block;
+	width: 200px;
+	height: 50px;
+	// background-image: url('../img/whitelist_icon.png');
+	background-size: auto 100%;
+	@media screen and (max-width: $max_w1) {
+		background-size: auto 100%;
+	}
+	background-repeat: no-repeat;
+	background-position: left;
+
+	opacity: 1;
+	transition: opacity 500ms $delay ease-in-out, height 500ms $delay cubic-bezier(.87,-.41,.19,1.44);
+
+	position: absolute;
+	left: 0px; right: 0px;
+	vertical-align: middle;
+	margin: auto;
+	top: 0px; 
+	bottom: 0px;
+}
+
+.fancy_button:hover {
+	@media screen and (min-width: $max_w1) {
+		height: 200px;
+		border-radius: 200px;
+		color: #fff0;
+	}
+}
+
+.fancy_button:hover::after {
+	opacity: 1;
+	@media screen and (min-width: $max_w1) {
+		height: 200px;
+	}
+}
+
+// tan(14 deg) == 1/4
+//180 - 14 = 166
+//135deg 
+
+.fancy_button.forum {
+	background: linear-gradient(135deg, #03b3f6 0%, #03b3f6 50%, #03A9F4 50%, #03A9F4 100%);
+}
+
+.fancy_button.whitelist {
+	background: linear-gradient(135deg, #96ca54 0%, #96ca54 50%, #8BC34A 50%, #8BC34A 100%);
+}
+
+.fancy_button.discord {
+	background: linear-gradient(135deg, #8c9eff 0%, #8c9eff 50%, #8192e9 50%, #8192e9 100%);
+}
+
+.fancy_button.rules {
+	background: linear-gradient(135deg, #f65746 0%, #f65746 50%, #f44336 50%, #f44336 100%);
+}
+
+.fancy_button.forum::after 		{	background-image: url('../img/forum_icon.png');			}
+.fancy_button.discord::after 	{	background-image: url('../img/discord_icon.png');		}
+.fancy_button.whitelist::after 	{	background-image: url('../img/whitelist_icon.png');		}
+.fancy_button.rules::after 		{	background-image: url('../img/rules_icon.png');			}
+
+/* SPINNER */
+.spinner {
+	width: 40px;
+	height: 40px;
+
+	position: relative;
+	margin: 20px auto;
+}
+
+.double-bounce1, .double-bounce2 {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	/*background-color: #f44336;*/
+	opacity: 0.7;
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+	animation-delay: -1.0s;
+}
+
+@keyframes sk-bounce {
+	0%, 100% { 
+		transform: scale(0.0);
+	} 50% { 
+		transform: scale(1.0);
+	}
+}

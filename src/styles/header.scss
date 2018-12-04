@@ -1,5 +1,8 @@
 $header-small: 100px;
 $header-large: 250px;
+$max_w1: 768px;
+
+$delay: 100ms;
 
 .main_header_container {
 	grid-area: header;
@@ -13,7 +16,7 @@ $header-large: 250px;
 	padding: 0px;
 	margin: 0px;
 
-	transition: height 500ms ease-in-out, font-size 500ms ease-in-out;
+	transition: height 500ms $delay ease-in-out, font-size 500ms $delay ease-in-out;
 }
 
 .main_header_container a.logo {
@@ -61,5 +64,8 @@ a.logo {
 	background: #263238;
 	height: 20px;
 
-	box-shadow: 0px 0px 15px #0008;
+	position: relative;
+	z-index: 3;
+
+	box-shadow: 0px 0px 8px #0006;
 }

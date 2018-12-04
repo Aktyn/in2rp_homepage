@@ -24,8 +24,7 @@
 	justify-content: end;
 }
 
-.footer_bottom .more_icon {
-	background-color: red;
+.footer_bottom .more_icon, .footer_bottom .close_icon {
 	display: inline-block;
 	width: 20px;
 	height: 20px;
@@ -36,6 +35,15 @@
 	opacity: 0.2;
 }
 
-.footer_bottom .more_icon:hover {
+.footer_bottom .more_icon {
+	
+}
+
+.footer_bottom .close_icon {
+	background: url('./../img/close.svg') center no-repeat;
+	background-size: 80%;
+}
+
+.footer_bottom .more_icon:hover, .footer_bottom .close_icon:hover {
 	opacity: 1;
 }

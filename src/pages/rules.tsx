@@ -3,6 +3,7 @@ import * as React from 'react';
 import Content from './content';
 
 import Rules from './../rules_template';
+import './../styles/rules.scss';
 
 export default class extends React.Component<any, any> {
 	constructor(props: any) {

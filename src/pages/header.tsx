@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Config from './../config';
 
-// import './../img/logo.png';
+import './../styles/header.scss';
 
 interface HeaderProps {
 	type: string;//small, large
