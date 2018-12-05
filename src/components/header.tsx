@@ -4,6 +4,8 @@ import Config from './../config';
 
 import './../styles/header.scss';
 
+import Discord from './discord_session';
+
 interface HeaderProps {
 	type: string;//small, large
 }
@@ -25,7 +27,7 @@ export default class extends React.Component<HeaderProps, any> {
 					<div style={{justifySelf: 'left'}}>{Config.short_description}</div>
 				</div>
 			</h1>
-			<div className='header_separator'></div>
+			<div className='header_separator'><Discord.Widget /></div>
 		</React.Fragment>;
 	}
 }

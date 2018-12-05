@@ -1,0 +1,95 @@
+$widget_h: 30px;
+
+.discord_widget_main {
+	float: right;
+	margin: 0px 5px;
+	height: 100%;
+	
+	height: $widget_h;
+}
+
+.discord_widget_main .dw_login_btn {
+	background-color: transparent;
+	font-size: 12px;
+	color: #546E7A;
+	font-weight: bold;
+	line-height: $widget_h;
+
+	padding: 0px $widget_h+5;
+
+	position: relative;
+
+	opacity: 1;
+
+	animation: fade_in 1s ease-in;
+}
+
+.discord_widget_main .dw_login_btn::after {
+	display: inline-block;
+	content: " ";
+	width: $widget_h;
+	height: $widget_h;
+	background: url('./../img/discord_icon.png') no-repeat center;
+	background-size: contain;
+	opacity: 0.6;
+	position: absolute;
+	right: 0px;
+
+	transform: rotate(0deg);
+	animation: shaker infinite 10s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.discord_widget_main .dw_login_btn:hover {
+	color: #94aEbA;
+}
+
+.discord_widget_main .dw_login_btn:hover::after {
+	opacity: 1;
+}
+
+@keyframes shaker {
+	1%, 9% {
+		transform: scale(0.95, 1);
+	}
+
+	2%, 8% {
+		transform: scale(1.1, 1);
+	}
+
+	3%, 5%, 7% {
+		transform: scale(0.8, 1);
+	}
+
+	4%, 6% {
+		transform: scale(1.2, 1);
+	}
+
+	10% {
+		transform: scale(1, 1);
+	}
+}
+
+.discord_widget_main .discord_session_widget {
+	color: #546E7A;
+	line-height: $widget_h;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.discord_widget_main .discord_session_widget .discord_logout {
+	margin: 0px 5px;
+	padding: 5px 10px;
+	color: #fff;
+	border-radius: 5px;
+	font-weight: bold;
+	background-color: #8c9eff;
+
+	box-shadow: 0px 1px 4px #0008;
+	opacity: 0.6;
+
+	transition: opacity 300ms ease-in-out;
+}
+
+.discord_widget_main .discord_session_widget .discord_logout:hover {
+	opacity: 1;
+}

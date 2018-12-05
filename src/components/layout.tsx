@@ -36,6 +36,7 @@ class Layout extends React.Component<any, LayoutState> {
 				return this.setState({headerSize: 'large'});
 			case '/wl': 
 			case '/rules':
+			case '/discord_login':
 				return this.setState({headerSize: 'small'});
 		}
 	}

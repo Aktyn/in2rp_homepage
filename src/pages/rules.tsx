@@ -1,6 +1,6 @@
 import * as React from 'react';
 // import { Link } from 'react-router-dom';
-import Content from './content';
+import Content from './../components/content';
 
 import Rules from './../rules_template';
 import './../styles/rules.scss';

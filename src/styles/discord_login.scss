@@ -1,0 +1,27 @@
+.login_failed, .login_success {
+	
+	font-size: 20px;
+	margin: 20px 0px;
+
+	background-color: #fff;
+	border-radius: 5px;
+	display: inline-block;
+	padding: 20px;
+	box-shadow: 0px 3px 6px #0006;
+}
+
+.login_failed {
+	color: #ef5350;
+	font-weight: bold;
+}
+
+.login_failed::after {
+	display: block;
+	content: "\1F63F";//1F622
+	font-weight: normal;
+	font-size: 60px;
+}
+
+.login_success {
+	color: #455a64;
+}

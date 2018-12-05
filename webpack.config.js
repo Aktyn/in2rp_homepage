@@ -24,9 +24,6 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.json', '.ts', '.tsx'],
     },
-    /*node: {
-        fs: "empty"
-    },*/
 
     module: {
         rules: [
@@ -114,8 +111,8 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             hash: isDevelopment,
-            favicon: './src/img/icon.png',
-            title: 'X-RP.pl',
+            favicon: './src/img/in2rpp.png',
+            title: 'IN2RP - GTA RolePlay Server',
             minify: !isDevelopment,
             template: './src/index.html',
             filename: './index.html'

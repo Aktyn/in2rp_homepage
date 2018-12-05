@@ -10,8 +10,8 @@ $delay: 50ms;
     // justify-items: stretch;
 }
 
-/* FANCY BUTTON */
-.fancy_button {
+/* FANCY AND SIMPLE BUTTONS */
+.fancy_button, .simple_button {
 	background-color: #03A9F4;
 	color: #fff;
 	text-shadow: none;
@@ -29,10 +29,6 @@ $delay: 50ms;
 	vertical-align: middle;
 	box-sizing: border-box;
 
-	transition: height 500ms $delay cubic-bezier(.87,-.41,.19,1.44), 
-		border-radius 500ms $delay cubic-bezier(.87,-.41,.19,1.44),
-		color 500ms $delay cubic-bezier(.87,-.41,.19,1.44);
-
 	position: relative;
 	overflow: hidden;
 
@@ -41,21 +37,30 @@ $delay: 50ms;
 	}
 }
 
-.fancy_button::after {
+.simple_button, .simple_button::after {
+	transition: transform 500ms $delay cubic-bezier(.87,-.41,.19,1.44);
+}
+
+.fancy_button {
+	transition: height 500ms $delay cubic-bezier(.87,-.41,.19,1.44), 
+		border-radius 500ms $delay cubic-bezier(.87,-.41,.19,1.44),
+		color 500ms $delay cubic-bezier(.87,-.41,.19,1.44);
+}
+
+.fancy_button::after, .simple_button::after {
 	content: " ";
 	display: block;
 	width: 200px;
 	height: 50px;
 	// background-image: url('../img/whitelist_icon.png');
 	background-size: auto 100%;
-	@media screen and (max-width: $max_w1) {
+	/*@media screen and (max-width: $max_w1) {
 		background-size: auto 100%;
-	}
+	}*/
 	background-repeat: no-repeat;
 	background-position: left;
 
 	opacity: 1;
-	transition: opacity 500ms $delay ease-in-out, height 500ms $delay cubic-bezier(.87,-.41,.19,1.44);
 
 	position: absolute;
 	left: 0px; right: 0px;
@@ -63,6 +68,10 @@ $delay: 50ms;
 	margin: auto;
 	top: 0px; 
 	bottom: 0px;
+}
+
+.fancy_button::after {
+	transition: opacity 500ms $delay ease-in-out, height 500ms $delay cubic-bezier(.87,-.41,.19,1.44);
 }
 
 .fancy_button:hover {
@@ -80,11 +89,18 @@ $delay: 50ms;
 	}
 }
 
+.simple_button:hover {
+	transform: scale(1.1);
+}
+.simple_button:hover::after {
+	transform: scale(0.90909090);
+}
+
 // tan(14 deg) == 1/4
 //180 - 14 = 166
 //135deg 
 
-.fancy_button.forum {
+.fancy_button.forum, .simple_button.return {
 	background: linear-gradient(135deg, #03b3f6 0%, #03b3f6 50%, #03A9F4 50%, #03A9F4 100%);
 }
 
@@ -104,6 +120,8 @@ $delay: 50ms;
 .fancy_button.discord::after 	{	background-image: url('../img/discord_icon.png');		}
 .fancy_button.whitelist::after 	{	background-image: url('../img/whitelist_icon.png');		}
 .fancy_button.rules::after 		{	background-image: url('../img/rules_icon.png');			}
+
+.simple_button.return::after 	{	background-image: url('../img/arrow_left.svg');			}
 
 /* SPINNER */
 .spinner {

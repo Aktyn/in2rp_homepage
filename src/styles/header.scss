@@ -51,7 +51,7 @@ h1.large {
 }
 
 a.logo {
-	background: url('../img/logo.png') no-repeat;
+	background: url('../img/in2rpp.png') no-repeat;
 	background-position: right;
 	background-size: auto 100%;
 	width: 100%;
@@ -62,7 +62,7 @@ a.logo {
 	grid-area: header_separator;
 	display: block;
 	background: #263238;
-	height: 20px;
+	// min-height: 20px;
 
 	position: relative;
 	z-index: 3;

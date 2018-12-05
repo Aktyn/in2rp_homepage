@@ -1,10 +1,9 @@
 import * as React from 'react';
 import './../styles/whitelist.scss';
 
-import Content from './content';
+import Content from './../components/content';
+import Session from './../components/discord_session';
 // import Loader from './../components/loader';
-
-import Config from './../config';
 
 enum STATE {
 	UNKNOWN,
@@ -14,13 +13,13 @@ enum STATE {
 
 interface WhitelistState {
 	status: STATE;
-	discord_user: string;
+	discord_nick: string;
 }
 
 export default class extends React.Component<any, WhitelistState> {
 	state: WhitelistState = {
 		status: STATE.UNKNOWN,
-		discord_user: 'Uknown user'
+		discord_nick: 'Uknown user'
 	};
 
 	constructor(props: any) {
@@ -28,7 +27,7 @@ export default class extends React.Component<any, WhitelistState> {
 	}
 
 	componentDidMount() {
-		var user_token = location.href.match(/.+[\?|&]user=([a-z0-9#]+)/i);
+		/*var user_token = location.href.match(/.+[\?|&]user=([a-z0-9#]+)/i);
 		var match_token = location.href.match(/.+[\?|&]token=([a-z0-9#]+)/i);
 
 		if(match_token !== null && match_token.length > 1) {//match_token[1] = token
@@ -38,21 +37,33 @@ export default class extends React.Component<any, WhitelistState> {
 			});
 		}
 		else
-			this.setState({status: STATE.UNAUTHORIZED});
+			this.setState({status: STATE.UNAUTHORIZED});*/
+		// console.log( Session.isLoggedIn(), Session.getUserNick() );
+		this.setState({
+			status: Session.isLoggedIn() ? STATE.AUTHORIZED : STATE.UNAUTHORIZED,
+			discord_nick: Session.getUserNick() || 'Error'
+		});
+
+		Session.addLoginListener('whitelist_session_listener', (_nick, _discriminator) => {
+			this.setState({
+				status: Session.isLoggedIn() ? STATE.AUTHORIZED : STATE.UNAUTHORIZED,
+				discord_nick: _nick
+			});
+		});
 	}
 
-	authorize() {
-		location.href =  Config.api_server_url + '/discord_login';
+	componentWillUnmount() {
+		Session.removeLoginListener('whitelist_session_listener');
 	}
 
 	renderAuthorizeInfo() {
 		return <React.Fragment>
 			<label className='info_label'>
-				Aby odblokować formularz whitelisty, połącz się ze swoim kontem na discordzie.
+				Aby odblokować formularz whitelisty, zaloguj się za pomocą konta na discordzie.
 			</label>
 			<div className='fancy_button_holder'>
-				<button className='fancy_button clean discord' onClick={this.authorize.bind(this)}>
-					Połącz
+				<button className='fancy_button clean discord' onClick={Session.login}>
+					Zaloguj
 				</button>
 			</div>
 		</React.Fragment>;
@@ -62,7 +73,7 @@ export default class extends React.Component<any, WhitelistState> {
 		return <div className='wl_container'>
 			<h2>Witaj&nbsp;
 				<span className='user_nick'>
-					{this.state.discord_user.replace(/#[0-9]+/i, '')}
+					{this.state.discord_nick}
 				</span>
 			</h2>
 			<h3>Odpowiedz na poniższe pytania przed wysłaniem podania o whiteliste.</h3>

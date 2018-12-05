@@ -5,8 +5,8 @@ export default function(props: any) {
 		<ol style={{listStyleType: 'decimal'}} start={1}><li>Postanowienia ogólne</li></ol>
 
 		<p>1.1 Serwer jest dla osób, które ukończyły 16 lat. (z wyjątkami!)<br/>
-		1.2 Administracja X-RP może zmienić regulamin w dowolnym momencie, bez podania przyczyny oraz informowania użytkowników.<br/>
-		1.3 Rejestrując się, akceptujesz regulamin strony X-RP.PL<br/>
+		1.2 Administracja IN2RP może zmienić regulamin w dowolnym momencie, bez podania przyczyny oraz informowania użytkowników.<br/>
+		1.3 Rejestrując się, akceptujesz regulamin strony IN2RP.PL<br/>
 		1.4 Składając podanie o przyjęcie na serwer akceptujesz jego regulamin i oświadczasz że się z nim zapoznałeś<br/>
 		1.5 Administracja ma zawsze racje.</p>
 
@@ -26,7 +26,7 @@ export default function(props: any) {
 
 		<ol style={{listStyleType: 'decimal'}} start={3}><li>RolePlay</li></ol>
 
-		<p>3.1 Serwer X-RP jest serwerem RolePlay i każdy ma obowiązek przestrzegania zasad tego trybu.<br/>
+		<p>3.1 Serwer IN2RP jest serwerem RolePlay i każdy ma obowiązek przestrzegania zasad tego trybu.<br/>
 		3.2 To nie jest MTA, więc aby grać u nas na serwerze potrzebujesz mikrofonu.<br/>
 		3.3 Kiedy jesteśmy w stanie BW, a medyka nie ma aktualnie na służbie nie spamujemy mu na discordzie czy gdziekolwiek, aby wszedł na wyspe i go podniósł.<br/>
 		3.4 Kiedy jesteśmy w stanie BW, nie ma medyka a jest administrator na serwerze, można prosić o revive tylko i wyłącznie wtedy kiedy odegrane zostanie "leczenie" w szpitalu przez słynną Basię.<br/>
