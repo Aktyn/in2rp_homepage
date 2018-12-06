@@ -1,13 +1,65 @@
+$max_w1: 768px;
+$discord_user_height: 30px;
+
 .footer {
 	background-color: #37474F;
+	text-align: left;
+	color: #94aeb3;
+
+	@media screen and (max-width: $max_w1) {
+		text-align: center;
+	}
 }
 
-.footer .long_desc {
+.footer article {
 	text-align: left;
-	padding: 10px;
+	padding: 10px 30px;
 	display: inline-block;
 	font-size: 14px;
-	// float: left;
+	
+	vertical-align: top;
+
+	max-width: $max_w1 / 2;
+
+	@media screen and (max-width: $max_w1) {
+		// width: 100%;
+		max-width: 100%;
+		border-bottom: 1px solid #455a64;
+	}
+}
+
+.footer article h4 {
+	margin-bottom: 0px;
+}
+
+.footer article ol, .footer article ul {
+	margin: 10px 0px;
+	padding: 0px 30px;
+}
+
+.footer article ol > li, .footer article ul > li {
+	padding: 3px 0px;
+}
+
+.footer article .discord_user {
+	display: inline-block;
+	line-height: $discord_user_height;
+	// color: #8c9eff;
+	font-weight: bold;
+	padding: 0px;
+	// padding-left: $discord_user_height;
+	height: $discord_user_height;
+}
+
+.footer article .discord_user::before {
+	display: inline-block;
+	float: left;
+	content: ' ';
+	width: $discord_user_height;
+	height: $discord_user_height;
+
+	background: url('./../img/discord_icon.png') no-repeat center;
+	background-size: contain;
 }
 
 .footer_bottom {

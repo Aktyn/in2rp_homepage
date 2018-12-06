@@ -13,15 +13,17 @@ import Home from './pages/home';
 import Whitelist from './pages/whitelist';
 import Rules from './pages/rules';
 import DiscordLogin from './pages/discord_login';
+import WlRequests from './pages/wl_requests';
 
 render(//<Redirect to="/" />
     <BrowserRouter>
     	<Layout>
     		<Route path="/" exact component={Home} />
     		
-    		<Route path='/discord_login' component={DiscordLogin} />
-    		<Route path="/wl" component={Whitelist} />
-    		<Route path="/rules" component={Rules} />
+    		<Route path='/login_result' component={DiscordLogin} />
+    		<Route path='/wl' component={Whitelist} />
+    		<Route path='/rules' component={Rules} />
+    		<Route path='/wl_requests' component={WlRequests} />
     	</Layout>
   	</BrowserRouter>,
     document.getElementById('page'),

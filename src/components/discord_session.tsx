@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import './../styles/discord_widget.scss';
 
 import Config from './../config';
@@ -6,15 +7,15 @@ import Cookies from './../utils/cookies';
 
 interface WidgetState {
 	session: boolean;
-	nick?: string;
-	discriminator?: number;
+	//nick?: string;
+	//discriminator?: number;
+	user?: DiscordUserSchema;
 }
 
 class WidgetClass extends React.Component<any, WidgetState> {
 	state: WidgetState = {
 		session: false,
-		nick: undefined,
-		discriminator: undefined
+		user: undefined,
 	};
 
 	constructor(props: any) {
@@ -22,11 +23,10 @@ class WidgetClass extends React.Component<any, WidgetState> {
 	}
 
 	componentDidMount() {
-		Session.addLoginListener('header_widget', (_nick, _discriminator) => {
+		Session.addLoginListener('header_widget', (_user) => {
 			this.setState({
 				session: true,
-				nick: _nick,
-				discriminator: _discriminator
+				user: _user
 			});
 		});
 	}
@@ -42,9 +42,15 @@ class WidgetClass extends React.Component<any, WidgetState> {
 	}
 
 	renderSessionInfo() {
+		// var is_admin = this.state.user && this.state.user.admin;
+		if(this.state.user === undefined)
+			throw new Error('Session is true but user undefined');
+
 		return <div className='discord_session_widget'>
-			{this.state.nick}#{this.state.discriminator}
+			{this.state.user.nick}#{this.state.user.discriminator}
 			<button onClick={Session.logout} className='clean discord_logout'>Wyloguj</button>
+			{this.state.user.admin && 
+				<Link to='/wl_requests' className='clean admin_btn'>Podania</Link>}
 		</div>;
 	}
 
@@ -56,19 +62,23 @@ class WidgetClass extends React.Component<any, WidgetState> {
 }
 
 var token: string | null = null;
-var discord_user: {nick: string, discriminator: number} | null = null;
+export interface DiscordUserSchema {
+	nick: string;
+	discriminator: number;
+	admin: boolean;
+}
+var discord_user: DiscordUserSchema | null = null;
 
 interface LoginListener {
 	name?: string;
-	callback: (nick: string, discriminator: number) => void;
+	callback: (user: DiscordUserSchema) => void;
 }
 
 var login_listeners: LoginListener[] = [];
 
-function invokeLoginListeners(nick: string, discriminator: number) {
-	login_listeners.forEach(listener => listener.callback(nick, discriminator));
+function invokeLoginListeners(user: DiscordUserSchema) {
+	login_listeners.forEach(listener => listener.callback(user));
 }
-
 
 interface SessionTemplate {
 	Widget: typeof WidgetClass;
@@ -79,11 +89,12 @@ interface SessionTemplate {
 
 	getUserNick(): string | undefined;
 	getUserDiscriminator(): number | undefined;
+	isUserAdmin(): boolean;
 
-	addLoginListener(_name: string, _callback: (nick: string, discriminator: number) => void): void;
+	addLoginListener(_name: string, _callback: (user: DiscordUserSchema) => void): void;
 	removeLoginListener(_name: string): boolean;
 
-	onLoginResponse(token: string, discord_user: string): void;
+	onLoginResponse(token: string, discord_user: string, admin: boolean): void;
 	restoreSession(): Promise<boolean>;
 }
 
@@ -114,6 +125,11 @@ const Session = {
 			return undefined;
 		return discord_user.discriminator;
 	},
+	isUserAdmin: function() {
+		if(!discord_user)
+			return false;
+		return discord_user.admin;
+	},
 
 	addLoginListener: function(_name, _callback) {
 		login_listeners.push( {name: _name, callback: _callback} );
@@ -129,14 +145,15 @@ const Session = {
 		return false;
 	},
 
-	onLoginResponse: function(_token, _discord_user) {
+	onLoginResponse: function(_token, _discord_user, _admin) {
 		token = _token;
 		if(_discord_user.indexOf('#') !== -1) {
 			discord_user = {
 				nick: _discord_user.split('#')[0],
-				discriminator: parseInt( _discord_user.split('#')[1] )
-			};
-			invokeLoginListeners(discord_user.nick, discord_user.discriminator);
+				discriminator: parseInt( _discord_user.split('#')[1] ),
+				admin: _admin
+			} as DiscordUserSchema;
+			invokeLoginListeners(discord_user);
 		}
 
 		Cookies.setCookie('discord_token', _token, 1000*60*60*24*7);
@@ -151,6 +168,7 @@ const Session = {
 				result: string;
 				nick: string;
 				discriminator: string | number;
+				is_admin: boolean;
 			}
 
 			var cookie_token = Cookies.getCookie('discord_token');
@@ -165,7 +183,7 @@ const Session = {
 			        },
         			body: JSON.stringify({token: cookie_token})
 				}).then(resp => resp.json()).then((res: SessionResponseJSON) => {
-					//console.log(res);
+					console.log(res);
 
 					if(res.result !== 'SUCCESS') {
 						Cookies.removeCookie('discord_token');
@@ -174,11 +192,12 @@ const Session = {
 					else {
 						discord_user = {
 							nick: res.nick,
-							discriminator: parseInt(res.discriminator as (string))
-						};
+							discriminator: parseInt(res.discriminator as (string)),
+							admin: res.is_admin
+						} as DiscordUserSchema;
 						token = cookie_token;
 
-						invokeLoginListeners(discord_user.nick, discord_user.discriminator);
+						invokeLoginListeners(discord_user);
 						resolve(true);
 					}
 

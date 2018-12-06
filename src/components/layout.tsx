@@ -30,15 +30,14 @@ class Layout extends React.Component<any, LayoutState> {
 	}
 
 	update() {
-		switch(this.props.location.pathname) {
-			default:
+		/*switch(this.props.location.pathname) {
 			case '/': 	
 				return this.setState({headerSize: 'large'});
-			case '/wl': 
-			case '/rules':
-			case '/discord_login':
+			default:
 				return this.setState({headerSize: 'small'});
-		}
+		}*/
+		if(this.props.location.pathname !== '/')
+			this.setState({headerSize: 'small'});
 	}
 
 	render() {

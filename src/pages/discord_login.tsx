@@ -39,13 +39,15 @@ export default class extends React.Component<any, LoginState> {
 	componentDidMount() {
 		var success_match = location.href.match(/.+[\?|&]success=([a-z0-9#]+)/i);
 		var user_match = location.href.match(/.+[\?|&]user=([a-z0-9#]+)/i);
+		var admin_match = location.href.match(/.+[\?|&]admin=([a-z0-9#]+)/i);
 		var match_token = location.href.match(/.+[\?|&]token=([a-z0-9#]+)/i);
 		var success = false;
 		if(success_match && success_match.length > 1 && success_match[1] === 'true') {
 			if(match_token && match_token.length > 1) {
 				success = true;
 				let user = user_match && user_match.length > 1 ? user_match[1] : '';
-				DiscordSession.onLoginResponse(match_token[1], user);
+				let admin = admin_match && admin_match.length > 1 && admin_match[1] === 'true';
+				DiscordSession.onLoginResponse(match_token[1], user, !!admin);
 			}
 		}
 

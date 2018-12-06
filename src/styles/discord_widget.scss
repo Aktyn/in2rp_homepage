@@ -76,7 +76,8 @@ $widget_h: 30px;
 	font-size: 12px;
 }
 
-.discord_widget_main .discord_session_widget .discord_logout {
+.discord_widget_main .discord_session_widget .discord_logout, 
+.discord_widget_main .discord_session_widget .admin_btn {
 	margin: 0px 5px;
 	padding: 5px 10px;
 	color: #fff;
@@ -90,6 +91,11 @@ $widget_h: 30px;
 	transition: opacity 300ms ease-in-out;
 }
 
-.discord_widget_main .discord_session_widget .discord_logout:hover {
+.discord_widget_main .discord_session_widget .discord_logout:hover,
+.discord_widget_main .discord_session_widget .admin_btn:hover {
 	opacity: 1;
+}
+
+.discord_widget_main .discord_session_widget .admin_btn {
+	background-color: #ef5350;
 }

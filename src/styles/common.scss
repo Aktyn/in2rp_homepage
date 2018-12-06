@@ -1,4 +1,4 @@
-$max_w1: 768px;
+$max_w1: 769px;
 $delay: 50ms;
 
 /* FANCY BUTTON HOLDER */
@@ -104,7 +104,7 @@ $delay: 50ms;
 	background: linear-gradient(135deg, #03b3f6 0%, #03b3f6 50%, #03A9F4 50%, #03A9F4 100%);
 }
 
-.fancy_button.whitelist {
+.fancy_button.whitelist, .simple_button.check {
 	background: linear-gradient(135deg, #96ca54 0%, #96ca54 50%, #8BC34A 50%, #8BC34A 100%);
 }
 
@@ -122,6 +122,7 @@ $delay: 50ms;
 .fancy_button.rules::after 		{	background-image: url('../img/rules_icon.png');			}
 
 .simple_button.return::after 	{	background-image: url('../img/arrow_left.svg');			}
+.simple_button.check::after 	{	background-image: url('../img/check_small.svg');		}
 
 /* SPINNER */
 .spinner {

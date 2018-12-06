@@ -22,14 +22,41 @@
 }
 
 .wl_container .questions {
-	display: grid;
+	/*display: grid;
 	grid-template-columns: 50% 50%;
 	grid-template-rows: auto;
 
 	align-items: center;
-    justify-content: center;
+    justify-content: center;*/
+    display: block;
     // align-content: stretch;
 }
+
+.wl_container .questions > p {
+	font-size: 13px;
+}
+
+.wl_container .questions > p:not(:last-child) {//question container
+	border-bottom: 1px solid #9dafb7;
+}
+
+.wl_container .questions > p > label {//question
+	display: block;
+	font-weight: bold;
+}
+
+.wl_container .questions > p > input, .wl_container .questions > p > textarea {//answer
+	width: 100%;
+	padding: 5px 0px;
+	margin-top: 5px;
+}
+
+.wl_container .questions > p > textarea {
+	height: 65px;
+	max-width: 100%;
+}
+
+
 
 .wl_container .questions > * {
 	padding: 10px 5px;

@@ -16,7 +16,7 @@ $delay: 100ms;
 	padding: 0px;
 	margin: 0px;
 
-	transition: height 500ms $delay ease-in-out, font-size 500ms $delay ease-in-out;
+	transition: height 300ms $delay ease-in-out, font-size 300ms $delay ease-in-out;
 }
 
 .main_header_container a.logo {
@@ -30,7 +30,7 @@ $delay: 100ms;
 
 	display: inline-grid;
 
-	grid-template-columns: 50% 50%;
+	grid-template-columns: 45% 55%;
 	grid-template-rows: auto;
 	align-content: stretch;
 	align-items: center;

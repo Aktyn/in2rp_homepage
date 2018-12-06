@@ -15,7 +15,7 @@ export default class extends React.Component<any, any> {
 					<a href='/forum' className='fancy_button forum'>Forum</a>
 					<a target="_blank" href="https://discord.gg/n2ERxEn"
 						className='fancy_button discord'>Nasz Discord</a>
-					<Link to='/wl' className='fancy_button whitelist'>Whitelist</Link>
+					<Link to='/wl' className='fancy_button whitelist'>Whitelista</Link>
 					<Link to='/rules' className='fancy_button rules'>Regulamin</Link>
 				</section>
 			</Content>
