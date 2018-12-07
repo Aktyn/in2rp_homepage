@@ -7,6 +7,8 @@ var started = false;
 
 const admins = [//discord account ids
 	'204639827193364492',//Aktyn
+	'363604545261142017',//Smerf (Tasma)
+	'272366948371660801'//Neqik
 ];
 
 process.argv.forEach((val) => {

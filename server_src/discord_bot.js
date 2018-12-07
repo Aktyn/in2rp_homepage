@@ -23,6 +23,8 @@ function onLogin() {
 		console.log(member.user);
 	});*/
 
+	// console.log( bot.users );
+
 	bot.on('message', message => {
 		//console.log(message.author);
 		//#9473 - aktyn
