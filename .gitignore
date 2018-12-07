@@ -1,4 +1,4 @@
 .jshintrc
 node_modules/
-xrp_server/
 dist/
+run_dev
