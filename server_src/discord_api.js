@@ -54,6 +54,10 @@ module.exports = {
 
 	getDiscordUserData: getDiscordUserData,
 
+	isAdmin: function(id) {
+		return admins.indexOf(id) !== -1;
+	},
+
 	discord_callback: function(req, res) {
 		//console.log('callback');
 		if (!req.query.code) {

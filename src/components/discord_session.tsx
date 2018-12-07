@@ -183,7 +183,7 @@ const Session = {
 			        },
         			body: JSON.stringify({token: cookie_token})
 				}).then(resp => resp.json()).then((res: SessionResponseJSON) => {
-					console.log(res);
+					// console.log(res);
 
 					if(res.result !== 'SUCCESS') {
 						Cookies.removeCookie('discord_token');

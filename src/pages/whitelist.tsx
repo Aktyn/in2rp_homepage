@@ -153,7 +153,7 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 	        },
 			body: JSON.stringify({token: cookie_token})
 		}).then(res => res.json()).then(res => {
-			console.log(res);
+			// console.log(res);
 			if(res.result !== 'SUCCESS')
 				this.setState({status: STATE.UNAUTHORIZED});
 			else {
@@ -162,6 +162,7 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 						WhitelistClass.cached_wl_status = WL_STATUS.NOTHING;
 						break;
 					case null:
+					case 'pending':
 						WhitelistClass.cached_wl_status = WL_STATUS.PENDING;
 						break;
 					case 'accepted':
@@ -189,10 +190,16 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 			content = <div>Twoje podanie oczekuje na rozpatrzenie.<br/>Zostaniesz poinformowany o decyzji zarządu poprzez prywatną wiadomość na discordzie.</div>;
 		}
 		else if(this.state.wl_status === WL_STATUS.ACCEPTED) {
-			content = <div>TODO - accepted</div>;
+			content = <React.Fragment>
+				<div>Twoje podanie zostało zaakceptowane.</div>
+				<div className='accepted_icon'>&#x2714;</div>
+			</React.Fragment>;
 		}
 		else if(this.state.wl_status === WL_STATUS.REJECTED) {
-			content = <div>TODO - rejected</div>;
+			content = <React.Fragment>
+				<div>Twoje podanie zostało odrzucone.</div>
+				<div className='rejected_icon'>&#x2717;</div>
+			</React.Fragment>;
 		}
 		else {
 			const q_data = Config.WHITELIST_QUESTIONS;
@@ -236,7 +243,7 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 			</React.Fragment>;
 		}
 
-		return <div className='wl_container'>
+		return <div className='wl_container container'>
 			<h2>Witaj&nbsp;
 				<span className='user_nick'>
 					{this.state.discord_nick}

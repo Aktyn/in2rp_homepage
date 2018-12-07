@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render } from 'react-dom';
-import { BrowserRouter, Route/*, Redirect*/ } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import './styles/normalize.css';
 import './styles/main.scss';
@@ -14,16 +14,21 @@ import Whitelist from './pages/whitelist';
 import Rules from './pages/rules';
 import DiscordLogin from './pages/discord_login';
 import WlRequests from './pages/wl_requests';
+import NotFound from './pages/not_found';
 
-render(//<Redirect to="/" />
+render(//
     <BrowserRouter>
     	<Layout>
-    		<Route path="/" exact component={Home} />
-    		
-    		<Route path='/login_result' component={DiscordLogin} />
-    		<Route path='/wl' component={Whitelist} />
-    		<Route path='/rules' component={Rules} />
-    		<Route path='/wl_requests' component={WlRequests} />
+    		<Switch>
+	    		<Route path="/" exact component={Home} />
+	    		
+	    		<Route path='/login_result' component={DiscordLogin} />
+	    		<Route path='/wl' component={Whitelist} />
+	    		<Route path='/rules' component={Rules} />
+	    		<Route path='/wl_requests' component={WlRequests} />
+
+	    		<Route component={NotFound} />
+    		</Switch>
     	</Layout>
   	</BrowserRouter>,
     document.getElementById('page'),

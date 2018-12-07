@@ -1,3 +1,5 @@
+/* jshint multistr:true */
+
 const MySQL = require('mysql');
 var prompt = require('prompt-sync')();
 
@@ -54,8 +56,8 @@ connection.connect((err) => {
 		connection_callback();
 });
 
-const UTILS = {
-	currentTime: function() {
+const Utils = {
+	/*currentTime: function() {
 		let date = new Date();
 		let m = date.getUTCMonth() + 1;
 		let d = date.getDate();
@@ -66,10 +68,16 @@ const UTILS = {
 			(d < 10 ? ('0' + d) : d) + ' ' +
 			(hours < 10 ? ('0' + hours) : hours) + ':' + 
 			(mins < 10 ? ('0' + mins) : mins);
-	}
+	},*/
+
+	//data_ur excluded due to short length
+	QUESTION_NAMES: ['o_rp', 'dosw', 'postacie', 'czy_stream', 
+		'Q1_jps', 'Q2_uc', 'Q3_napad', 'Q4_koledzy', 'Q5_pg', 'Q6_wu', ]
 };
 
 module.exports = {
+	QUESTION_NAMES: Utils.QUESTION_NAMES,
+
 	onConnected: function(callback) {
 		if(status === STATUS.SUCCESS)
 			callback();
@@ -94,31 +102,30 @@ module.exports = {
 	},
 
 	init: function() {
-		const QUESTION_NAMES = ['o_rp', 'dosw', 'postacie', 'czy_stream', 
-			'Q1_jps', 'Q2_uc', 'Q3_napad', 'Q4_koledzy', 'Q5_pg', 'Q6_wu', ];
+		
 		this.customQuery(
-			'CREATE TABLE IF NOT EXISTS `Whitelist`.`requests` (\
+			"CREATE TABLE IF NOT EXISTS `Whitelist`.`requests` (\
 			  	`id` INT(16) NOT NULL AUTO_INCREMENT,\
-			  	`status` VARCHAR(16) NULL,\
+			  	`status` VARCHAR(16) NOT NULL DEFAULT 'pending',\
 			  	`timestamp` VARCHAR(16) NOT NULL,\
 			  	`discord_nick` VARCHAR(128) NOT NULL,\
 			  	`discord_discriminator` INT(6) NOT NULL,\
 			  	`discord_id` VARCHAR(32) NOT NULL,\
-			  	`data_ur` VARCHAR(16) NULL,' + QUESTION_NAMES.map(q => {
-			  		return '`' + q + '` VARCHAR(512) NULL, ';
+			  	`data_ur` VARCHAR(16) NULL," + Utils.QUESTION_NAMES.map(q => {
+			  		return "`" + q + "` VARCHAR(512) NULL, ";
 			  	}).join('') +
-		  		'PRIMARY KEY (`id`),\
-		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));'
+		  		"PRIMARY KEY (`id`),\
+		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
 	  	);
 	},
 
 	addWhitelistRequest: function(answers, username, discriminator, id) {
 		var answer_keys = Object.keys(answers);
 		var columns_names = answer_keys.map(key => {
-			return "`" + key + "`";
+			return "`" + encodeURIComponent(key) + "`";
 		}).join(', ');
 		var column_values = answer_keys.map(key => {
-			return "'" + answers[key] + "'";
+			return "'" + encodeURIComponent(answers[key]) + "'";
 		}).join(', ');
 
 		return this.customQuery("INSERT INTO `Whitelist`.`requests`\
@@ -130,5 +137,20 @@ module.exports = {
 
 	getWhitelistRequest: function(id) {
 		return this.customQuery("SELECT * FROM `Whitelist`.`requests` WHERE `discord_id` = '"+id+"';");
+	},
+
+	getRequests: function(status) {//1000*60*60*24 = 86400000 => miliseconds in one day
+		return this.customQuery("SELECT * FROM `Whitelist`.`requests`\
+			WHERE `status`='" + status + "' AND ((UNIX_TIMESTAMP()*1000 - `timestamp`)/86400000) < 7\
+			ORDER BY `timestamp` DESC LIMIT 100;");
+	},
+
+	changeStatus: function(id, new_status) {
+		return this.customQuery("UPDATE `Whitelist`.`requests` SET `status`='" + new_status + "'\
+			WHERE `id`=" + id + ";");
+	},
+
+	getUserDiscordID: function(id) {
+		return this.customQuery("SELECT discord_id FROM Whitelist.requests WHERE id=" + id + ";");
 	}
 };
