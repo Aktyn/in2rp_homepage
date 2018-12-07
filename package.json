@@ -9,7 +9,7 @@
     "publish": "rm -rf dist && NODE_ENV='production' webpack --config ./webpack.config.js -p",
 
     "dev": "NODE_ENV=dev nodemon --watch server_src/**/* server_src/index.js",
-    "server": "NODE_ENV=prod node src/index.js"
+    "server": "NODE_ENV=prod node server_src/index.js"
   },
   "author": "Aktyn",
   "license": "UNLICENSED",
