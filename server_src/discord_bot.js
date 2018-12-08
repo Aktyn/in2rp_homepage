@@ -4,7 +4,6 @@ var TOKEN = null;
 var started = false;
 
 process.argv.forEach((val) => {
-	//console.log('x', val);
 	if(val.startsWith('TOKEN='))
 		TOKEN = val.replace('TOKEN=', '');
 });
@@ -23,7 +22,7 @@ function onLogin() {
 		console.log(member.user);
 	});*/
 
-	// console.log( bot.users );
+	// console.log( bot.channels.get('516321132656197661') );
 
 	bot.on('message', message => {
 		//console.log(message.author);
@@ -60,5 +59,12 @@ module.exports = {
 	sendPrivateMessage: function(user_id, message) {
 		if(started)
 			bot.users.get(user_id).send(message);
+	},
+
+	//💬zarzad, id: 520748695059300383
+	//whitelist, id: 516321132656197661
+	sendChannelMessage: function(channel_id, message) {
+		if(started)
+			bot.channels.get(channel_id).send(message);
 	}
 };

@@ -14,6 +14,8 @@ const Database = require('./database.js');
 const discordBot = require('./discord_bot.js');
 discordBot.start();
 
+// setTimeout(() => discordBot.sendChannelMessage('520748695059300383', 'test'), 5000);
+
 // console.log('ENV:', process.env.NODE_ENV);
 
 var allowCrossDomain = function(req, res, next) {

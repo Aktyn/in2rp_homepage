@@ -26,8 +26,9 @@ module.exports = {
 		//console.log(insert_res);
 		if(insert_res.affectedRows > 0) {
 			res.json({result: 'SUCCESS'});
-			discordBot.sendPrivateMessage('204639827193364492', //<@519130104073289769>
-				`<@${response.id}> właśnie zlożył podanie o whiteliste`);
+			let msg = `<@${response.id}> właśnie zlożył podanie o whiteliste.`;
+			discordBot.sendPrivateMessage('204639827193364492', msg);
+			discordBot.sendChannelMessage('520748695059300383', msg)
 			// response.username+'#'+response.discriminator + ' właśnie zlożył podanie o whiteliste');
 		}
 		else
