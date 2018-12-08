@@ -93,7 +93,7 @@ export default function(props: any) {
 		9.5 Podczas wykonywania prac legalnych masz obowiązek wynajęcia pojazdu firmowego.<br/>
 		9.6 Napastowanie kobiet oraz używanie animacji z kategorii +18 bez zgody obywatelki jest zakazane.</p> 
 
-		<ol style={{listStyleType: 'decimal'}} start={1}><li>Administratorzy</li></ol>
+		<ol style={{listStyleType: 'decimal'}} start={10}><li>Administratorzy</li></ol>
 
 		<p>10.1 Administrator nie ma obowiązku odpowiadanie na wiadomości wysłane na PW na jakiejkolwiek platformie. Istnieje od tego odpowiedni dział na discordzie. (Wyjątek stanowi forum, lecz błachostki też tam będą ignorowane)<br/>
 		10.2 Kiedy adminisrator będzie musiał interweniować w jakiejś akcji, zostaje ona wstrzymana.<br/>

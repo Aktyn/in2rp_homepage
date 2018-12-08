@@ -30,6 +30,7 @@ $delay: 50ms;
 	box-sizing: border-box;
 
 	position: relative;
+	z-index: 5;
 	overflow: hidden;
 
 	@media screen and (max-width: $max_w1) {
@@ -156,6 +157,20 @@ $delay: 50ms;
 	} 50% { 
 		transform: scale(1.0);
 	}
+}
+
+.shake_icon:hover {
+	animation: shk-rot 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shk-rot {
+	10%, 90% { transform: rotate(-2deg); }
+
+	20%, 80% { transform: rotate(4deg); }
+
+	30%, 50%, 70% { transform: rotate(-8deg); }
+
+	40%, 60% { transform: rotate(8deg); }
 }
 
 /* PAGE BLOCK CONTAINER WHITE */

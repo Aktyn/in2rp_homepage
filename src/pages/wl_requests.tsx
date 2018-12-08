@@ -157,7 +157,7 @@ export default class extends React.Component<any, WlRequestsState> {
 		this.setState({focused: undefined});
 	}
 
-	renderDataHeader(data: WlRequestDataJSON, closer?: JSX.Element) {
+	renderDataHeader(data: WlRequestDataJSON, closer?: JSX.Element, h1_border_color?: string) {
 		var creation_date = new Date(parseInt(data.timestamp)).toLocaleString()
 			.replace(/(:[0-9]{2}$)|,/gi, '');
 		var age = (() => {
@@ -177,7 +177,7 @@ export default class extends React.Component<any, WlRequestsState> {
 			}
 		})();
 
-		return <h1>
+		return <h1 style={{borderColor: h1_border_color}}>
 			<span className='creation_date'>{creation_date}</span>
 			<span className='nick'>{data.nick + '#' + data.discriminator}</span>
 			<span className='age'>
@@ -214,8 +214,10 @@ export default class extends React.Component<any, WlRequestsState> {
 		return <div className='user_wl_focused'>
 			{this.renderDataHeader(
 				this.state.focused, 
-				<button className='closer clean' 
-					onClick={this.closeFocused.bind(this)}>&times;</button>
+				<button className='closer clean shake_icon' 
+					onClick={this.closeFocused.bind(this)}></button>,
+				this.state.current_cat === CATEGORIES.PENDING ? '#42A5F5' : 
+					(this.state.current_cat === CATEGORIES.ACCEPTED ? '#8BC34A' : '#ef5350')
 			)}
 			<div className='QandA'>
 				{Object.keys(q_data).map((key, id) => 
