@@ -58,13 +58,15 @@ module.exports = {
 
 	sendPrivateMessage: function(user_id, message) {
 		if(started)
-			bot.users.get(user_id).send(message);
+			return bot.users.get(user_id).send(message);
+		return undefined;
 	},
 
 	//💬zarzad, id: 520748695059300383
 	//whitelist, id: 516321132656197661
 	sendChannelMessage: function(channel_id, message) {
 		if(started)
-			bot.channels.get(channel_id).send(message);
+			return bot.channels.get(channel_id).send(message);
+		return undefined;
 	}
 };

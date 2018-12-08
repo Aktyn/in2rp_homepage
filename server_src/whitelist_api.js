@@ -27,7 +27,7 @@ module.exports = {
 		if(insert_res.affectedRows > 0) {
 			res.json({result: 'SUCCESS'});
 			let msg = `<@${response.id}> właśnie zlożył podanie o whiteliste.`;
-			discordBot.sendPrivateMessage('204639827193364492', msg);
+			// discordBot.sendPrivateMessage('204639827193364492', msg);
 			discordBot.sendChannelMessage('520748695059300383', msg)
 			// response.username+'#'+response.discriminator + ' właśnie zlożył podanie o whiteliste');
 		}
@@ -112,9 +112,9 @@ module.exports = {
 		//setTimeout(() => {//TODO - asynchronosly deal with discord bot sending message to user
 			var new_status;
 			if(req.body.requested_status === 'accepted')
-				new_status = 'zaakceptowane';
+				new_status = `zaakceptowane. Zapraszamy na rozmowę, w której sprawdzimy twoją znajomość regulaminu. <#516321132656197661>`;
 			else if(req.body.requested_status === 'rejected')
-				new_status = 'odrzucone';
+				new_status = 'odrzucone.';
 			else
 				return;
 
@@ -122,7 +122,7 @@ module.exports = {
 
 			if(target_user_discord_id.length > 0) {
 				discordBot.sendPrivateMessage(target_user_discord_id[0].discord_id,
-					`Witaj. Twoje podanie o whiteliste zostało właśnie ${new_status}.`);
+					`Witaj. Twoje podanie o whiteliste zostało właśnie ${new_status}`);
 			}
 		//});
 	}
