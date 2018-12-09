@@ -8,9 +8,9 @@ const entries = [//only letters and spaces
 	'metamorfoza',
 	'urwiesz mi od internetu',
 	'zwierzchnictwo',
-	'prześladowanie',
+	//'prześladowanie',
 	'antyterrorysta',
-	'dźwiękonaśladownictwo',
+	//'dźwiękonaśladownictwo',
 	'antykoncepcja',
 	'kolorowanka',
 	'luminescencja',
@@ -20,7 +20,7 @@ const entries = [//only letters and spaces
 	'magnetoelektryczny',
 	'malkontenctwo',
 	'primaaprilisowy',
-	'pięćdziesięciogroszówka',
+	//'pięćdziesięciogroszówka',
 	'anatomopatologiczny',
 	'deoksyrybonukleinowy',
 ];
@@ -60,7 +60,7 @@ export default class HangmanClass {
 	}
 
 	tryAnswerOrLetter(input: string): number {
-		if(input.replace(/[^a-z ]/gi, '') !== input)
+		if(input.replace(/[^a-z ąęśćółżźń]/gi, '') !== input)
 			return HangmanClass.RESULT.wrong_input;
 		input = input.toUpperCase();
 		if(this.guesses_history.has(input))
