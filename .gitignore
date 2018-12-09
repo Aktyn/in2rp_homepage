@@ -1,5 +1,6 @@
 .jshintrc
 node_modules/
 dist/
+server_dist/
 run_dev
 logs/
