@@ -1,16 +1,16 @@
 /* jshint multistr:true */
 
-const MySQL = require('mysql');
+import * as MySQL from 'mysql';
 var prompt = require('prompt-sync')();
 
-const STATUS = {//TODO - convert to javascript
+const STATUS = {
     ERROR: 0,
     PENDING: 1,
     SUCCESS: 2
 };
 
 var status = STATUS.PENDING;
-var connection_callback;
+var connection_callback: (() => void) | undefined = undefined;
 
 var mysql_login = process.env.npm_config_mysqllogin;
 if(!mysql_login) {
@@ -57,34 +57,21 @@ connection.connect((err) => {
 });
 
 const Utils = {
-	/*currentTime: function() {
-		let date = new Date();
-		let m = date.getUTCMonth() + 1;
-		let d = date.getDate();
-		let mins = date.getMinutes();
-		let hours = date.getHours();
-		return date.getFullYear() + '-' + 
-			(m < 10 ? ('0' + m) : m) + '-' + 
-			(d < 10 ? ('0' + d) : d) + ' ' +
-			(hours < 10 ? ('0' + hours) : hours) + ':' + 
-			(mins < 10 ? ('0' + mins) : mins);
-	},*/
-
 	//data_ur excluded due to short length
 	QUESTION_NAMES: ['o_rp', 'dosw', 'postacie', 'czy_stream', 
 		'Q1_jps', 'Q2_uc', 'Q3_napad', 'Q4_koledzy', 'Q5_pg', 'Q6_wu', ]
 };
 
-module.exports = {
+const self = {
 	QUESTION_NAMES: Utils.QUESTION_NAMES,
 
-	onConnected: function(callback) {
+	onConnected: function(callback: () => void) {
 		if(status === STATUS.SUCCESS)
 			callback();
 		else
 			connection_callback = callback;
 	},
-	customQuery: function(query) {
+	customQuery: function(query: string): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if(status === STATUS.PENDING)
 				setTimeout(() => self.customQuery(query).then(resolve).catch(reject), 1000);
@@ -102,7 +89,6 @@ module.exports = {
 	},
 
 	init: function() {
-		
 		this.customQuery(
 			"CREATE TABLE IF NOT EXISTS `Whitelist`.`requests` (\
 			  	`id` INT(16) NOT NULL AUTO_INCREMENT,\
@@ -119,7 +105,9 @@ module.exports = {
 	  	);
 	},
 
-	addWhitelistRequest: function(answers, username, discriminator, id) {
+	addWhitelistRequest: function(answers: {[index: string]: string}, username: string, 
+		discriminator: number, id: string) 
+	{
 		var answer_keys = Object.keys(answers);
 		var columns_names = answer_keys.map(key => {
 			return "`" + encodeURIComponent(key) + "`";
@@ -135,22 +123,24 @@ module.exports = {
 		);
 	},
 
-	getWhitelistRequest: function(id) {
+	getWhitelistRequest: function(id: string) {
 		return this.customQuery("SELECT * FROM `Whitelist`.`requests` WHERE `discord_id` = '"+id+"';");
 	},
 
-	getRequests: function(status) {//1000*60*60*24 = 86400000 => miliseconds in one day
+	getRequests: function(status: string) {//1000*60*60*24 = 86400000 => miliseconds in one day
 		return this.customQuery("SELECT * FROM `Whitelist`.`requests`\
 			WHERE `status`='" + status + "' AND ((UNIX_TIMESTAMP()*1000 - `timestamp`)/86400000) < 7\
 			ORDER BY `timestamp` DESC LIMIT 100;");
 	},
 
-	changeStatus: function(id, new_status) {
+	changeStatus: function(id: number, new_status: string) {
 		return this.customQuery("UPDATE `Whitelist`.`requests` SET `status`='" + new_status + "'\
 			WHERE `id`=" + id + ";");
 	},
 
-	getUserDiscordID: function(id) {
+	getUserDiscordID: function(id: number) {
 		return this.customQuery("SELECT discord_id FROM Whitelist.requests WHERE id=" + id + ";");
 	}
 };
+
+export default self;

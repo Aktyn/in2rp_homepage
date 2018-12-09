@@ -24,9 +24,16 @@ export default class extends React.Component<any, FooterState> {
 
 	render() {//TODO - change icon to close when showing github page
 		return <div className='footer'>
+			<div className='waves_container'>
+				<div></div>
+				<div></div>
+				<div></div>
+			</div>
 			<section style={{width: '100%'}}>
-				<article>{Config.long_description}</article>
-				<article>{Config.contacs}</article>
+				<div className='footer_bg_clipped'>
+					<article>{Config.long_description}</article>
+					<article>{Config.contacs}</article>
+				</div>
 			</section>
 			<div className='footer_bottom'>
 				{this.state.revealed ? 

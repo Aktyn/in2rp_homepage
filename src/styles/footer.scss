@@ -2,7 +2,7 @@ $max_w1: 768px;
 $discord_user_height: 30px;
 
 .footer {
-	background-color: #37474F;
+	// background-color: #37474F;
 	text-align: left;
 	color: #94aeb3;
 
@@ -11,9 +11,17 @@ $discord_user_height: 30px;
 	}
 }
 
+.footer .footer_bg_clipped {
+	background-color: #37474F;
+	// @media screen and (min-width: 900px) {
+		// clip-path: polygon(0px 0px, 650px 0px, 875px 100%, 0px 100%);
+	// }
+}
+
 .footer article {
 	text-align: left;
 	padding: 10px 30px;
+	padding-top: 0px;
 	display: inline-block;
 	font-size: 14px;
 	
@@ -98,4 +106,67 @@ $discord_user_height: 30px;
 
 .footer_bottom .more_icon:hover, .footer_bottom .close_icon:hover {
 	opacity: 1;
+}
+
+/* WAVES EFFECT */
+@media screen and (min-width: $max_w1) {
+	.footer .waves_container {
+		height: 66px;
+		position: relative;
+		overflow: hidden;
+		// background-color: blue;
+	}
+
+	.footer .waves_container > * {
+		height: 100%;
+		width: 200%;
+
+		position: absolute;
+		left: 0px;
+		right: 0px;
+		margin: auto;
+		bottom: 0px;
+
+		background-repeat: repeat;
+		background-size: auto 100%;
+		// background-size: auto 100%;
+
+		background-position: bottom;
+		transform-origin: center bottom;
+		// background-color: #37474F;
+	}
+
+	@for $i from 1 through 3 {
+		.footer .waves_container > *:nth-child(#{$i}) {
+	    	$ext: svg;
+	    	$index: $i;
+	    	@if $i == 1 {
+	    		$index: 2;
+	    	}
+
+	    	// -webkit-mask-box-image: url(./../img/wave#{$index}.#{$ext});
+	    	background-image: url(./../img/wave#{$index}.#{$ext});
+	    	opacity: #{1 - ($i - 1)/4};
+
+	    	$dir: alternate;
+	    	@if $i == 2 {
+	    		$dir: alternate-reverse;
+	    	}
+
+	    	animation: anim_wave #{$i*7 + 10}s ease-in-out infinite $dir;
+	    	z-index: #{5 - $i};
+		}
+	}
+
+	@keyframes anim_wave {
+	    0% {
+	        transform: translateX(0) translateZ(0) scaleY(1);
+	    }
+	    50% {
+	        transform: translateX(-25%) translateZ(0) scaleY(0.55);
+	    }
+	    100% {
+	        transform: translateX(-50%) translateZ(0) scaleY(1);
+	    }
+	}
 }

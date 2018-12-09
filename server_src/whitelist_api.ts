@@ -1,10 +1,10 @@
-const discordAPI = require('./discord_api.js');
-const Database = require('./database.js');
-const discordBot = require('./discord_bot.js');
+import discordAPI from './discord_api';
+import discordBot from './discord_bot';
+import Database from './database';
+import LOG from './log';
 
-/* jshint ignore: start */
-module.exports = {
-	async apply_request(req, res) {
+export default {
+	async apply_request(req: any, res: any) {
 		//console.log(req.body);
 
 		var response = await discordAPI.getDiscordUserData(req.body.token);
@@ -27,15 +27,22 @@ module.exports = {
 		if(insert_res.affectedRows > 0) {
 			res.json({result: 'SUCCESS'});
 			let msg = `<@${response.id}> właśnie zlożył podanie o whiteliste.`;
-			// discordBot.sendPrivateMessage('204639827193364492', msg);
-			discordBot.sendChannelMessage('520748695059300383', msg)
-			// response.username+'#'+response.discriminator + ' właśnie zlożył podanie o whiteliste');
+			LOG(msg);
+			try {
+				discordBot.sendChannelMessage('520748695059300383', msg).catch((e: Error) => {
+					console.log('Cannot send message to channel 520748695059300383');
+					discordBot.sendChannelMessage('516321132656197661', 'test')
+				});
+			}
+			catch(e) {
+				console.error('Sending channel message failed:', e);
+			}
 		}
 		else
 			res.json({result: 'DATABASE_ERROR'});
 	},
 
-	async status_request(req, res) {
+	async status_request(req: any, res: any) {
 		var response = await discordAPI.getDiscordUserData(req.body.token);
 
 		if(response.code === 0) {
@@ -52,7 +59,7 @@ module.exports = {
 			res.json({result: 'SUCCESS', status: 'nothing'});
 	},
 
-	async applicants_request(req, res) {
+	async applicants_request(req: any, res: any) {
 		var response = await discordAPI.getDiscordUserData(req.body.token);
 
 		if(response.code === 0)
@@ -69,10 +76,20 @@ module.exports = {
 		//console.log(select_res);
 		// console.log(req.body);
 
-		var data = [];
+		interface WL_APP_DATA_SCHEMA {
+			id: number;
+			timestamp: string;
+			nick: string;
+			discriminator: number;
+			data_ur: string;
 
-		select_res.forEach(res => {
-			var wl_app_data = {
+			[index: string]: any;
+		}
+
+		var data: WL_APP_DATA_SCHEMA[] = [];
+
+		select_res.forEach((res: WL_APP_DATA_SCHEMA) => {
+			var wl_app_data: WL_APP_DATA_SCHEMA = {
 				id: res.id,
 				timestamp: res.timestamp,
 				nick: res.discord_nick,
@@ -90,7 +107,7 @@ module.exports = {
 		res.json({result: 'SUCCESS', data: data});
 	},
 
-	async update_request(req, res) {
+	async update_request(req: any, res: any) {
 		var response = await discordAPI.getDiscordUserData(req.body.token);
 
 		if(response.code === 0)
@@ -98,8 +115,11 @@ module.exports = {
 
 		//console.log(response);
 
-		if(discordAPI.isAdmin(response.id) === false)
+		if(discordAPI.isAdmin(response.id) === false) {
+			LOG('Someone without permissions trying to accept/reject whitelist request:',
+				response.id, response.username);
 			return res.json({ result: 'INSUFICIENT_PERMISSIONS' });
+		}
 
 		var update_res = await Database.changeStatus(req.body.id, req.body.requested_status);
 
@@ -109,7 +129,7 @@ module.exports = {
 
 		res.json({result: 'SUCCESS'});
 
-		//setTimeout(() => {//TODO - asynchronosly deal with discord bot sending message to user
+		setTimeout(async () => {//asynchronosly deal with discord bot sending message to user
 			var new_status;
 			if(req.body.requested_status === 'accepted')
 				new_status = `zaakceptowane. Zapraszamy na rozmowę, w której sprawdzimy twoją znajomość regulaminu. <#516321132656197661>`;
@@ -121,10 +141,16 @@ module.exports = {
 			var target_user_discord_id = await Database.getUserDiscordID(req.body.id);
 
 			if(target_user_discord_id.length > 0) {
-				discordBot.sendPrivateMessage(target_user_discord_id[0].discord_id,
-					`Witaj. Twoje podanie o whiteliste zostało właśnie ${new_status}`);
+				try {
+					LOG('User', response.username, response.id, 'changed whitelist request status to',
+						req.body.requested_status, 'for user', target_user_discord_id[0].discord_id);
+					discordBot.sendPrivateMessage(target_user_discord_id[0].discord_id,
+						`Witaj. Twoje podanie o whiteliste zostało właśnie ${new_status}`);
+				}
+				catch(e) {
+					console.log('Cannot send private message to', target_user_discord_id[0].discord_id);
+				}
 			}
-		//});
+		});
 	}
 };
-/* jshint ignore: end */

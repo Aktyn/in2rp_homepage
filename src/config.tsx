@@ -10,20 +10,21 @@ export default {
 	api_server_url: process.env.NODE_ENV === 'development' ? 
 		'http://localhost:1234' : 
 		'http://54.37.128.46',
+
 	short_description: <span>Polski serwer Role&nbsp;Play<br />Grand Theft Auto V</span>,
+
 	long_description: <React.Fragment>
 		<h4>Zapraszamy do wspólnej gry</h4>
-		<h4>Znajdziesz u nas atrakcje takie jak:</h4>
+		<h4>Oferujemy:</h4>
 		<ul>
-			<li>TODO1</li>
-			<li>TODO2</li>
-			<li>TODO3</li>
+			<li>Dużo dobrej zabawy</li>
 		</ul>
 	</React.Fragment>,
+
 	contacs: <React.Fragment>
 		<h4>Pytania odnośnie serwera możesz kierować do:</h4>
 		<div>
-			<span className='discord_user'>TODO</span>
+			<span className='discord_user'>Smerf (Taśma)#9722</span>
 		</div>
 		<h4>Pytania odnośnie strony:</h4>
 		<div>

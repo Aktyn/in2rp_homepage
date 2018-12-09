@@ -1,9 +1,10 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
+// import btoa from 'btoa';
 const btoa = require('btoa');
+import LOG from './log';
 
-var CLIENT_ID = null;
-var SECRET_KEY = null;
-var started = false;
+var CLIENT_ID: string | null = null;
+var SECRET_KEY: string | null = null;
 
 const admins = [//discord account ids
 	'204639827193364492',//Aktyn
@@ -13,7 +14,6 @@ const admins = [//discord account ids
 ];
 
 process.argv.forEach((val) => {
-	//console.log('x', val);
 	if(val.startsWith('CLIENT_ID'))
 		CLIENT_ID = val.replace('CLIENT_ID=', '');
 	else if(val.startsWith('SECRET_KEY'))
@@ -25,9 +25,9 @@ if(!SECRET_KEY)
 if(!CLIENT_ID)
 	throw new Error('You must specify bot CLIENT_ID as argument: CLIENT_ID=VALUE');
 
-var redirect;
-var client_port;
-var final_redirect;
+var redirect: string;
+var client_port: number;
+var final_redirect: string;
 
 if(process.env.NODE_ENV === 'dev') {
 	redirect = encodeURIComponent(`http://localhost:${global.PORT}/discord_callback`);
@@ -42,42 +42,49 @@ else {
 	final_redirect = `http://54.37.128.46/login_result`;
 }
 
-function getDiscordUserData(token) {
+interface DiscordUserJSON {
+	code: number;
+	message: string;
+	id: string;
+	username: string;
+	discriminator: number;
+}
+
+function getDiscordUserData(token: string): Promise<DiscordUserJSON> {
 	return fetch('http://discordapp.com/api/users/@me', {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		}
-	}).then(response => response.json());
+	}).then((response) => response.json());
 }
 
-module.exports = {
-	login_request: function(req, res) {
+export default {
+	login_request: function(req: any, res: any) {
 		res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirect}&response_type=code&scope=identify`);
 	},
 
 	getDiscordUserData: getDiscordUserData,
 
-	isAdmin: function(id) {
+	isAdmin: function(id: string) {
 		return admins.indexOf(id) !== -1;
 	},
 
-	discord_callback: function(req, res) {
-		//console.log('callback');
+	discord_callback: function(req: any, res: any) {
 		if (!req.query.code) {
 			console.error('NoCodeProvided');
 			res.redirect(final_redirect + `?success=false`);
 		}
-		//console.log(req.query.code);
+		
 		const code = req.query.code;
 		const creds = btoa(`${CLIENT_ID}:${SECRET_KEY}`);
-		//const response = await 
-		fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect}`, {//TODO - use different redirect for this fetch
+
+		fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect}`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Basic ${creds}`,
 			},
-		/* jshint ignore:start */
-		}).then(res => res.json()).then(async (json) => {
+		
+		}).then((res) => res.json()).then(async (json) => {
 			try {
 				var response = await getDiscordUserData(json.access_token);
 				if(response.code === 0)
@@ -85,13 +92,15 @@ module.exports = {
 				console.log('User logged in:', response.username + '#' + response.discriminator, 'id:',
 					response.id);
 				let is_admin = admins.indexOf(response.id) !== -1;
+				LOG('User logged in:', response.username + '#' + response.discriminator, 'id:',
+					response.id, 'admin:', is_admin);
 				res.redirect(final_redirect + `?success=true&token=${json.access_token}?user=${response.username}#${response.discriminator}?admin=${is_admin}`);
 			}
 			catch(e) {
 				console.error(e);
 				res.redirect(final_redirect + `?success=false`);
 			}
-		/* jshint ignore:end */
+		
 			//res.redirect(final_redirect + `?success=true&token=${json.access_token}`);
 		}).catch((e) => {
 			console.error(e);
@@ -100,26 +109,27 @@ module.exports = {
 			res.redirect(final_redirect + `?success=false`);
 		});
 	},
-
-	/* jshint ignore:start */
-	restore_session: async function(req, res) {
+	
+	restore_session: async function(req: any, res: any) {
 		try {
+			var ip = req.connection.remoteAddress.replace(/::ffff:/, '');
+
 			if(typeof req.body.token !== 'string') {
 				res.status(400);
-				res.json({result: 'You must provide token in body request'});
+				LOG('guest session', ip);
+				return res.json({result: 'You must provide token in body request'});
 			}
 			
 			var response = await getDiscordUserData(req.body.token);
 
-			// console.log(response.id, typeof response.id);
-			//console.log(req.body.token);
-
 			if(response.code === 0) {
+				LOG('client session expired or discord denied access', ip);
 				res.json({
 					result: response.message
 				});
 			}
 			else {
+				LOG('client session', response.username, response.id, ip);
 				res.json({
 					result: 'SUCCESS',
 					nick: response.username, 
@@ -134,5 +144,4 @@ module.exports = {
 			res.json({result: e.message});
 		}
 	}
-	/* jshint ignore:end */
 };
