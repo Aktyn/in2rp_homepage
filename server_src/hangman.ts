@@ -8,9 +8,8 @@ const entries = [//only letters and spaces
 	'metamorfoza',
 	'urwiesz mi od internetu',
 	'zwierzchnictwo',
-	//'prześladowanie',
 	'antyterrorysta',
-	//'dźwiękonaśladownictwo',
+	'dźwiękonaśladownictwo',
 	'antykoncepcja',
 	'kolorowanka',
 	'luminescencja',
@@ -20,7 +19,7 @@ const entries = [//only letters and spaces
 	'magnetoelektryczny',
 	'malkontenctwo',
 	'primaaprilisowy',
-	//'pięćdziesięciogroszówka',
+	
 	'anatomopatologiczny',
 	'deoksyrybonukleinowy',
 ];
@@ -40,9 +39,13 @@ export default class HangmanClass {
 
 	private guesses_history: Set<string> = new Set();
 
+	public timestamp: number;
+
 	constructor() {
+		this.timestamp = Date.now();
+
 		this.target_entry = entries[ (Math.random() * entries.length)|0 ].toUpperCase();
-		this.user_guess = this.target_entry.replace(/[A-Z]/gi, '-');
+		this.user_guess = this.target_entry.replace(/[a-ząęśćółżźń]/gi, '-');
 
 		this.remaining_tries = 8;
 	}

@@ -1,4 +1,3 @@
-// const Discord = require("discord.js");
 import * as Discord from 'discord.js';
 import LOG from './log';
 
@@ -46,7 +45,9 @@ function onLogin() {
 	// console.log( bot.channels.get('516321132656197661') );
 
 	bot.on('message', message => {
-		if(!message.author || message.author.bot)
+		//console.log(message.channel.type);
+		//return;
+		if(!message.author || message.author.bot || message.channel.type !== 'dm')
 			return;
 
 	    if(message.content.startsWith('!')) {//command
@@ -72,18 +73,27 @@ function onLogin() {
 		        	answerToMsg(message.author, `Zgaduj litery pisząc je do mnie (pojedyńczo), lub spróbuj zgadnąć hasło wpisując je w całości.\nPozostało szans: ${game.getRemainingTries()}\n\`${game.getUserGuess()}\``);
 		        	break;
 		        case 'koniec':
+		        	if(games.find(g => g.id === message.author.id) === undefined)
+		        		answerToMsg(message.author, 'Nie ma żadnej gry, którą można by zakończyć.');
+		        	else
+		        		answerToMsg(message.author, 'Fajnie się grało. Może jeszcze będzie okazja.');
 		        	removeGame(message.author.id);
-		        	answerToMsg(message.author, 'Fajnie się grało. Może jeszcze będzie okazja.');
 		        	break;
 		   	}
 	    }
 	    else {//regular message
 	    	var user_game = games.find(g => g.id === message.author.id);
 	    	
-	    	if(user_game !== undefined) {
-	    		//console.log('xx');
+	    	if(user_game === undefined) {
+		    	answerToMsg(message.author, "Cześć. Jestem tylko małomównym botem, chyba że chcesz zagrać w wisielca.\nNapisz do mnie `!wisielec` by zacząć. :wink:");
+		    }
+		    else if(Date.now() - user_game.game.timestamp > 1000 * 60 * 60) {//game expired
+	    		answerToMsg(message.author, `Gra w wisielca wygasła.`);
+	    		removeGame(message.author.id);
+	    	} 
+	    	else {
 	    		var guess_res = user_game.game.tryAnswerOrLetter(message.content);
-	    		//console.log(guess_res);
+	    		
 	    		switch(guess_res) {
 	    			case Hangman.RESULT.letter_guessed:
 	    				answerToMsg(message.author, `Zgadłeś\n\`${user_game.game.getUserGuess()}\``);
@@ -98,7 +108,7 @@ function onLogin() {
     					}
 	    				break;
     				case Hangman.RESULT.solved:
-    					LOG('Someone won hangman game with discobot:', message.author.username, message.author.id);
+    					LOG('Someone won hangman game with discobot:', message.author.username, message.author.id, user_game.game.getUserGuess());
     					answerToMsg(message.author, `Brawo! :clap:\nOdgadłeś hasło: \`${user_game.game.getUserGuess()}\``);
     					removeGame(message.author.id);
 	    				break;
@@ -110,22 +120,8 @@ function onLogin() {
 	    				break;
 	    		}
 
-	    	}
-	    	else {
-		    	answerToMsg(message.author, "Cześć. Jestem tylko małomównym botem, chyba że chcesz zagrać w wisielca.\nNapisz do mnie `!wisielec` by zacząć. :wink:");
-		    }
+	    	} 
 	    }
-
-	    /*let args = message.content.substring(1).split(' ');
-	    let cmd = args.shift();
-
-	    switch(cmd) {
-	        case 'say':
-	            if(message.author.id === '457479295078760448')
-	                message.channel.send(args.join(' '))
-	                    .then(message.delete());
-	            break;
-	    }*/
 	});
 }
 
