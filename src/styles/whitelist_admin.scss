@@ -1,3 +1,5 @@
+$max_w1: 768px;
+
 .whitelist_admin_main .control_panel {
 	width: 100%;
 }
@@ -73,6 +75,10 @@
 	display: grid;
 	grid-gap: 10px;
 	grid-template-columns: auto auto;
+
+	@media screen and (max-width: $max_w1) {
+		grid-template-columns: auto;
+	}
 }
 
 .user_wl_entries_container > * {//single entry

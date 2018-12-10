@@ -2,6 +2,7 @@ const path = require('path');
 // const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -14,7 +15,7 @@ module.exports = {
         filename: '[name].js',
         path: path.resolve(__dirname, 'dist'),
     },
-    mode: 'development',
+    mode: isDevelopment ? 'development' : 'production',
     devtool: isDevelopment && "source-map",
     devServer: {
         historyApiFallback: true,
@@ -23,6 +24,20 @@ module.exports = {
     },
     resolve: {
         extensions: ['.js', '.json', '.ts', '.tsx'],
+    },
+
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                uglifyOptions: {
+                    output: {
+                        comments: false
+                    },
+                    ie8: false,
+                    toplevel: true
+                }
+            })
+        ]
     },
 
     module: {
@@ -117,5 +132,5 @@ module.exports = {
             template: './src/index.html',
             filename: './index.html'
         })
-      ]
+    ]
 };

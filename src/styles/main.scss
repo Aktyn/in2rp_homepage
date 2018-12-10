@@ -11,16 +11,9 @@ $bg-dark: #455A64;
 
 @import 'scrollbars.scss';
 
-body, html {
+body, html, textarea, input, button {
     padding: 0px;
     margin: 0px;
-
-    // width: 100vw;
-    // display: block;
-    // position: fixed;
-    // left: 0px;
-    // right: 0px;
-    // overflow: auto;
 
     font-family: $body-font;
     -webkit-font-smoothing: antialiased;
@@ -29,16 +22,19 @@ body, html {
     box-sizing: border-box;
     vertical-align: middle;
 
+    text-shadow: 0px 1px 5px #0003;
+}
+
+body, html {
     background-color: $bg-dark;
     color: #fff;
-    text-shadow: 0px 1px 5px #0003;
-
     text-align: center;
 }
 
 a {
     text-decoration: none;
     color: inherit;
+    outline: none;
 }
 
 hr {
@@ -49,12 +45,25 @@ hr {
 }
 
 button.clean {
+    font-size: 100%;
     background-color: #fff;
     border: none;
     outline: none;
     cursor: pointer;
     padding: 0px;
     margin: 0px;
+}
+
+textarea, input {
+    border: 1px solid rgb(169, 169, 169);
+    outline: none;
+    padding: 2px 5px;
+    color: #455a64;
+    font-size: 13px;
+}
+
+textarea:focus, input:focus {
+    border-color: #e57373;
 }
 
 .layout_main {
