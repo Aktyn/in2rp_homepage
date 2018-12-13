@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import Config from '../config';
 
@@ -40,7 +41,10 @@ export default class extends React.Component<any, FooterState> {
 					<a target='_blank' href='https://github.com/Aktyn' style={{
 						color: '#71c1bb'
 					}} className='fader_in'>GitHub autora strony</a> : 
-					<label className='fader_in'>© 2018 Aktyn | All rights reserved</label>}
+					<label className='fader_in'>
+						<Link to='/snake'>©</Link> 2018 Aktyn | All rights reserved
+					</label>
+				}
 				<button onClick={this.switchView.bind(this)} 
 					className={this.state.revealed ? 'clean close_icon' : 'clean more_icon'}></button>
 			</div>

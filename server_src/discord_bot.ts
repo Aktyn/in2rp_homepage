@@ -36,7 +36,10 @@ function answerToMsg(author: Discord.User, message?: string) {
 function onLogin() {
 	console.log('Bot is running');
 
-	// bot.user.setActivity("Pracownia Aktyna");
+	if(process.env.NODE_ENV === 'dev')
+		bot.user.setActivity("Pracownia Aktyna");
+	//else
+	//	bot.user.setActivity("");
 
 	/*bot.on('presenceUpdate', member => {
 		console.log(member.user);

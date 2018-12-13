@@ -23,10 +23,8 @@ class Layout extends React.Component<any, LayoutState> {
 	}
 
 	componentDidUpdate(prevProps: any) {
-		if (this.props.location !== prevProps.location) {//routed
-			//console.log('new path:', this.props.location.pathname);
+		if (this.props.location !== prevProps.location)//routed
 			this.update();
-		}
 	}
 
 	update() {
