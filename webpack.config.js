@@ -126,7 +126,7 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             hash: isDevelopment,
-            favicon: './src/img/in2rpp.png',
+            favicon: './src/img/favicon.png',
             title: 'IN2RP',
             minify: !isDevelopment,
             template: './src/index.html',

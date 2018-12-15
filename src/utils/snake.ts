@@ -65,6 +65,8 @@ function darkenColor(color: string) {//assumption - string starts with #
 
 export default class {
 	private settings = defaultSettings;
+	private onGameOver?: () => void;
+
 	private running = false;
 	private speed = 0;
 	private timer = 0;
@@ -91,10 +93,13 @@ export default class {
 
 	private time_to_next_step: number;
 
-	constructor(canvas: HTMLCanvasElement, user_settings?: Partial<GameSettings>) {
+	constructor(canvas: HTMLCanvasElement, user_settings?: Partial<GameSettings>, onOver?: ()=>void) {
 		this.settings = defaultSettings;
 		if(user_settings)
 			Object.assign(this.settings, user_settings);
+
+		this.onGameOver = onOver;
+
 		this.width = canvas.getBoundingClientRect().width;
 		this.height = canvas.getBoundingClientRect().height;
 
@@ -179,7 +184,8 @@ export default class {
 
 		this.drawText(this.settings.game_over_text);
 
-		//TODO - stage two with discordbot
+		if(this.onGameOver)
+			this.onGameOver();
 	}
 
 	private update(dt: number) {//dt - time since last frame in miliseconds

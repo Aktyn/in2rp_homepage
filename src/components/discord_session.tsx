@@ -80,6 +80,16 @@ function invokeLoginListeners(user: DiscordUserSchema) {
 	login_listeners.forEach(listener => listener.callback(user));
 }
 
+function recordVisit() {
+	fetch(Config.api_server_url + '/record_visit', {
+		method: "POST",
+		mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
+		headers: {
+           "Content-Type": "application/json; charset=utf-8",
+        }
+	}).catch();//ignore any errors here
+}
+
 interface SessionTemplate {
 	Widget: typeof WidgetClass;
 	login(): void;
@@ -172,8 +182,10 @@ const Session = {
 			}
 
 			var cookie_token = Cookies.getCookie('discord_token');
-			if(cookie_token === null)
+			if(cookie_token === null) {
+				recordVisit();
 				resolve(false);
+			}
 			else {//trying to restore session using token from cookies
 				fetch(Config.api_server_url + '/discord_restore_session', {
 					method: "POST",

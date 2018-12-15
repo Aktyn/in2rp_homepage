@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Config from './config';
 
 // import './styles/normalize.css';
 import './styles/main.scss';
@@ -16,6 +17,9 @@ import DiscordLogin from './pages/discord_login';
 import WlRequests from './pages/wl_requests';
 import SnakeGame from './pages/snake_game';
 import NotFound from './pages/not_found';
+
+if(location.hostname !== Config.hostname)
+	location.hostname = Config.hostname;
 
 render(
     <BrowserRouter>

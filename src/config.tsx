@@ -7,9 +7,10 @@ export enum QuestionType {
 }
 
 export default {
+	hostname: process.env.NODE_ENV === 'development' ? 'localhost' : 'in2rp.pl',
 	api_server_url: process.env.NODE_ENV === 'development' ? 
 		'http://localhost:1234' : 
-		'http://54.37.128.46',
+		'http://in2rp.pl',
 
 	short_description: <span>Polski serwer Role&nbsp;Play<br />Grand Theft Auto V</span>,
 
@@ -20,6 +21,11 @@ export default {
 			<li>Dużo dobrej zabawy</li>
 		</ul>
 	</React.Fragment>,
+
+	short_info: <span>
+		Start wkrótce.<br/>
+		Dołącz do naszego discorda by być na bieżąco.
+	</span>,
 
 	contacs: <React.Fragment>
 		<h4>Pytania odnośnie serwera możesz kierować do:</h4>

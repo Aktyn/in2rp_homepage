@@ -12,6 +12,7 @@ import * as bodyParser from 'body-parser';
 const app = express();
 
 import * as fs from 'fs';
+import LOG from './log';
 
 import Database from './database';
 
@@ -46,6 +47,7 @@ import discordAPI from './discord_api';
 app.get('/discord_login', discordAPI.login_request);
 app.get('/discord_callback', discordAPI.discord_callback);
 app.post('/discord_restore_session', discordAPI.restore_session);
+app.post('/snake_gameover', discordAPI.snake_gameover);
 
 // const whitelistAPI = require('./whitelist_api.js');
 import whitelistAPI from './whitelist_api';
@@ -59,10 +61,14 @@ app.post('/whitelist_status_request', whitelistAPI.status_request);
 app.post('/get_whitelist_applicants', whitelistAPI.applicants_request);
 app.post('/update_whitelist_status', whitelistAPI.update_request);
 
+app.post('/record_visit', (req, resp) => {
+	LOG('guest session', (req.connection.remoteAddress || '').replace(/::ffff:/, ''));
+});
+
 const dir = __dirname + '/../dist';
 app.use('/', express.static(dir));
 
 const index_html = fs.readFileSync(dir + '/index.html', 'utf8');
 app.get('*', (req, res) => res.send(index_html));
 
-app.listen(global.PORT, () => console.log(`Example app listening on port ${global.PORT}!`));
+app.listen(global.PORT, () => console.log(`Homepage server runs on: ${global.PORT}!`));

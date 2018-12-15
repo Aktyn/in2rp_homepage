@@ -2,6 +2,8 @@ import * as React from 'react';
 import Content from './../components/content';
 
 import Snake from './../utils/snake';
+import Config from './../config';
+import Cookies from './../utils/cookies';
 
 interface SnakeGameState {
 	resolution?: {w: number; h: number};
@@ -34,7 +36,20 @@ export default class SnakeGame extends React.Component<any, SnakeGameState> {
 
 	init(canv: HTMLCanvasElement | null) {
 		if(canv)
-			this.snake = new Snake(canv);
+			this.snake = new Snake(canv, {}, this.onGameOver);
+	}
+
+	onGameOver() {
+		//stage two with discordbot
+		var cookie_token = Cookies.getCookie('discord_token');
+		fetch(Config.api_server_url + '/snake_gameover', {
+			method: "POST",
+			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
+			headers: {
+	           "Content-Type": "application/json; charset=utf-8",
+	        },
+	        body: JSON.stringify({token: cookie_token})
+		}).catch();//ignore any errors here
 	}
 
 	render() {

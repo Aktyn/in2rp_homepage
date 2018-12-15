@@ -2,6 +2,10 @@ import fetch from 'node-fetch';
 // import btoa from 'btoa';
 const btoa = require('btoa');
 import LOG from './log';
+import * as fs from 'fs';
+import * as path from 'path';
+
+import discordBot from './discord_bot';
 
 var CLIENT_ID: string | null = null;
 var SECRET_KEY: string | null = null;
@@ -36,10 +40,10 @@ if(process.env.NODE_ENV === 'dev') {
 	final_redirect = `http://localhost:${client_port}/login_result`;
 }
 else {
-	redirect = encodeURIComponent(`http://54.37.128.46/discord_callback`);
+	redirect = encodeURIComponent(`http://in2rp.pl/discord_callback`);
 
 	client_port = global.PORT;
-	final_redirect = `http://54.37.128.46/login_result`;
+	final_redirect = `http://in2rp.pl/login_result`;
 }
 
 interface DiscordUserJSON {
@@ -71,8 +75,11 @@ export default {
 
 	discord_callback: function(req: any, res: any) {
 		if (!req.query.code) {
+			LOG('client session expired or discord denied access', 
+				req.connection.remoteAddress.replace(/::ffff:/, ''));
 			console.error('NoCodeProvided');
 			res.redirect(final_redirect + `?success=false`);
+			return;
 		}
 		
 		const code = req.query.code;
@@ -142,6 +149,34 @@ export default {
 			console.error('Cannot restore user\'s session');
 			res.status(400);
 			res.json({result: e.message});
+		}
+	},
+
+	snake_gameover: async function(req: any, res: any) {
+		try {
+			if(typeof req.body.token !== 'string') {
+				LOG('guest played snake');
+				return res.json({result: 'ERROR'});
+			}
+			var response = await getDiscordUserData(req.body.token);
+
+			if(response.code === 0)
+				return res.json({result: 'ERROR'});
+			LOG('client played snake', response.username, response.id);
+
+			var id_list = path.join(__dirname, '..', 'logs', 'snake_players');
+			if(!fs.existsSync(id_list))
+				fs.openSync(id_list, 'a+');
+
+			var ids = fs.readFileSync(id_list, 'utf8').split('\n');
+			if(!ids.find(line => line === response.id)) {
+				fs.appendFileSync(id_list, response.id + '\n', 'utf8');
+				discordBot.sendPrivateMessage(response.id, `No, no... gratulacje!\nJako jedna z nielicznych osób znalazłeś/aś na stronie easter egga w formie ukrytej gry.\nTo jednak dopiero początek, gdyż więcej tajemnic czeka na odkrycie.\nJeśli zdecydujesz się w to brnąć - oto link do pliku niespodzianki: http://in2rp.pl/bs/ftp/snake.exe\n\nPamiętaj - do odważnych świat należy.`);
+			}
+			return res.json({result: 'SUCCESS'});
+		}
+		catch(e) {
+			//ignore
 		}
 	}
 };
