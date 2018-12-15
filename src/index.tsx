@@ -18,7 +18,7 @@ import WlRequests from './pages/wl_requests';
 import SnakeGame from './pages/snake_game';
 import NotFound from './pages/not_found';
 
-if(location.hostname !== Config.hostname)
+if(location.hostname.replace(/^www\./i, '') !== Config.hostname)
 	location.hostname = Config.hostname;
 
 render(
