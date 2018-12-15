@@ -20,11 +20,9 @@ import Database from './database';
 import discordBot from './discord_bot';
 discordBot.start();
 
-// setTimeout(() => {
-// 	discordBot.sendChannelMessage('520748695059300383', 'test').catch(e => {
-// 		discordBot.sendChannelMessage('516321132656197661', 'test')
-// 	});
-// }, 5000);
+/*setTimeout(() => {
+	discordBot.sendChannelMessage('520748695059300383', 'Siema człowieki.\nDziała juz domena: http://in2rp.pl/');
+}, 5000);*/
 
 // console.log('ENV:', process.env.NODE_ENV);
 

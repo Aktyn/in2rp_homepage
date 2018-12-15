@@ -10,7 +10,7 @@ export default {
 	hostname: process.env.NODE_ENV === 'development' ? 'localhost' : 'in2rp.pl',
 	api_server_url: process.env.NODE_ENV === 'development' ? 
 		'http://localhost:1234' : 
-		'http://www.in2rp.pl',
+		'http://in2rp.pl',
 
 	short_description: <span>Polski serwer Role&nbsp;Play<br />Grand Theft Auto V</span>,
 
