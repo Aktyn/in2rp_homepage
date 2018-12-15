@@ -30,7 +30,8 @@ export default {
 	contacs: <React.Fragment>
 		<h4>Pytania odnośnie serwera możesz kierować do:</h4>
 		<div>
-			<span className='discord_user'>Smerf (Taśma)#9722</span>
+			<span className='discord_user'>Olka#1479</span><br/>
+			<span className='discord_user'>Edennn#8791</span>
 		</div>
 		<h4>Pytania odnośnie strony:</h4>
 		<div>
