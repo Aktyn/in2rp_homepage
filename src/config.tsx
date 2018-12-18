@@ -6,11 +6,15 @@ export enum QuestionType {
 	TEXTAREA
 }
 
-export default {
+const discord_invitation_link = 'https://discord.gg/n2ERxEn';
+
+const CONFIG = {
 	hostname: process.env.NODE_ENV === 'development' ? 'localhost' : 'in2rp.pl',
 	api_server_url: process.env.NODE_ENV === 'development' ? 
 		'http://localhost:1234' : 
 		location.origin, //'http://in2rp.pl',
+
+	discord_invitation_link: discord_invitation_link,
 
 	short_description: <span>Polski serwer Role&nbsp;Play<br />Grand Theft Auto V</span>,
 
@@ -28,11 +32,7 @@ export default {
 	</span>,
 
 	contacs: <React.Fragment>
-		<h4>Pytania odnośnie serwera możesz kierować do:</h4>
-		<div>
-			<span className='discord_user'>Olka#1479</span><br/>
-			<span className='discord_user'>Edennn#8791</span>
-		</div>
+		<h4>Pytania odnośnie serwera możesz kierować do administracji na <a href={discord_invitation_link}>discordzie</a>.</h4>
 		<h4>Pytania odnośnie strony:</h4>
 		<div>
 			<span className='discord_user'>Aktyn#9473</span>
@@ -86,3 +86,5 @@ export default {
 		},
 	} as {[index: string]: {type: QuestionType, content: string}}
 };
+
+export default CONFIG;
