@@ -119,7 +119,10 @@ export default {
 	
 	restore_session: async function(req: any, res: any) {
 		try {
-			var ip = req.connection.remoteAddress.replace(/::ffff:/, '');
+			let forwards = req.headers['x-forwarded-for'];
+			if(typeof forwards === 'object')
+				forwards = forwards.join(',');
+			var ip = (forwards || req.connection.remoteAddress || '').replace(/::ffff:/, '');
 
 			if(typeof req.body.token !== 'string') {
 				res.status(400);
