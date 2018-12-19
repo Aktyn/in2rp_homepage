@@ -2,6 +2,7 @@ import * as Discord from 'discord.js';
 import LOG from './log';
 
 import Hangman from './hangman';
+import todoApp from './discord_todo_app';
 
 var TOKEN: string | undefined = undefined;
 var started = false;
@@ -45,7 +46,9 @@ function onLogin() {
 		console.log(member.user);
 	});*/
 	//204639827193364492
-	//console.log( bot.channels.get('516321132656197661') );
+	//console.log( bot.channels/*.get('516321132656197661')*/ );
+	//@ts-ignore
+	//console.log( bot.channels.map(ch => {return {id: ch.id, name: ch.name}}) );
 
 	bot.on('message', message => {
 		//console.log(message.channel);
@@ -53,24 +56,12 @@ function onLogin() {
 		if(!message.author || message.author.bot)
 			return;
 
-		//whitelist channel - TODO
-		/*if(message.channel.type === 'text' && message.channel.id === '516321132656197661') {
-			message.channel.fetchMessages().then(messages => {
-				message.channel.bulkDelete(messages);
-				var messagesDeleted = messages.array().length; // number of messages deleted
-
-				// Logging the number of messages deleted on both the channel and console.
-				//message.channel.sendMessage("Deletion of messages successful. Total messages deleted: "+messagesDeleted);
-				console.log('Deletion of messages successful. Total messages deleted: '+messagesDeleted)
-			})
-			.catch(err => {
-				console.log('Error while doing Bulk Delete');
-				console.log(err);
-			});
-
+		//#co-trzeba-jeszcze-zrobic //520947668432715787
+		if(message.channel.type === 'text' && message.channel.id === '520947668432715787') {
+			todoApp.handleMessage(message);
 			return;
 		}
-		else */if(message.channel.type !== 'dm')
+		else if(message.channel.type !== 'dm')
 			return;
 
 	    if(message.content.startsWith('!')) {//command
