@@ -32,7 +32,7 @@ const CONFIG = {
 	</span>,
 
 	contacs: <React.Fragment>
-		<h4>Pytania odnośnie serwera możesz kierować do administracji na <a href={discord_invitation_link}>discordzie</a>.</h4>
+		<h4>Pytania odnośnie serwera możesz kierować do administracji na <a target="_blank" href={discord_invitation_link}>discordzie</a>.</h4>
 		<h4>Pytania odnośnie strony:</h4>
 		<div>
 			<span className='discord_user'>Aktyn#9473</span>

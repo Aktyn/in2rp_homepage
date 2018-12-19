@@ -60,7 +60,10 @@ app.post('/get_whitelist_applicants', whitelistAPI.applicants_request);
 app.post('/update_whitelist_status', whitelistAPI.update_request);
 
 app.post('/record_visit', (req, resp) => {
-	LOG('guest session', (req.connection.remoteAddress || '').replace(/::ffff:/, ''));
+	let forwards = req.headers['x-forwarded-for'];
+	if(typeof forwards === 'object')
+		forwards = forwards.join(',');
+	LOG('guest session', (forwards || req.connection.remoteAddress || '').replace(/::ffff:/, ''));
 });
 
 const dir = __dirname + '/../dist';

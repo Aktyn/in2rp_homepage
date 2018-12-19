@@ -45,12 +45,32 @@ function onLogin() {
 		console.log(member.user);
 	});*/
 	//204639827193364492
-	// console.log( bot.channels.get('516321132656197661') );
+	//console.log( bot.channels.get('516321132656197661') );
 
 	bot.on('message', message => {
-		//console.log(message.channel.type);
+		//console.log(message.channel);
 		//return;
-		if(!message.author || message.author.bot || message.channel.type !== 'dm')
+		if(!message.author || message.author.bot)
+			return;
+
+		//whitelist channel - TODO
+		/*if(message.channel.type === 'text' && message.channel.id === '516321132656197661') {
+			message.channel.fetchMessages().then(messages => {
+				message.channel.bulkDelete(messages);
+				var messagesDeleted = messages.array().length; // number of messages deleted
+
+				// Logging the number of messages deleted on both the channel and console.
+				//message.channel.sendMessage("Deletion of messages successful. Total messages deleted: "+messagesDeleted);
+				console.log('Deletion of messages successful. Total messages deleted: '+messagesDeleted)
+			})
+			.catch(err => {
+				console.log('Error while doing Bulk Delete');
+				console.log(err);
+			});
+
+			return;
+		}
+		else */if(message.channel.type !== 'dm')
 			return;
 
 	    if(message.content.startsWith('!')) {//command
