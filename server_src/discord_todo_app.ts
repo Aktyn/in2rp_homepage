@@ -30,6 +30,8 @@ function printHelp(message: Discord.Message) {
 
 export default {
 	handleMessage: (message: Discord.Message) => {
+		if(process.env.NODE_ENV === 'dev')//temporary blocked in dev mode due to prevent collisions
+			return;
 		if(!message.content.startsWith('!'))
 			return printHelp(message);
 
@@ -46,7 +48,6 @@ export default {
 		   		break;
 		   	case 'add':
 		   		let msg_to_add = args.join(' ');
-		   		console.log('test:', msg_to_add);
 		   		todo_list.push(msg_to_add);
 		   		fs.writeFileSync(todo_path, todo_list.join('\n'));
 
