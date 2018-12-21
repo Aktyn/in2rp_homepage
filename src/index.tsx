@@ -15,6 +15,7 @@ import Whitelist from './pages/whitelist';
 import Rules from './pages/rules';
 import DiscordLogin from './pages/discord_login';
 import WlRequests from './pages/wl_requests';
+import Gallery from './pages/gallery';
 import SnakeGame from './pages/snake_game';
 import NotFound from './pages/not_found';
 
@@ -31,6 +32,7 @@ render(
 	    		<Route path='/wl' component={Whitelist} />
 	    		<Route path='/rules' component={Rules} />
 	    		<Route path='/wl_requests' component={WlRequests} />
+	    		<Route path='/gallery' component={Gallery} />
 	    		<Route path='/snake' component={SnakeGame} />
 
 	    		<Route component={NotFound} />

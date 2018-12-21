@@ -101,3 +101,27 @@ main.content {
     0%   { opacity: 0; }
     100% { opacity: 1; }
 }
+
+//gallery custom style
+.image-gallery-content:not(.fullscreen) {
+    //.image-gallery {
+    //    max-width: 900px;
+        margin: 20px auto !important;//todo - fix
+    //}
+
+    .image-gallery-slide img {
+        max-height: 506.25px;
+        width: auto !important;
+    }
+
+    .image-gallery-slide {
+        background-color: transparent !important;
+    }
+}
+
+.image-gallery-content.fullscreen {
+    .image-gallery-slide img {
+        max-height: 100vh !important;
+        max-width: 100vw !important;
+    }
+}
