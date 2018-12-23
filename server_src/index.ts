@@ -20,8 +20,10 @@ import Database from './database';
 import discordBot from './discord_bot';
 discordBot.start();
 
+//status - 526137746126012416
+//zarzad - 520748695059300383
 /*setTimeout(() => {
-	discordBot.sendChannelMessage('520748695059300383', '-----');
+	discordBot.sendChannelMessage('526137746126012416', 'Biore ten kanał');
 }, 5000);*/
 
 // console.log('ENV:', process.env.NODE_ENV);

@@ -3,6 +3,7 @@ import LOG from './log';
 
 import Hangman from './hangman';
 import todoApp from './discord_todo_app';
+import statusApp from './discord_status_app';
 
 var TOKEN: string | undefined = undefined;
 var started = false;
@@ -49,6 +50,7 @@ function onLogin() {
 	//console.log( bot.channels/*.get('516321132656197661')*/ );
 	//@ts-ignore
 	//console.log( bot.channels.map(ch => {return {id: ch.id, name: ch.name}}) );
+	statusApp.init(bot);
 
 	bot.on('message', message => {
 		//console.log(message.channel);
@@ -57,8 +59,11 @@ function onLogin() {
 			return;
 
 		//#co-trzeba-jeszcze-zrobic //520947668432715787
-		if(message.channel.type === 'text' && message.channel.id === '520947668432715787') {
-			todoApp.handleMessage(message);
+		if(message.channel.type === 'text') {
+			if(message.channel.id === todoApp.CHANNEL_ID)//#co-trzeba-jeszcze-zrobic
+				todoApp.handleMessage(message);
+			else if(message.channel.id === statusApp.CHANNEL_ID)//#status
+				statusApp.handleMessage(message, bot);
 			return;
 		}
 		else if(message.channel.type !== 'dm')
@@ -93,6 +98,10 @@ function onLogin() {
 		        		answerToMsg(message.author, 'Fajnie się grało. Może jeszcze będzie okazja.');
 		        	removeGame(message.author.id);
 		        	break;
+		   	}
+
+		   	if(process.env.NODE_ENV === 'dev') {
+		   		statusApp.handleMessage(message, bot);
 		   	}
 	    }
 	    else {//regular message

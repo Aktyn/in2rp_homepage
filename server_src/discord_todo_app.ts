@@ -36,10 +36,11 @@ function printEmptyHistoryInfo(message: Discord.Message) {
 }
 
 function printHelp(message: Discord.Message) {
-	message.channel.send('`Czyszczenie wszystkiego prócz listy zadań: !clear\nDodawanie nowego zadania: !add tresc zadania\nUsuwanie zadania z listy: !delete [numer_zadania]\nCofniecie ostatniej zmiany: !undo`');
+	message.channel.send((process.env.NODE_ENV === 'dev' ? '[dev mode] ' : '') + '`Czyszczenie wszystkiego prócz listy zadań: !clear\nDodawanie nowego zadania: !add tresc zadania\nUsuwanie zadania z listy: !delete [numer_zadania]\nCofniecie ostatniej zmiany: !undo`');
 }
 
 export default {
+	CHANNEL_ID: '520947668432715787',
 	handleMessage: (message: Discord.Message) => {
 		if(process.env.NODE_ENV === 'dev') {
 			if(!message.content.startsWith('!dev_'))
@@ -73,6 +74,7 @@ export default {
 		   		clearChannel(message);
 		   		printList(message);
 		   		break;
+		   	case 'remove':
 		   	case 'delete':
 		   		let index = parseInt( args[0] ) || -1;
 		   		if(index <= todo_list.length) {
