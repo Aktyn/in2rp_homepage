@@ -46,7 +46,7 @@ function generateMessage(data: MessageSchema) {
 		.setColor('#ff5555')
 		//.setTitle("in2rp")
 		.addField('Graczy online', `**${data.players_online.length}** / **${ServerInfo.max_players}**\n${data.players_online.join(data.players_online.length < 10 ? '\n' : ' ')}`)
-		.addField('Ostatnia aktualizacja', new Date().toLocaleTimeString())
+		.addField('Ostatnia aktualizacja', new Date().toLocaleTimeString('en-US', {hour12: false}))
 		.setFooter(`IP serwera: ${server_ip}`);
 	return embed;
 }
