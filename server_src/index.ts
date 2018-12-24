@@ -23,7 +23,7 @@ discordBot.start();
 //status - 526137746126012416
 //zarzad - 520748695059300383
 /*setTimeout(() => {
-	discordBot.sendChannelMessage('526137746126012416', 'Biore ten kanał');
+	discordBot.sendChannelMessage('520748695059300383', 'Nawzajem wszystkim');
 }, 5000);*/
 
 // console.log('ENV:', process.env.NODE_ENV);

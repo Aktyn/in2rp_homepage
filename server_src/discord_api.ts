@@ -7,6 +7,8 @@ import * as path from 'path';
 
 import discordBot from './discord_bot';
 
+const HOST = '145.239.92.229:' + global.PORT;//'in2rp.pl';
+
 var CLIENT_ID: string | null = null;
 var SECRET_KEY: string | null = null;
 
@@ -40,10 +42,10 @@ if(process.env.NODE_ENV === 'dev') {
 	final_redirect = `http://localhost:${client_port}/login_result`;
 }
 else {
-	redirect = encodeURIComponent(`http://in2rp.pl/discord_callback`);
+	redirect = encodeURIComponent(`http://${HOST}/discord_callback`);
 
 	client_port = global.PORT;
-	final_redirect = `http://in2rp.pl/login_result`;
+	final_redirect = `http://${HOST}/login_result`;
 }
 
 interface DiscordUserJSON {

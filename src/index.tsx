@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Config from './config';
+// import Config from './config';
 
 // import './styles/normalize.css';
 import './styles/main.scss';
@@ -19,8 +19,8 @@ import Gallery from './pages/gallery';
 import SnakeGame from './pages/snake_game';
 import NotFound from './pages/not_found';
 
-if(location.hostname.replace(/^www\./i, '') !== Config.hostname)
-	location.hostname = Config.hostname;
+//if(location.hostname.replace(/^www\./i, '') !== Config.hostname)
+//	location.hostname = Config.hostname;
 
 render(
     <BrowserRouter>
