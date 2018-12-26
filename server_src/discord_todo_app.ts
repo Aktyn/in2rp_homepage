@@ -26,9 +26,27 @@ function clearChannel(message: Discord.Message) {//removes every message from ch
 }
 
 function printList(message: Discord.Message) {
-	message.channel.send(todo_list.map((line, index) => {
+	let list = todo_list.map((line, index) => {
 		return `${index+1} - ${line}`;
-	}).join('\n'));
+	}).join('\n');
+
+	if(list.length >= 2000) {//handle single message length limit
+		let lines = list.split('\n');
+		let firstmsg: string[] = [], secondmsg: string[] = [];
+		let temp_len = 0;
+		for(var i=0; i<lines.length; i++) {
+			if((temp_len += lines[i].length+1) < 2000)
+				firstmsg.push(lines[i]);
+			else
+				secondmsg.push(lines[i]);
+		}
+
+		message.channel.send(firstmsg.join('\n')).then(() => {
+			message.channel.send(secondmsg.join('\n'));
+		});
+	}
+	else
+		message.channel.send(list);
 }
 
 function printEmptyHistoryInfo(message: Discord.Message) {
