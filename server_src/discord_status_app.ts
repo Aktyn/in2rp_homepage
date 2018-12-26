@@ -75,8 +75,8 @@ async function startRefreshing(current_id: number) {
 		console.log('Current refreshing process with id:', current_id, 'expired');
 	else if(MainMessage) {
 		await MainMessage.edit(generateMessage(data));
-		if(refreshing_active)//every minute if server is online, otherwise every hour
-			setTimeout(() => startRefreshing(current_id), data.online ? 1000 * 60 : 1000 * 60 * 60);
+		if(refreshing_active)//every minute if server is online, otherwise every 5 minutes
+			setTimeout(() => startRefreshing(current_id), data.online ? 1000 * 60 : 1000 * 60 * 5);
 	}
 }
 
