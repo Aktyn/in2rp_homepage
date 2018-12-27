@@ -28,9 +28,10 @@ discordBot.start();
 //#status - 526137746126012416
 //#zarzad - 520748695059300383
 //#regulamin - 527902170822213663
+//#zarzadzanie-serverem 527950073322143794
 /*setTimeout(() => {
-	discordBot.sendChannelMessage('527902170822213663', 'test');
-}, 5000);*/
+	discordBot.sendChannelMessage('527950073322143794', 'Do roboty boty');
+}, 1000);*/
 
 // console.log('ENV:', process.env.NODE_ENV);
 

@@ -102,10 +102,8 @@ var StatusApp = {
 	init: async (bot: Discord.Client) => {
 		var msg: Discord.Message | Discord.Message[] | undefined;
 		var target: Discord.Channel | Discord.User | undefined;
-		if(process.env.NODE_ENV === 'dev') {
-			//testing disabled
-			//target = bot.users.get('204639827193364492');
-		}
+		if(process.env.NODE_ENV === 'dev')
+			target = bot.users.get('204639827193364492');
 		else {
 			target = bot.channels.get(id);
 			if(target instanceof Discord.TextChannel)

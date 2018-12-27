@@ -5,6 +5,7 @@ import Hangman from './hangman';
 import todoApp from './discord_todo_app';
 import statusApp from './discord_status_app';
 import rulesApp from './discord_rules_app';
+import manageApp from './discord_servermng_app';
 
 var TOKEN: string | undefined = undefined;
 var started = false;
@@ -44,18 +45,20 @@ function onLogin() {
 
 	if(process.env.NODE_ENV === 'dev')
 		bot.user.setActivity("Pracownia Aktyna");
-	//else
-	//	bot.user.setActivity("");
 
 	/*bot.on('presenceUpdate', member => {
 		console.log(member.user);
 	});*/
-	//204639827193364492
-	//console.log( bot.channels/*.get('516321132656197661')*/ );
+	
 	//@ts-ignore
-	//console.log( bot.channels.map(ch => {return {id: ch.id, name: ch.name}}) );
-	statusApp.init(bot);
-	rulesApp.init(bot);
+	// console.log( bot.channels.map(ch => {return {id: ch.id, name: ch.name}}) );
+
+	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+		statusApp.init(bot);
+	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+		rulesApp.init(bot);
+	//if(process.env.NODE_ENV !== 'dev')
+		manageApp.init(bot);
 
 	bot.on('message', message => {
 		//console.log(message.channel);
@@ -69,7 +72,7 @@ function onLogin() {
 			switch(message.channel.id) {
 				case todoApp.CHANNEL_ID: 	return todoApp.handleMessage(message);
 				case statusApp.CHANNEL_ID: 	return statusApp.handleMessage(message, bot);
-				//case rulesApp.CHANNEL_ID:	return rulesApp.handleMessage(message);
+				case manageApp.CHANNEL_ID:	return manageApp.handleMessage(message, bot);
 			}
 			return;
 		}
