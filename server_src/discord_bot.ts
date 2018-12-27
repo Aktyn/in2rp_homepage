@@ -4,6 +4,7 @@ import LOG from './log';
 import Hangman from './hangman';
 import todoApp from './discord_todo_app';
 import statusApp from './discord_status_app';
+import rulesApp from './discord_rules_app';
 
 var TOKEN: string | undefined = undefined;
 var started = false;
@@ -18,6 +19,9 @@ if(!TOKEN)
 	throw new Error('You must specify bot TOKEN as argument: TOKEN=SECRET_TOKEN');
 
 var bot = new Discord.Client();
+
+bot.on('messageReactionAdd', rulesApp.onReactionAdded);
+bot.on('messageReactionRemove', rulesApp.onReactionRemoved);
 
 interface GameSchema {
 	id: string;
@@ -51,6 +55,7 @@ function onLogin() {
 	//@ts-ignore
 	//console.log( bot.channels.map(ch => {return {id: ch.id, name: ch.name}}) );
 	statusApp.init(bot);
+	rulesApp.init(bot);
 
 	bot.on('message', message => {
 		//console.log(message.channel);
@@ -59,17 +64,19 @@ function onLogin() {
 			return;
 
 		//#co-trzeba-jeszcze-zrobic //520947668432715787
+		//#regulamin - 516320348464087054
 		if(message.channel.type === 'text') {
-			if(message.channel.id === todoApp.CHANNEL_ID)//#co-trzeba-jeszcze-zrobic
-				todoApp.handleMessage(message);
-			else if(message.channel.id === statusApp.CHANNEL_ID)//#status
-				statusApp.handleMessage(message, bot);
+			switch(message.channel.id) {
+				case todoApp.CHANNEL_ID: 	return todoApp.handleMessage(message);
+				case statusApp.CHANNEL_ID: 	return statusApp.handleMessage(message, bot);
+				//case rulesApp.CHANNEL_ID:	return rulesApp.handleMessage(message);
+			}
 			return;
 		}
 		else if(message.channel.type !== 'dm')
 			return;
 
-	    if(message.content.startsWith('!')) {//command
+	    if(message.content.startsWith('!')) {//private message command
 	    	LOG(message.author.username, 'used discordbot command:', message.content);
 
 	    	let args = message.content.substring(1).split(' ');

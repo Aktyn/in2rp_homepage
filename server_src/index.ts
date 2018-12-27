@@ -12,6 +12,11 @@ import * as bodyParser from 'body-parser';
 const app = express();
 
 import * as fs from 'fs';
+import * as path from 'path';
+
+if(fs.existsSync( path.join(__dirname, '..', 'data') ) === false)
+	fs.mkdirSync('data');
+
 import LOG from './log';
 
 import Database from './database';
@@ -20,10 +25,11 @@ import Database from './database';
 import discordBot from './discord_bot';
 discordBot.start();
 
-//status - 526137746126012416
-//zarzad - 520748695059300383
+//#status - 526137746126012416
+//#zarzad - 520748695059300383
+//#regulamin - 527902170822213663
 /*setTimeout(() => {
-	discordBot.sendChannelMessage('520748695059300383', 'Nawzajem wszystkim');
+	discordBot.sendChannelMessage('527902170822213663', 'test');
 }, 5000);*/
 
 // console.log('ENV:', process.env.NODE_ENV);

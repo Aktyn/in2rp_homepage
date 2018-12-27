@@ -4,3 +4,4 @@ dist/
 server_dist/
 run_dev
 logs/
+data/

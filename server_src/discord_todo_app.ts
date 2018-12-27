@@ -5,10 +5,10 @@ import LOG from './log';
 
 const MAX_HISTORY_SIZE = 69;
 
-const logs_path = path.join(__dirname, '..', 'logs');
-if(!fs.existsSync(logs_path))
-	fs.mkdirSync(logs_path);
-const todo_path = path.join(logs_path, 'todo');
+const data_path = path.join(__dirname, '..', 'data');
+if(!fs.existsSync(data_path))
+	fs.mkdirSync(data_path);
+const todo_path = path.join(data_path, 'todo');
 if(!fs.existsSync(todo_path))
 	fs.appendFileSync(todo_path, '', 'utf8');
 

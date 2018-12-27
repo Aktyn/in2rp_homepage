@@ -5,19 +5,23 @@ import LOG from './log';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import discordBot from './discord_bot';
+// import discordBot from './discord_bot';
 
 const HOST = '145.239.92.229:' + global.PORT;//'in2rp.pl';
 
 var CLIENT_ID: string | null = null;
 var SECRET_KEY: string | null = null;
 
-const admins = [//discord account ids
-	'204639827193364492',//Aktyn
-	'363604545261142017',//Smerf (Tasma)
-	'272366948371660801',//Neqik
-	'217963448682807297',//Bilu
-];
+var admins: string[] = [];//discord account ids
+const admin_list_file_path = path.join(__dirname, '..', 'data', 'admins');
+
+if(fs.existsSync( admin_list_file_path ) === false)
+	console.log(admin_list_file_path, 'file not found. It should be created with list of admin ids');
+else {
+	admins = fs.readFileSync(admin_list_file_path, 'utf8').replace(/\/\/.*/gi, '')
+		.split('\n').map(line => line.replace(/\s/g, ''));
+}
+// console.log(admins);
 
 process.argv.forEach((val) => {
 	if(val.startsWith('CLIENT_ID'))
@@ -158,7 +162,7 @@ export default {
 	},
 
 	snake_gameover: async function(req: any, res: any) {
-		try {
+		/*try {//TODO - restore this functionality
 			if(typeof req.body.token !== 'string') {
 				LOG('guest played snake');
 				return res.json({result: 'ERROR'});
@@ -182,6 +186,6 @@ export default {
 		}
 		catch(e) {
 			//ignore
-		}
+		}*/
 	}
 };
