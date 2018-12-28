@@ -41,7 +41,7 @@ function sendCommandOutput(channel: Discord.TextChannel, output: string, success
 }
 
 function generateMessage(status = '') {//\n\n**Komendy strony:**\ntodo
-	return `**Komendy serwera:**\n!start\n!stop\n!restart\n\n**Inne:**\n!clear - czyści kanał\n\n${status}`;
+	return `**Komendy serwera:**\n!start\n!stop\n!restart\n\n**Inne:**\n!total_purge - nieodwracalnie usuwa wszystkie pliki serwera i strony\n!clear - czyści kanał\n\n${status}`;
 }
 
 function update(status: string) {

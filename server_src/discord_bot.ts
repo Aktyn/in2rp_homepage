@@ -57,7 +57,7 @@ function onLogin() {
 		statusApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);
-	//if(process.env.NODE_ENV !== 'dev')
+	if(process.env.NODE_ENV !== 'dev')
 		manageApp.init(bot);
 
 	bot.on('message', message => {
@@ -70,9 +70,18 @@ function onLogin() {
 		//#regulamin - 516320348464087054
 		if(message.channel.type === 'text') {
 			switch(message.channel.id) {
-				case todoApp.CHANNEL_ID: 	return todoApp.handleMessage(message);
-				case statusApp.CHANNEL_ID: 	return statusApp.handleMessage(message, bot);
-				case manageApp.CHANNEL_ID:	return manageApp.handleMessage(message, bot);
+				case todoApp.CHANNEL_ID: 	
+					if(process.env.NODE_ENV !== 'dev')
+						return todoApp.handleMessage(message);
+					break;
+				case statusApp.CHANNEL_ID: 	
+					if(process.env.NODE_ENV !== 'dev')
+						return statusApp.handleMessage(message, bot);
+					break;
+				case manageApp.CHANNEL_ID:	
+					if(process.env.NODE_ENV !== 'dev')
+						return manageApp.handleMessage(message, bot);
+					break;
 			}
 			return;
 		}
