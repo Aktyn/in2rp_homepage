@@ -27,7 +27,7 @@ export default {
 		if(insert_res.affectedRows > 0) {
 			res.json({result: 'SUCCESS'});
 			let msg = `<@${response.id}> właśnie zlożył podanie o whiteliste.`;
-			LOG(msg);
+			LOG(`${response.username} właśnie zlożył podanie o whiteliste.`);//not tested
 			try {
 				discordBot.sendChannelMessage('520748695059300383', msg).catch((e: Error) => {
 					console.log('Cannot send message to channel 520748695059300383');
