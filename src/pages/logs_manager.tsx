@@ -104,7 +104,7 @@ export default class extends React.Component<any, LogsManagerState> {
 					console.log('focused log changed while loading this log\'s content');
 				else {
 					this.setState({
-						focused_content: res.content
+						focused_content: res.content.reverse()
 					});
 				}
 			}
