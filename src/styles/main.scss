@@ -125,3 +125,11 @@ main.content {
         max-width: 100vw !important;
     }
 }
+
+.image-gallery-fullscreen-button::before, .image-gallery-play-button::before {
+    transform: scale(0.9) !important;
+}
+
+.image-gallery-fullscreen-button:hover::before, .image-gallery-play-button:hover::before {
+    transform: scale(1) !important;
+}

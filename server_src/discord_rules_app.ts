@@ -72,7 +72,8 @@ export default {
 			var messages = await (<Discord.TextChannel>rules_channel).fetchMessages();
 			var msg_arr = messages.array();
 			if(msg_arr.length > 0) {
-				targetMsg = msg_arr[0];
+				targetMsg = msg_arr[msg_arr.length-1];
+				//console.log(targetMsg.content);
 
 				const filter: Discord.CollectorFilter = (reaction, user) => true;
 					//reaction.emoji.name === '✅';

@@ -9,8 +9,8 @@ import 'react-image-gallery/styles/css/image-gallery.css';
 // import homeIcon from '../img/gallery/1.png';
 
 var img_sources: string[] = [];
-for(var i=1; i<=1; i++)
-	img_sources.push( require(`../img/gallery/${i}.png`) );
+for(var i=1; i<=2; i++)
+	img_sources.push( require(`../img/gallery/${i}.jpg`) );
 
 export default class extends React.Component<any, any> {
 	constructor(props: any) {

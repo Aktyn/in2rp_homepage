@@ -1,0 +1,60 @@
+.logs_admin_main .error {
+	color: #ef5350;
+	font-weight: bold;
+	padding: 20px 0px;
+	display: block;
+}
+
+.logs_admin_main .logs_body {
+	display: grid;
+	grid-template-columns: 130px auto;
+}
+
+.logs_admin_main .logs_body .logs_list {
+	/*display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr; 
+	// grid-template-rows: 40px;
+	align-items: center;
+	justify-content: center;
+	justify-items: center;
+	align-content: center;*/
+	max-height: 700px;
+	overflow-y: auto;
+	overflow-x: hidden;
+
+}
+
+.logs_admin_main .logs_list > * {
+	display: block;
+	padding: 5px 10px;
+	hyphens: none;
+}
+
+.logs_admin_main .logs_list > *:not(.current):hover {
+	color: #e57373;
+	cursor: pointer;
+}
+
+.logs_admin_main .logs_list > *.current {
+	color: #8BC34A;
+}
+
+.logs_admin_main .focused_title {
+	padding: 0px;
+	margin: 0px;
+	font-weight: bold;
+	font-size: 18px;
+	height: 30px;
+	line-height: 30px;
+}
+
+.logs_admin_main .log_content {
+	text-align: left;
+	font-size: 14px;
+	max-height: 670px;//maximum .logs_list height - 30px (height of title)
+	overflow-y: auto;
+}
+
+.logs_admin_main .log_content > * {//single log line
+	
+}

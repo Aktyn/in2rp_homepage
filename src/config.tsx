@@ -6,7 +6,7 @@ export enum QuestionType {
 	TEXTAREA
 }
 
-const discord_invitation_link = 'https://discord.gg/9karSGf';
+const discord_invitation_link = 'https://discord.io/in2rp';
 
 const CONFIG = {
 	hostname: process.env.NODE_ENV === 'development' ? 'localhost' : 'http://145.239.92.229:1234',//'in2rp.pl',

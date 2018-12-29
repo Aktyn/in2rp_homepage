@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import './../styles/discord_widget.scss';
 
 import Config from './../config';
 import Cookies from './../utils/cookies';
+
+import AdminMenu from './admin_menu';
 
 interface WidgetState {
 	session: boolean;
@@ -49,8 +51,7 @@ class WidgetClass extends React.Component<any, WidgetState> {
 		return <div className='discord_session_widget'>
 			{this.state.user.nick}#{this.state.user.discriminator}
 			<button onClick={Session.logout} className='clean discord_logout'>Wyloguj</button>
-			{this.state.user.admin && 
-				<Link to='/wl_requests' className='clean admin_btn'>Podania</Link>}
+			{this.state.user.admin && <AdminMenu />}
 		</div>;
 	}
 

@@ -68,7 +68,7 @@ function onLogin() {
 
 		//#co-trzeba-jeszcze-zrobic //520947668432715787
 		//#regulamin - 516320348464087054
-		if(message.channel.type === 'text') {
+		if(message.channel.type === 'text') {//non private message
 			switch(message.channel.id) {
 				case todoApp.CHANNEL_ID: 	
 					if(process.env.NODE_ENV !== 'dev')
@@ -86,6 +86,9 @@ function onLogin() {
 			return;
 		}
 		else if(message.channel.type !== 'dm')
+			return;
+
+		if(process.env.NODE_ENV === 'dev')//disable hangman in dev mode
 			return;
 
 	    if(message.content.startsWith('!')) {//private message command

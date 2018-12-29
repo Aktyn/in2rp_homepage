@@ -4,7 +4,7 @@ $widget_h: 30px;
 	float: right;
 	margin: 0px 5px;
 	// height: 100%;
-	
+	// line-height: $widget_h;
 	// height: $widget_h;
 }
 
@@ -74,6 +74,10 @@ $widget_h: 30px;
 	line-height: $widget_h;
 	font-weight: bold;
 	font-size: 12px;
+}
+
+.discord_widget_main .discord_session_widget > * {
+	vertical-align: baseline;
 }
 
 .discord_widget_main .discord_session_widget .discord_logout, 

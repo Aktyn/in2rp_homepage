@@ -68,6 +68,11 @@ app.post('/whitelist_status_request', whitelistAPI.status_request);
 app.post('/get_whitelist_applicants', whitelistAPI.applicants_request);
 app.post('/update_whitelist_status', whitelistAPI.update_request);
 
+import logsAPI from './logs_api';
+
+app.post('/get_avaible_logs', logsAPI.get_logs);
+app.post('/get_log_content', logsAPI.get_log_content);
+
 app.post('/record_visit', (req, resp) => {
 	let forwards = req.headers['x-forwarded-for'];
 	if(typeof forwards === 'object')
