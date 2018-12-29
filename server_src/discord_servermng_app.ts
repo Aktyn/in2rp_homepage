@@ -2,7 +2,7 @@ import * as Discord from 'discord.js';
 import {spawn} from 'child_process';
 import LOG from './log';
 
-const id = '527950073322143794';//channel id
+const id = '528686772679606273';//'527950073322143794';//channel id
 
 const PERMITTED_ROLES = ['Developer', 'Właściciel', 'Administrator'];
 const SERVER_CMDS: any = {

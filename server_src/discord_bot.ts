@@ -51,7 +51,7 @@ function onLogin() {
 	});*/
 	
 	//@ts-ignore
-	// console.log( bot.channels.map(ch => {return {id: ch.id, name: ch.name}}) );
+	//console.log( bot.channels.map(ch => {return {id: ch.id, name: ch.name}}) );
 
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		statusApp.init(bot);

@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import LOG from './log';
 
 const server_ip = '145.239.92.229:30120';
-const id = '526137746126012416';//channel id
+const id = '528694912162594827';//'526137746126012416';//channel id
 
 var MainMessage: Discord.Message | null = null;
 var refreshing_active = true;

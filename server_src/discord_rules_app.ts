@@ -1,7 +1,7 @@
 import * as Discord from 'discord.js';
 import LOG from './log';
 
-const id = '527902170822213663';//channel id
+const id = '528678812507045898';//'527902170822213663';//channel id
 
 var targetMsg: Discord.Message | null = null;
 

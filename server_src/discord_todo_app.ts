@@ -58,7 +58,7 @@ function printHelp(message: Discord.Message) {
 }
 
 export default {
-	CHANNEL_ID: '520947668432715787',
+	CHANNEL_ID: '528686895836692480',//'520947668432715787',
 	handleMessage: (message: Discord.Message) => {
 		if(process.env.NODE_ENV === 'dev') {
 			if(!message.content.startsWith('!dev_'))
