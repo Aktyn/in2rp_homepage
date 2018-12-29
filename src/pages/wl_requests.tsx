@@ -75,9 +75,9 @@ export default class extends React.Component<any, WlRequestsState> {
 			body: JSON.stringify({token: cookie_token, requested_status: cat})
 		}).then(res => res.json()).then(res => {
 			//console.log(res);
-			if(res.result !== 'SUCCESS') {
+			if(res['result'] !== 'SUCCESS') {
 				let error_msg;
-				switch(res.result) {
+				switch(res['result']) {
 					case 'INSUFICIENT_PERMISSIONS':
 						error_msg = 'Nie masz uprawnień do tego kontentu.';
 						break;
@@ -91,7 +91,7 @@ export default class extends React.Component<any, WlRequestsState> {
 				this.setState({
 					error: undefined, 
 					loading: false, 
-					wl_requests: res.data,
+					wl_requests: res['data'],
 					focused: undefined
 				});
 			}
@@ -122,11 +122,11 @@ export default class extends React.Component<any, WlRequestsState> {
 				id: this.state.focused.id
 			})
 		}).then(res => res.json()).then(res => {
-			console.log(res);
+			//console.log(res);
 			
-			if(res.result !== 'SUCCESS') {
+			if(res['result'] !== 'SUCCESS') {
 				let error_msg;
-				switch(res.result) {
+				switch(res['result']) {
 					case 'INSUFICIENT_PERMISSIONS':
 						error_msg = 'Nie masz uprawnień do tego kontentu.';
 						break;

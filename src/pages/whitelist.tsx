@@ -103,9 +103,9 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 			body: JSON.stringify({answers: _answers, token: cookie_token})
 		}).then(res => res.json()).then(response => {
 			//console.log(response);
-			if(response.result !== 'SUCCESS') {
+			if(response['result'] !== 'SUCCESS') {
 				var error_msg;
-				switch(response.result) {
+				switch(response['result']) {
 					case 'REQUEST_ALREADY_IN_DATABASE':
 						error_msg = 'W bazie danych znajduje się już podanie wysłane z twojego konta';
 						break;
@@ -154,10 +154,10 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 			body: JSON.stringify({token: cookie_token})
 		}).then(res => res.json()).then(res => {
 			// console.log(res);
-			if(res.result !== 'SUCCESS')
+			if(res['result'] !== 'SUCCESS')
 				this.setState({status: STATE.UNAUTHORIZED});
 			else {
-				switch(res.status) {
+				switch(res['status']) {
 					case 'nothing':
 						WhitelistClass.cached_wl_status = WL_STATUS.NOTHING;
 						break;

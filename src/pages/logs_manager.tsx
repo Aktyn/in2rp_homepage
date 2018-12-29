@@ -47,9 +47,9 @@ export default class extends React.Component<any, LogsManagerState> {
 			body: JSON.stringify({token: cookie_token})
 		}).then(res => res.json()).then(res => {
 			//console.log(res);
-			if(res.result !== 'SUCCESS') {
+			if(res['result'] !== 'SUCCESS') {
 				let error_msg;
-				switch(res.result) {
+				switch(res['result']) {
 					case 'INSUFICIENT_PERMISSIONS':
 						error_msg = 'Nie masz uprawnień do tego kontentu.';
 						break;
@@ -61,7 +61,7 @@ export default class extends React.Component<any, LogsManagerState> {
 				this.setState({
 					error: undefined, 
 					loading: false, 
-					log_files: (res.files as string[]).reverse()
+					log_files: (res['files'] as string[]).reverse()
 				});
 			}
 		}).catch(e => {
@@ -88,10 +88,10 @@ export default class extends React.Component<any, LogsManagerState> {
 			headers: {"Content-Type": "application/json; charset=utf-8"},
 			body: JSON.stringify({token: cookie_token, log_file: focus_target})
 		}).then(res => res.json()).then(res => {
-			console.log(res);
-			if(res.result !== 'SUCCESS') {
+			//console.log(res);
+			if(res['result'] !== 'SUCCESS') {
 				let error_msg;
-				switch(res.result) {
+				switch(res['result']) {
 					case 'INSUFICIENT_PERMISSIONS':
 						error_msg = 'Nie masz uprawnień do tego kontentu.';
 						break;
@@ -104,7 +104,7 @@ export default class extends React.Component<any, LogsManagerState> {
 					console.log('focused log changed while loading this log\'s content');
 				else {
 					this.setState({
-						focused_content: res.content.reverse()
+						focused_content: res['content'].reverse()
 					});
 				}
 			}
