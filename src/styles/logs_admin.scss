@@ -53,8 +53,9 @@
 	font-size: 14px;
 	max-height: 670px;//maximum .logs_list height - 30px (height of title)
 	overflow-y: auto;
+	word-break: break-all;
 }
 
 .logs_admin_main .log_content > * {//single log line
-	
+	word-break: break-all;
 }
