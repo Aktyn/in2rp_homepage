@@ -23,7 +23,7 @@ export default class extends React.Component<any, AdminMenuState> {
 
 	render() {
 		return <>
-			<button data-ct='Moc admina' className={`clean admin_btn ${this.state.open ? 'open' : ''}`} 
+			<div data-ct='Moc admina' className={`clean admin_btn ${this.state.open ? 'open' : ''}`} 
 				onClick={this.switchMenu.bind(this)}>
 				Moc admina
 				<div className='menu_icon'>
@@ -40,7 +40,7 @@ export default class extends React.Component<any, AdminMenuState> {
 					<Link to='/statistics'>Statystyki</Link>
 					<Link to='/gallery'>Galeria</Link>
 				</div>
-			</button>
+			</div>
 		</>;
 	}
 }

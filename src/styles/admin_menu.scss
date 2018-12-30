@@ -3,11 +3,16 @@ $buttonheight: 24px;
 
 .admin_btn {
 	position: relative;
+	display: inline-block !important;
+	padding: 0px !important;
+	margin: 0px;
 	z-index: 80;
 	width: $buttonwidth;
 	box-shadow: none !important;
 	white-space: nowrap;
-	height: $buttonheight;
+	height: $buttonheight !important;
+	line-height: $buttonheight !important;
+	cursor: pointer;
 }
 
 .admin_btn.open {
