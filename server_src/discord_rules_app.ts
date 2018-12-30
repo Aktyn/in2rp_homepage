@@ -15,9 +15,9 @@ function changeUserRole(user: Discord.User, message: Discord.Message, remove_rol
 		let member = message.guild.members.get(user.id);
 		if(member) {
 			if(remove_role === true)
-				member.removeRole(role).catch(console.error);
+				member.removeRoles([role]).catch(console.error);
 			else
-				member.addRole(role).catch(console.error);
+				member.addRoles([role]).catch(console.error);
 		}
 		else
 			console.log('member not found:', user.username);
