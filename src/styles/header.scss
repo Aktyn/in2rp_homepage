@@ -72,6 +72,7 @@ a.logo {
 	// max-height: $height;
 
 	position: relative;
+
 	z-index: 3;
 
 	box-shadow: 0px 0px 8px #0006;
@@ -87,8 +88,9 @@ a.logo {
 		grid-template-columns: $height 0px fit-content(100%);
 	}
 
-	@media screen and (max-width: 320px) {
+	@media screen and (max-width: $max_w1) {
 		// min-height: 2*$height;
+		z-index: 50;
 	}
 }
 

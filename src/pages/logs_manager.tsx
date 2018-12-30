@@ -143,7 +143,6 @@ export default class extends React.Component<any, LogsManagerState> {
 	render() {//style={{paddingTop: '0px'}}
 		return <Content>
 			<section className='logs_admin_main container'>
-				<div></div>
 				<article>
 					{this.state.error && <span className='error'>{this.state.error}</span>}
 					{this.state.loading && <Loader color='#f44336' />}

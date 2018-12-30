@@ -22,6 +22,8 @@ const CONFIG = {
 		<h4>Zapraszamy do wspólnej gry</h4>
 		<h4>Oferujemy:</h4>
 		<ul>
+			<li>Profesjonalną administracje </li>
+			<li>Dopracowany serwer</li>
 			<li>Dużo dobrej zabawy</li>
 		</ul>
 	</React.Fragment>,

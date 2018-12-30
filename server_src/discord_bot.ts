@@ -53,6 +53,8 @@ function onLogin() {
 	//@ts-ignore
 	//console.log( bot.channels.map(ch => {return {id: ch.id, name: ch.name}}) );
 
+	//bot.guilds.find(g => g.name === 'IN2RP [+16]').members.find(m => m.user.username === 'Boteg').setNickname('IN2RP').catch(console.error);
+
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		statusApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
@@ -191,8 +193,6 @@ export default {
 		return undefined;
 	},
 
-	//💬zarzad, id: 520748695059300383
-	//whitelist, id: 516321132656197661
 	sendChannelMessage: function(channel_id: string, message: string) {
 		if(started) {
 			var found_channel = bot.channels.get(channel_id);
@@ -203,5 +203,11 @@ export default {
 				return undefined;
 		}
 		return undefined;
-	}
+	},
+
+	getDiscordUser: function(user_id: string) {
+		if(started)
+			return bot.users.get(user_id);
+		return undefined;
+	}	
 };

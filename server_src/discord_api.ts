@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-// import btoa from 'btoa';
+import Database from './database';
 const btoa = require('btoa');
 import LOG from './log';
 import * as fs from 'fs';
@@ -75,6 +75,10 @@ export default {
 
 	getDiscordUserData: getDiscordUserData,
 
+	getAdmins: function() {
+		return admins;
+	},
+
 	isAdmin: function(id: string) {
 		return admins.indexOf(id) !== -1;
 	},
@@ -133,6 +137,7 @@ export default {
 			if(typeof req.body.token !== 'string') {
 				res.status(400);
 				LOG('guest session', ip);
+				Database.storeVisit();
 				return res.json({result: 'You must provide token in body request'});
 			}
 			
@@ -146,6 +151,7 @@ export default {
 			}
 			else {
 				LOG('client session', response.username, response.id, ip);
+				Database.storeVisit(response.username);
 				res.json({
 					result: 'SUCCESS',
 					nick: response.username, 

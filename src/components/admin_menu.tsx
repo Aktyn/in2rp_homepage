@@ -32,9 +32,12 @@ export default class extends React.Component<any, AdminMenuState> {
 				  	<span></span>
 				  	<span></span>
 				</div>
-				<div className='options_container'>
+				<div className='options_container' 
+					style={{height: this.state.open ? `${25*6+4}px` : 'inherit'}}>
 					<Link to='/wl_requests'>Podania</Link>
 					<Link to='/logs_mng'>Logi</Link>
+					<Link to='/admins_mng'>Adminostwo</Link>
+					<Link to='/statistics'>Statystyki</Link>
 					<Link to='/gallery'>Galeria</Link>
 				</div>
 			</button>

@@ -25,12 +25,10 @@ import Database from './database';
 import discordBot from './discord_bot';
 discordBot.start();
 
-//#status - 526137746126012416
-//#zarzad - 520748695059300383
-//#regulamin - 527902170822213663
-//#zarzadzanie-serverem 527950073322143794
+//#administracja - 528687540937424955
+//#whitelist - 528681859882811421
 /*setTimeout(() => {
-	discordBot.sendChannelMessage('527950073322143794', 'Do roboty boty');
+	discordBot.sendChannelMessage('528987808438812683', 'test');
 }, 1000);*/
 
 // console.log('ENV:', process.env.NODE_ENV);
@@ -68,16 +66,19 @@ app.post('/whitelist_status_request', whitelistAPI.status_request);
 app.post('/get_whitelist_applicants', whitelistAPI.applicants_request);
 app.post('/update_whitelist_status', whitelistAPI.update_request);
 
-import logsAPI from './logs_api';
+import commonAPI from './common_api';
 
-app.post('/get_avaible_logs', logsAPI.get_logs);
-app.post('/get_log_content', logsAPI.get_log_content);
+app.post('/get_avaible_logs', commonAPI.get_logs);
+app.post('/get_log_content', commonAPI.get_log_content);
+app.post('/get_admins', commonAPI.get_admins);
+app.post('/get_visits', commonAPI.get_visits);
 
 app.post('/record_visit', (req, resp) => {
 	let forwards = req.headers['x-forwarded-for'];
 	if(typeof forwards === 'object')
 		forwards = forwards.join(',');
 	LOG('guest session', (forwards || req.connection.remoteAddress || '').replace(/::ffff:/, ''));
+	Database.storeVisit();
 });
 
 const dir = __dirname + '/../dist';

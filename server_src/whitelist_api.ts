@@ -26,12 +26,12 @@ export default {
 		//console.log(insert_res);
 		if(insert_res.affectedRows > 0) {
 			res.json({result: 'SUCCESS'});
-			let msg = `<@${response.id}> właśnie zlożył podanie o whiteliste.`;
-			LOG(`${response.username} właśnie zlożył podanie o whiteliste.`);//not tested
+			let msg = `<@${response.id}> zlożył podanie o whiteliste.`;
+			LOG(`${response.username} zlożył podanie o whiteliste.`);//not tested
 			try {
-				discordBot.sendChannelMessage('520748695059300383', msg).catch((e: Error) => {
-					console.log('Cannot send message to channel 520748695059300383');
-					discordBot.sendChannelMessage('516321132656197661', 'test')
+				discordBot.sendChannelMessage('528987808438812683', msg).catch((e: Error) => {
+					console.error('Cannot send message to channel 520748695059300383');
+					//discordBot.sendChannelMessage('516321132656197661', 'test')
 				});
 			}
 			catch(e) {
@@ -132,7 +132,7 @@ export default {
 		setTimeout(async () => {//asynchronosly deal with discord bot sending message to user
 			var new_status;
 			if(req.body.requested_status === 'accepted')
-				new_status = `zaakceptowane. Zapraszamy na rozmowę, w której sprawdzimy twoją znajomość regulaminu. <#516321132656197661>`;
+				new_status = `zaakceptowane. Zapraszamy na rozmowę, w której sprawdzimy twoją znajomość regulaminu. <#528681859882811421>`;
 			else if(req.body.requested_status === 'rejected')
 				new_status = 'odrzucone.';
 			else

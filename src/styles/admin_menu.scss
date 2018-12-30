@@ -3,7 +3,7 @@ $buttonheight: 24px;
 
 .admin_btn {
 	position: relative;
-	z-index: 3;
+	z-index: 80;
 	width: $buttonwidth;
 	box-shadow: none !important;
 	white-space: nowrap;
@@ -19,7 +19,7 @@ $buttonheight: 24px;
 	left: 10px;
 	text-align: left;
 	width: 100%;
-	z-index: 13;
+	z-index: 83;
 	content: attr(data-ct);
 	// width: 100%;
 	height: $buttonheight;
@@ -27,7 +27,7 @@ $buttonheight: 24px;
 
 .admin_btn .menu_icon {
 	position: absolute;
-	z-index: 11;
+	z-index: 82;
 	display: inline-block;
 	width: 13.3px;
 	height: 10px;
@@ -97,7 +97,7 @@ $buttonheight: 24px;
 
 .admin_btn .options_container {
 	position: absolute;
-	z-index: 10;
+	z-index: 81;
 	right: 0px;
 	top: 0px;
 	background-color: #ff6360;
@@ -123,10 +123,9 @@ $buttonheight: 24px;
 	// background-color: red;
 }
 
-.admin_btn.open .options_container {
-	// background-color: #ef5350;
-	height: 104px;
-}
+// .admin_btn.open .options_container {
+// 	height: 104px;
+// }
 
 .admin_btn .options_container > a {
 	display: block;

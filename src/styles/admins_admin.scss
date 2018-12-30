@@ -1,0 +1,52 @@
+$block_h: 24px;
+
+.admins_admin_main .admins_list {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: start;
+}
+
+.admins_admin_main .error {
+	color: #ef5350;
+	font-weight: bold;
+	padding: 20px 0px;
+	display: block;
+}
+
+.admins_admin_main .admins_list > * {
+	white-space: nowrap;
+	margin: 8px 2px;
+	padding: 0px $block_h+10 0px 10px;
+	text-align: left;
+	border-bottom: 4px solid #00796B;
+	border-radius: 5px;
+	background-color: #009688;
+	color: #fff;
+	// font-weight: bold;
+	font-size: 12px;
+	// cursor: pointer;
+	position: relative;
+	height: $block_h;
+	line-height: $block_h;
+}
+
+.admins_admin_main .admins_list > * > .close_btn {
+	width: $block_h;
+	height: $block_h;
+	position: absolute;
+	right: 5px;
+	background: url('../img/close.svg') center no-repeat;
+	background-size: 70%;
+	border-left: 1px solid #fff2;
+}
+/*.admins_admin_main .admins_list > * > .close_btn::before {
+	content: " ";
+	width: $block_h;
+	height: $block_h;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	border-left: 1px solid #fff4;
+}*/

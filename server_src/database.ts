@@ -57,7 +57,7 @@ connection.connect((err) => {
 });
 
 const Utils = {
-	//data_ur excluded due to short length
+	//data_ur excluded due to short length of VARCHAR
 	QUESTION_NAMES: ['o_rp', 'dosw', 'postacie', 'czy_stream', 
 		'Q1_jps', 'Q2_uc', 'Q3_napad', 'Q4_koledzy', 'Q5_pg', 'Q6_wu', ]
 };
@@ -88,9 +88,9 @@ const self = {
 		});
 	},
 
-	init: function() {
-		this.customQuery(
-			"CREATE TABLE IF NOT EXISTS `Whitelist`.`requests` (\
+	init: async function() {
+		await this.customQuery(//table for whitelist requests
+			"CREATE TABLE IF NOT EXISTS `requests` (\
 			  	`id` INT(16) NOT NULL AUTO_INCREMENT,\
 			  	`status` VARCHAR(16) NOT NULL DEFAULT 'pending',\
 			  	`timestamp` VARCHAR(16) NOT NULL,\
@@ -101,6 +101,14 @@ const self = {
 			  		return "`" + q + "` VARCHAR(512) NULL, ";
 			  	}).join('') +
 		  		"PRIMARY KEY (`id`),\
+		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
+	  	);
+	  	await this.customQuery(//table for whitelist requests
+			"CREATE TABLE IF NOT EXISTS `visits` (\
+			  	`id` INT(16) NOT NULL AUTO_INCREMENT,\
+			  	`timestamp` VARCHAR(16) NOT NULL,\
+			  	`user` VARCHAR(32),\
+			  	PRIMARY KEY (`id`),\
 		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
 	  	);
 	},
@@ -116,7 +124,7 @@ const self = {
 			return "'" + encodeURIComponent(answers[key]) + "'";
 		}).join(', ');
 
-		return this.customQuery("INSERT INTO `Whitelist`.`requests`\
+		return this.customQuery("INSERT INTO `requests`\
 			(`timestamp`, `discord_nick`, `discord_discriminator`, `discord_id`, " + columns_names + ")\
 			VALUES \
 			('" + Date.now() + "', '" + username + "', '" + discriminator + "', '" + id + "', " + column_values + ");"
@@ -124,22 +132,38 @@ const self = {
 	},
 
 	getWhitelistRequest: function(id: string) {
-		return this.customQuery("SELECT * FROM `Whitelist`.`requests` WHERE `discord_id` = '"+id+"';");
+		return this.customQuery("SELECT * FROM `requests` WHERE `discord_id` = '"+id+"';");
 	},
 
 	getRequests: function(status: string) {//1000*60*60*24 = 86400000 => miliseconds in one day
-		return this.customQuery("SELECT * FROM `Whitelist`.`requests`\
+		return this.customQuery("SELECT * FROM `requests`\
 			WHERE `status`='" + status + "' AND ((UNIX_TIMESTAMP()*1000 - `timestamp`)/86400000) < 7\
 			ORDER BY `timestamp` DESC LIMIT 100;");
 	},
 
 	changeStatus: function(id: number, new_status: string) {
-		return this.customQuery("UPDATE `Whitelist`.`requests` SET `status`='" + new_status + "'\
+		return this.customQuery("UPDATE `requests` SET `status`='" + new_status + "'\
 			WHERE `id`=" + id + ";");
 	},
 
 	getUserDiscordID: function(id: number) {
-		return this.customQuery("SELECT discord_id FROM Whitelist.requests WHERE id=" + id + ";");
+		return this.customQuery("SELECT discord_id FROM requests WHERE id=" + id + ";");
+	},
+
+	storeVisit: function(user?: string) {
+		return this.customQuery("INSERT INTO `visits`\
+			(`timestamp`, `user`)\
+			VALUES ('" + Date.now() + "', " + (user && user.length > 0 ? `'${user}'` : "NULL") + ");");
+	},
+
+	getVisits: function(from: string, to: string) {//from and to are dates in format: YYYY-MM-DD
+		return this.customQuery("SELECT \
+				COUNT(`id`) as 'count', \
+				DATE_FORMAT(from_unixtime(`timestamp`/1000), '%Y-%m-%d') as day\
+			FROM Whitelist.visits\
+			GROUP BY day\
+			HAVING day >= '" + from + "' AND day <= '" + to + "'\
+			ORDER BY day ASC;");
 	}
 };
 
