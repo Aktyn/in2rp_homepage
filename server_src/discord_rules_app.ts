@@ -41,7 +41,7 @@ function onUserRejectedRules(user: Discord.User, message: Discord.Message) {
 
 //set role for those who accepted rules
 //and removes role for those who doesn't
-async function setUserInitialRoles(rules_msg: Discord.Message) {
+/*async function setUserInitialRoles(rules_msg: Discord.Message) {
 	try {
 		let users_who_accepted = await rules_msg.reactions.filter(reaction => {
 			return isCorrectReaction(reaction.emoji.name);
@@ -63,7 +63,7 @@ async function setUserInitialRoles(rules_msg: Discord.Message) {
 	catch(e) {
 		console.log('Cannot set initial roles:', e);
 	}
-}
+}*/
 
 export default {
 	CHANNEL_ID: id,
@@ -78,7 +78,7 @@ export default {
 				const filter: Discord.CollectorFilter = (reaction, user) => 
 					isCorrectReaction(reaction.emoji.name);//optimization
 				targetMsg.createReactionCollector(filter);
-				setUserInitialRoles(targetMsg);
+				//setUserInitialRoles(targetMsg);
 			}
 		}
 	},
