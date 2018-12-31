@@ -47,6 +47,8 @@ async function setUserInitialRoles(rules_msg: Discord.Message) {
 			return isCorrectReaction(reaction.emoji.name);
 		}).array()[0].fetchUsers();
 
+		//console.log(users_who_accepted.map(u => u.username).length);
+
 		let accepted_users_ids = users_who_accepted.array().map(u => u.id);
 
 		let role = rules_msg.guild.roles.find(r => r.name === "Użytkownik");
@@ -54,8 +56,8 @@ async function setUserInitialRoles(rules_msg: Discord.Message) {
 		for(var mem of rules_msg.guild.members.array()) {
 			if( accepted_users_ids.indexOf(mem.user.id) !== -1 )//user has accepted rules
 				mem.addRole(role).catch(console.error);
-			else
-				mem.removeRole(role).catch(console.error);
+			//else
+			//	mem.removeRole(role).catch(console.error);
 		}
 	} 
 	catch(e) {
