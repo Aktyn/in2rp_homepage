@@ -79,8 +79,9 @@ app.post('/record_visit', (req, resp) => {
 	let forwards = req.headers['x-forwarded-for'];
 	if(typeof forwards === 'object')
 		forwards = forwards.join(',');
-	LOG('guest session', (forwards || req.connection.remoteAddress || '').replace(/::ffff:/, ''));
-	Database.storeVisit();
+	let ip = (forwards || req.connection.remoteAddress || '').replace(/::ffff:/, '');
+	LOG('guest session', ip);
+	Database.storeVisit(ip);
 });
 
 const dir = __dirname + '/../dist';

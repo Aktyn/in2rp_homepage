@@ -53,6 +53,9 @@ function onLogin() {
 	//@ts-ignore
 	//console.log( bot.channels.map(ch => {return {id: ch.id, name: ch.name}}) );
 
+	// let guild = bot.guilds.find(g => g.name === 'IN2RP.PL +16');
+	// let role = guild.roles.find(r => r.name === "Użytkownik");
+
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		statusApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move

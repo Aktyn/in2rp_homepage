@@ -4,7 +4,6 @@ import Cookies from './../utils/cookies';
 import Config from './../config';
 // import Loader from './../components/loader';
 
-// import * as Charts from 'chart.js';
 import {Line as LineChart} from 'react-chartjs-2';
 
 import './../styles/statisitcs_admin.scss';
@@ -15,7 +14,7 @@ const CHART_OPTIONS: Chart.ChartOptions = {
 		text: 'Odwiedziny strony',
 		display: true,
 		fontStyle: 'normal',
-		padding: 20
+		padding: 10
 	},
     scales: {
         yAxes: [{
@@ -27,7 +26,7 @@ const CHART_OPTIONS: Chart.ChartOptions = {
             	color: '#bbb',
             	lineWidth: 1,
             	zeroLineWidth: 0,
-            	drawBorder: false
+            	drawBorder: true
             }
         }],
         xAxes: [{
@@ -43,14 +42,14 @@ const CHART_OPTIONS: Chart.ChartOptions = {
         }]
     },
     legend: {
-    	display: false
+    	display: true
     },
     // spanGaps
 };
 
 const DEFAULT_DATA = {
     datasets: [{
-        label: '',
+        label: 'Wszystkie',
         data: [{
 		    x: new Date(Date.now()-1000*60*60*24*7),
 		    y: 0
@@ -59,10 +58,28 @@ const DEFAULT_DATA = {
 		    y: 0
 		}],
         backgroundColor: [
-            'rgba(255, 128, 128, 0.6)',
+            '#e5393560',
         ],
         borderColor: [
-            'rgba(255, 128, 128)',
+            '#e53935',
+        ],
+        fill: 1,
+        borderWidth: 1
+    },
+    {
+    	label: 'Unikalne',
+        data: [{
+		    x: new Date(Date.now()-1000*60*60*24*7),
+		    y: 0
+		}, {
+		    x: new Date(),
+		    y: 0
+		}],
+        backgroundColor: [
+            '#00695C60',
+        ],
+        borderColor: [
+            '#00695C',
         ],
         borderWidth: 1
     }]
@@ -86,6 +103,7 @@ function properFormat(timestamp: number) {//returns date in format: YYYY-MM-DD
 
 interface VisitJSON {
 	count: number;
+	distinct_ip: number;
 	day: string;
 }
 
@@ -152,6 +170,12 @@ export default class extends React.Component<any, StatisticsState> {
 							return {
 								x: new Date( new Date(v.day).getTime() ),
 								y: v.count
+							}
+						});
+						this.visits_chart.chartInstance.data.datasets[1].data = res['visits'].map(v=>{
+							return {
+								x: new Date( new Date(v.day).getTime() ),
+								y: v.distinct_ip
 							}
 						});
 						this.visits_chart.chartInstance.update();

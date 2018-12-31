@@ -108,6 +108,7 @@ const self = {
 			  	`id` INT(16) NOT NULL AUTO_INCREMENT,\
 			  	`timestamp` VARCHAR(16) NOT NULL,\
 			  	`user` VARCHAR(32),\
+			  	`ip` VARCHAR(32),\
 			  	PRIMARY KEY (`id`),\
 		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
 	  	);
@@ -150,15 +151,17 @@ const self = {
 		return this.customQuery("SELECT discord_id FROM requests WHERE id=" + id + ";");
 	},
 
-	storeVisit: function(user?: string) {
+	storeVisit: function(ip: string, user?: string) {
 		return this.customQuery("INSERT INTO `visits`\
-			(`timestamp`, `user`)\
-			VALUES ('" + Date.now() + "', " + (user && user.length > 0 ? `'${user}'` : "NULL") + ");");
+			(`timestamp`, `user`, `ip`)\
+			VALUES ('" + Date.now() + "', " + (user && user.length > 0 ? `'${user}'` : "NULL") + ", '" + ip + "');");
 	},
 
+	//COUNT(distinct ip) as 'distinct_ip',
 	getVisits: function(from: string, to: string) {//from and to are dates in format: YYYY-MM-DD
 		return this.customQuery("SELECT \
 				COUNT(`id`) as 'count', \
+				COUNT(distinct `ip`) as 'distinct_ip',\
 				DATE_FORMAT(from_unixtime(`timestamp`/1000), '%Y-%m-%d') as day\
 			FROM Whitelist.visits\
 			GROUP BY day\
