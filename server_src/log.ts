@@ -15,8 +15,12 @@ var current_day = 'today';
 var today_log_file: string | undefined = undefined;
 var ready = false;
 
+function fixedZero(n: number) {
+	return n >= 10 ? n.toString() : ('0'+n);
+}
+
 function generateLogFile(dt: Date) {
-	current_day = `${dt.getFullYear()}-${dt.getMonth()+1}-${ toFixed(dt.getDate()) }`;
+	current_day = `${fixedZero(dt.getFullYear())}-${fixedZero(dt.getMonth()+1)}-${toFixed(dt.getDate())}`;
 
 	today_log_file = path.join(__dirname, '..', 'logs', 'log_' + current_day);
 	
