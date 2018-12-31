@@ -71,6 +71,8 @@ import commonAPI from './common_api';
 app.post('/get_avaible_logs', commonAPI.get_logs);
 app.post('/get_log_content', commonAPI.get_log_content);
 app.post('/get_admins', commonAPI.get_admins);
+app.post('/remove_admin', commonAPI.remove_admin);
+app.post('/add_admin', commonAPI.add_admin);
 app.post('/get_visits', commonAPI.get_visits);
 
 app.post('/record_visit', (req, resp) => {

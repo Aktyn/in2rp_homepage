@@ -6,7 +6,7 @@ import Loader from './../components/loader';
 
 import './../styles/admins_admin.scss';
 
-interface AdminJSON {
+interface UserJSON {
 	id: string; 
 	nick: string; 
 	discriminator: string;
@@ -14,20 +14,31 @@ interface AdminJSON {
 
 interface AdminResJSON {
 	result: string;
-	admins: AdminJSON[]
+	admins: UserJSON[],
+	candidats: UserJSON[]
 }
 
 interface AdminsManagerState {
 	loading: boolean;
 	error?: string;
-	admins: AdminJSON[];
+	admins: UserJSON[];
+	candidats: UserJSON[];
+	selected_to_remove?: UserJSON;
+	removing_result?: string;
+	adding_result?: string;
 }
 
 export default class extends React.Component<any, AdminsManagerState> {
+	private user_id_input: HTMLInputElement | null = null;
+
 	state: AdminsManagerState = {
 		loading: true,
 		error: undefined,
-		admins: []
+		admins: [],
+		candidats: [],
+		selected_to_remove: undefined,
+		removing_result: undefined,
+		adding_result: undefined
 	};
 
 	constructor(props: any) {
@@ -41,7 +52,7 @@ export default class extends React.Component<any, AdminsManagerState> {
 		});
 	}
 
-	componentDidMount() {
+	refresh() {
 		var cookie_token = Cookies.getCookie('discord_token');
 		if(cookie_token === null)
 			return this.onError('Wygląda na to, że nie jesteś zalogowany');
@@ -53,7 +64,7 @@ export default class extends React.Component<any, AdminsManagerState> {
 			headers: {"Content-Type": "application/json; charset=utf-8"},
 			body: JSON.stringify({token: cookie_token})
 		}).then(res => res.json()).then((res: AdminResJSON) => {
-			//console.log(res);
+			//console.log(res['candidats']);
 			if(res['result'] !== 'SUCCESS') {
 				let error_msg;
 				switch(res['result']) {
@@ -68,7 +79,8 @@ export default class extends React.Component<any, AdminsManagerState> {
 				this.setState({
 					error: undefined, 
 					loading: false, 
-					admins: res['admins']
+					admins: res['admins'],
+					candidats: res['candidats'],
 				});
 			}
 		}).catch(e => {
@@ -77,20 +89,135 @@ export default class extends React.Component<any, AdminsManagerState> {
 		});
 	}
 
+	componentDidMount() {
+		this.refresh();
+	}
+
+	removeAttempt(admin: UserJSON) {
+		this.setState({selected_to_remove: admin, removing_result: undefined});
+	}
+
+	removeAdmin() {
+		if(!this.state.selected_to_remove)
+			return;
+
+		var cookie_token = Cookies.getCookie('discord_token');
+		if(cookie_token === null)
+			return this.onError('Wygląda na to, że nie jesteś zalogowany');
+
+		//getting list of avaible log files
+		fetch(Config.api_server_url + '/remove_admin', {
+			method: "POST",
+			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
+			headers: {"Content-Type": "application/json; charset=utf-8"},
+			body: JSON.stringify({token: cookie_token, id: this.state.selected_to_remove.id})
+		}).then(res => res.json()).then((res: AdminResJSON) => {
+			//console.log(res);
+			if(res['result'] !== 'SUCCESS') {
+				this.setState({
+					removing_result: res['result'] === 'ERROR_XXX' ? 
+						'Co ty robisz?! Aktyna nie usuniesz xD' : 'Nie można usunąć admina'
+				});
+			}
+			else {
+				this.setState({selected_to_remove: undefined, removing_result: undefined});
+				this.refresh();
+			}
+		}).catch(e => {
+			this.setState({removing_result: 'Nie można usunąć admina'});
+			console.error(e);
+		});
+	}
+
+	addAdmin(id: string) {
+		if(id.length < 1)
+			return;
+
+		var cookie_token = Cookies.getCookie('discord_token');
+		if(cookie_token === null)
+			return this.onError('Wygląda na to, że nie jesteś zalogowany');
+
+		//getting list of avaible log files
+		fetch(Config.api_server_url + '/add_admin', {
+			method: "POST",
+			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
+			headers: {"Content-Type": "application/json; charset=utf-8"},
+			body: JSON.stringify({token: cookie_token, id: id})
+		}).then(res => res.json()).then((res: AdminResJSON) => {
+			//console.log(res);
+			if(res['result'] !== 'SUCCESS')
+				this.setState({adding_result: 'Nie można dodać admina'});
+			else {
+				this.setState({selected_to_remove: undefined, adding_result: undefined});
+				this.refresh();
+			}
+		}).catch(e => {
+			this.setState({adding_result: 'Nie można dodać admina'});
+			console.error(e);
+		});
+	}
+
+	renderRemoveConfirmationPrompt() {
+		let nick = this.state.selected_to_remove && this.state.selected_to_remove.nick;
+		return <>
+			<div>{
+				this.state.removing_result ? 
+					<span style={{color: '#f44336'}}>{this.state.removing_result}</span> : 
+					`Czy na pewno chcesz usunąć użytkownika ${nick} z listy adminów?`
+			}</div>
+			{this.state.removing_result === undefined && <>
+					<button className='clean' onClick={this.removeAdmin.bind(this)}>Yep</button>
+					<button className='clean' 
+						onClick={() => this.setState({selected_to_remove: undefined})}>Nope</button>
+				</>
+			}
+		</>;
+	}
+
 	renderContent() {
 		return <>
 			<h4 style={{margin: '0px'}}>Edycja poniższej listy adminow nie wpływa na discorda</h4>
-			<div className='admins_list'>
+			<div className='users_list'>
 				{this.state.admins.map(admin => {
 					return <div key={admin.id}>
 						{`${admin.nick}#${admin.discriminator}`}
-						<button className='clean close_btn shake_icon'></button>
+						<button className='clean close_btn shake_icon' onClick={() => {
+							this.removeAttempt(admin);
+						}}></button>
 					</div>;
 				})}
 			</div>
-			<div>
-				Dodawanie i usuwanie będzie dostępne wkrótce 
-				<span style={{color: '#455a6460'}}>(chyba)</span>
+			<div className='confirmation_container'>
+				{this.state.selected_to_remove && this.renderRemoveConfirmationPrompt()}
+			</div>
+			<hr />
+			<div className='adder_container'>
+				<input type='text' placeholder='user discord id' ref={el => this.user_id_input=el} />
+				<br />
+				<button className='clean' onClick={() => {
+					if(this.user_id_input) {
+						this.addAdmin(this.user_id_input.value);
+						this.user_id_input.value = '';
+					}
+				}}>Dodaj admina</button>
+				<div><span style={{color: '#f44336'}}>{this.state.adding_result}</span></div>
+			</div>
+			<hr />
+			<div>Lista osób z wysokimi rangami typu Developer, Administrator:</div>
+			<div className='users_list candidates'>
+				{this.state.candidats.map(candidat => {
+					return <div key={candidat.id}>
+						{`${candidat.nick}#${candidat.discriminator}`}
+						<button className='clean add_btn' onClick={() => {
+							if(this.user_id_input) {
+								this.user_id_input.value = candidat.id;
+								this.user_id_input.classList.remove('blink');
+								void this.user_id_input.offsetHeight;
+								this.user_id_input.classList.add('blink');
+							}
+						}}>+</button>
+					</div>;
+				})}
 			</div>
 		</>;
 	}

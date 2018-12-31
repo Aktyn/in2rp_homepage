@@ -27,24 +27,9 @@ interface MessageSchema {
 function generateMessage(data: MessageSchema) {
 	if(data.online === false)
 		return 'Serwer offline :dizzy_face:';
-	/*var players_formated = '```';
-	let fixed_len = Math.max( ...data.players_online.map(p => p.length) ) + 3;//3 works as margin
-	var col = 0;
-	for(var nick of data.players_online) {
-		var spaces_offset = fixed_len - nick.length;
-		players_formated += nick;
-		for(var i=0; i<spaces_offset; i++)
-			players_formated += ' ';
-
-		if(2 === ++col)
-			players_formated += '\n';
-	}
-	players_formated += '```';
-	console.log(players_formated);*/
 
 	var embed = new Discord.RichEmbed()
 		.setColor('#ff5555')
-		//.setTitle("in2rp")
 		.addField('Graczy online', `**${data.players_online.length}** / **${ServerInfo.max_players}**\n${data.players_online.join(data.players_online.length < 10 ? '\n' : ' ')}`)
 		.addField('Ostatnia aktualizacja', new Date().toLocaleTimeString('en-US', {hour12: false}))
 		.setFooter(`IP serwera: ${server_ip}`);
@@ -89,7 +74,7 @@ function printHelp(message: Discord.Message, is_spam = false) {
 }
 
 function clearChannel(channel: Discord.TextChannel) {
-	channel.fetchMessages().then(messages => {
+	return channel.fetchMessages().then(messages => {
 		channel.bulkDelete(messages);
 	}).catch(err => {
 		console.log('Error while deleting channel messages');
@@ -102,19 +87,21 @@ var StatusApp = {
 	init: async (bot: Discord.Client) => {
 		var msg: Discord.Message | Discord.Message[] | undefined;
 		var target: Discord.Channel | Discord.User | undefined;
-		if(process.env.NODE_ENV === 'dev')
-			target = bot.users.get('204639827193364492');
-		else {
-			target = bot.channels.get(id);
-			if(target instanceof Discord.TextChannel)
-				clearChannel(target)
-		}
-		if(!target) {
+		
+		target = bot.channels.get(id);
+		if(!target || !(target instanceof Discord.TextChannel)) {
 			console.error('Error while fetching user/channel (status app)');
 			return;
 		}
-		//@ts-ignore
-		msg = await target.send('Ładowanko...');
+		var messages = await (<Discord.TextChannel>target).fetchMessages();
+		var msg_arr = messages.array();
+		if(msg_arr.length === 1 && msg_arr[0].author.bot)
+			msg = msg_arr[0];
+		else {
+			if(msg_arr.length > 1)
+				await clearChannel(target);
+			msg = await target.send('Ładowanko...');
+		}
 		if(msg instanceof Discord.Message)
 			MainMessage = msg;
 		else {

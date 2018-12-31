@@ -65,7 +65,7 @@ export default {
 		if(response.code === 0)
 			return res.json({ result: response.message });
 
-		if(discordAPI.isAdmin(response.id) === false)
+		if(discordAPI.Admins.isAdmin(response.id) === false)
 			return res.json({ result: 'INSUFICIENT_PERMISSIONS' });
 		
 		if(req.body.requested_status !== 'accepted' && req.body.requested_status !== 'rejected')
@@ -115,7 +115,7 @@ export default {
 
 		//console.log(response);
 
-		if(discordAPI.isAdmin(response.id) === false) {
+		if(discordAPI.Admins.isAdmin(response.id) === false) {
 			LOG('Someone without permissions trying to accept/reject whitelist request:',
 				response.id, response.username);
 			return res.json({ result: 'INSUFICIENT_PERMISSIONS' });

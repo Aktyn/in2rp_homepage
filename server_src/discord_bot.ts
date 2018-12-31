@@ -53,7 +53,7 @@ function onLogin() {
 	//@ts-ignore
 	//console.log( bot.channels.map(ch => {return {id: ch.id, name: ch.name}}) );
 
-	//bot.guilds.find(g => g.name === 'IN2RP [+16]').members.find(m => m.user.username === 'Boteg').setNickname('IN2RP').catch(console.error);
+	//var user = bot.guilds.find(g => g.name === 'IN2RP.PL +16').members.find...
 
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		statusApp.init(bot);
@@ -173,6 +173,14 @@ function onLogin() {
 }
 
 export default {
+	getClient: function() {
+		return bot;
+	},
+
+	getGuild: function() {
+		return bot.guilds.find(g => g.name === 'IN2RP.PL +16');
+	},
+
 	start: function() {
 		if(started === true) {
 			console.log('Bot already started');
@@ -203,6 +211,19 @@ export default {
 				return undefined;
 		}
 		return undefined;
+	},
+
+	clearChannel: async function(channel_id: string) {
+		try {
+			var channel = bot.channels.get(channel_id);
+			if(channel instanceof Discord.TextChannel) {
+				let messages = await channel.fetchMessages();
+				channel.bulkDelete(messages);
+			}
+		}
+		catch(e) {
+			console.log('Cannot clear channel:', e);
+		}
 	},
 
 	getDiscordUser: function(user_id: string) {

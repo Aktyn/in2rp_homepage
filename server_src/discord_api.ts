@@ -12,16 +12,43 @@ const HOST = '145.239.92.229:' + global.PORT;//'in2rp.pl';
 var CLIENT_ID: string | null = null;
 var SECRET_KEY: string | null = null;
 
-var admins: string[] = [];//discord account ids
+//var admins: string[] = [];//discord account ids
 const admin_list_file_path = path.join(__dirname, '..', 'data', 'admins');
 
-if(fs.existsSync( admin_list_file_path ) === false)
-	console.log(admin_list_file_path, 'file not found. It should be created with list of admin ids');
-else {
-	admins = fs.readFileSync(admin_list_file_path, 'utf8').replace(/\/\/.*/gi, '')
-		.split('\n').map(line => line.replace(/\s/g, ''));
-}
-// console.log(admins);
+const ADMINS = {
+	list: [] as string[],
+
+	load: function() {
+		if(fs.existsSync( admin_list_file_path ) === false) {
+			console.log(admin_list_file_path, 'admins file not found, creating it');
+			fs.appendFileSync(admin_list_file_path, '', 'utf8');
+		}
+		
+		this.list = fs.readFileSync(admin_list_file_path, 'utf8')//.replace(/\/\/.*/gi, '')
+			.split('\n').map(line => line.replace(/\s/g, ''));
+	},
+
+	save: function() {
+		if(fs.existsSync( admin_list_file_path ) === false)
+			fs.appendFileSync(admin_list_file_path, '', 'utf8');
+		fs.writeFileSync(admin_list_file_path, this.list.join('\n'), 'utf8');
+	},
+
+	setAdmins: function(new_list: string[]) {
+		this.list = new_list;
+		this.save();
+	},
+
+	getAdmins: function() {
+		return this.list;
+	},
+
+	isAdmin: function(id: string) {
+		return this.list.indexOf(id) !== -1;
+	},
+};
+
+ADMINS.load();
 
 process.argv.forEach((val) => {
 	if(val.startsWith('CLIENT_ID'))
@@ -75,13 +102,7 @@ export default {
 
 	getDiscordUserData: getDiscordUserData,
 
-	getAdmins: function() {
-		return admins;
-	},
-
-	isAdmin: function(id: string) {
-		return admins.indexOf(id) !== -1;
-	},
+	Admins: ADMINS,
 
 	discord_callback: function(req: any, res: any) {
 		if (!req.query.code) {
@@ -108,7 +129,7 @@ export default {
 					throw new Error('Cannot fetch DiscordUserData');
 				console.log('User logged in:', response.username + '#' + response.discriminator, 'id:',
 					response.id);
-				let is_admin = admins.indexOf(response.id) !== -1;
+				let is_admin = ADMINS.isAdmin(response.id);
 				LOG('User logged in:', response.username + '#' + response.discriminator, 'id:',
 					response.id, 'admin:', is_admin);
 				res.redirect(final_redirect + `?success=true&token=${json.access_token}?user=${response.username}#${response.discriminator}?admin=${is_admin}`);
@@ -156,7 +177,7 @@ export default {
 					result: 'SUCCESS',
 					nick: response.username, 
 					discriminator: response.discriminator,
-					is_admin: admins.indexOf(response.id) !== -1
+					is_admin: ADMINS.isAdmin(response.id)
 				});
 			}
 		}

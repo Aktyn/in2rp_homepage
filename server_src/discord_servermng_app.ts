@@ -79,13 +79,20 @@ function executeCommand(cmd: string): Promise<string> {
 const ManagerApp = {
 	CHANNEL_ID: id,
 	init: async (bot: Discord.Client) => {
-		let target_channel = <Discord.TextChannel | undefined>bot.channels.get(id);
+		let target_channel = bot.channels.get(id);
 
-		if(target_channel) {
-			clearChannel(target_channel);
-			target_channel.send(generateMessage()).then(msg => {
-				MainMessage = msg as Discord.Message;
-			}).catch(console.error);
+		if(target_channel instanceof Discord.TextChannel) {
+			var msg_arr = (await target_channel.fetchMessages()).array();
+			if(msg_arr.length === 1 && msg_arr[0].author.bot) {
+				MainMessage = msg_arr[0];
+				MainMessage.edit(generateMessage());
+			}
+			else {
+				await clearChannel(target_channel);
+				target_channel.send(generateMessage()).then(msg => {
+					MainMessage = msg as Discord.Message;
+				}).catch(console.error);
+			}
 		}
 	},
 	handleMessage: (message: Discord.Message, bot: Discord.Client) => {

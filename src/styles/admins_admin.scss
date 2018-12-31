@@ -1,6 +1,6 @@
 $block_h: 24px;
 
-.admins_admin_main .admins_list {
+.admins_admin_main .users_list {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -15,7 +15,7 @@ $block_h: 24px;
 	display: block;
 }
 
-.admins_admin_main .admins_list > * {
+.admins_admin_main .users_list > * {
 	white-space: nowrap;
 	margin: 8px 2px;
 	padding: 0px $block_h+10 0px 10px;
@@ -30,9 +30,15 @@ $block_h: 24px;
 	position: relative;
 	height: $block_h;
 	line-height: $block_h;
+	box-shadow: 0px 1px 8px #000a;
 }
 
-.admins_admin_main .admins_list > * > .close_btn {
+.admins_admin_main .users_list.candidates > * {
+	background-color: #00BCD4;
+	border-color: #0097A7;
+}
+
+.admins_admin_main .users_list > * > .close_btn, .admins_admin_main .users_list > * > .add_btn {
 	width: $block_h;
 	height: $block_h;
 	position: absolute;
@@ -41,12 +47,69 @@ $block_h: 24px;
 	background-size: 70%;
 	border-left: 1px solid #fff2;
 }
-/*.admins_admin_main .admins_list > * > .close_btn::before {
-	content: " ";
-	width: $block_h;
-	height: $block_h;
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	border-left: 1px solid #fff4;
-}*/
+
+.admins_admin_main .users_list > * > .add_btn {
+	text-shadow: none;
+	color: #fff;
+	font-size: 19px;
+	font-weight: normal;
+	line-height: $block_h;
+	background: none;
+}
+
+.admins_admin_main .users_list > * > .add_btn:hover {
+	font-size: 25px;
+}
+
+.admins_admin_main .confirmation_container {
+	margin: 10px 0px;
+}
+
+.admins_admin_main .confirmation_container button,
+.admins_admin_main .adder_container button {
+	color: #ef5350;
+	padding: 5px 10px;
+	width: 100px;
+	margin: 10px 5px;
+	border-radius: 10px;
+	border: 1px solid #ef5350;
+	box-shadow: 0px 1px 6px #0006;
+	white-space: nowrap;
+}
+
+.admins_admin_main .confirmation_container button:hover,
+.admins_admin_main .adder_container button:hover {
+	font-weight: bold;
+	border-width: 2px;
+	padding: 4px 9px;
+	box-shadow: 0px 2px 8px #0006;
+}
+
+.admins_admin_main .confirmation_container button:last-child {
+	color: #4CAF50;
+	border-color: #4CAF50;
+}
+
+.admins_admin_main .adder_container button {
+	width: auto;
+	color: #2196F3;
+	border-color: #2196F3;
+}
+
+.admins_admin_main .adder_container input {
+	padding: 5px 10px;
+}
+
+.admins_admin_main .adder_container input.blink {
+	animation: blink 1s cubic-bezier(0.280, 0.840, 0.420, 1);
+}
+
+@keyframes blink {
+	0%   { transform: scale(1,1);     }
+	10%  { transform: scale(1.1,.9);  }
+	30%  { transform: scale(.9,1.1);  }
+	50%  { transform: scale(1.05,.95);}
+	57%  { transform: scale(1,1);     }
+	64%  { transform: scale(1,1);     }
+	100% { transform: scale(1,1);     }
+}
