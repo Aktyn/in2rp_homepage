@@ -55,10 +55,18 @@ function onLogin() {
 
 	// let guild = bot.guilds.find(g => g.name === 'IN2RP.PL +16');
 	// let role = guild.roles.find(r => r.name === "Użytkownik");
+	/*var rules_channel = bot.channels.get('528678812507045898');
+	if(rules_channel instanceof Discord.TextChannel) {
+		rules_channel.fetchMessages().then(messages => {
+			var msg_arr = messages.array();
+			var targetMsg = msg_arr[msg_arr.length-1];
+			console.log( targetMsg.reactions.array()[0].emoji. );
+		});
+	}*/
 
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		statusApp.init(bot);
-	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')
 		manageApp.init(bot);

@@ -4,6 +4,8 @@ import LOG from './log';
 const id = '528678812507045898';//channel id
 
 var targetMsg: Discord.Message | null = null;
+const TARGET_ROLE_NAME = 'Użytkownik';
+var target_role: Discord.Role | null = null;
 
 function isCorrectReaction(name: string) {
 	return name === '✅';
@@ -11,13 +13,18 @@ function isCorrectReaction(name: string) {
 
 function changeUserRole(user: Discord.User, message: Discord.Message, remove_role = false) {
 	try {
-		let role = message.guild.roles.find(r => r.name === "Użytkownik");
+		if(target_role === null)
+			throw "Target role";
 		let member = message.guild.members.get(user.id);
 		if(member) {
-			if(remove_role === true)
-				member.removeRoles([role]).catch(console.error);
-			else
-				member.addRoles([role]).catch(console.error);
+			if(remove_role === true) {
+				if(member.roles.some(rl => rl.name === TARGET_ROLE_NAME))
+					member.removeRoles([target_role]).catch(console.error);
+			}
+			else {
+				if(!member.roles.some(rl => rl.name === TARGET_ROLE_NAME))
+					member.addRoles([target_role]).catch(console.error);
+			}
 		}
 		else
 			console.log('member not found:', user.username);
@@ -39,35 +46,17 @@ function onUserRejectedRules(user: Discord.User, message: Discord.Message) {
 	changeUserRole(user, message, true);
 }
 
-//set role for those who accepted rules
-//and removes role for those who doesn't
-/*async function setUserInitialRoles(rules_msg: Discord.Message) {
-	try {
-		let users_who_accepted = await rules_msg.reactions.filter(reaction => {
-			return isCorrectReaction(reaction.emoji.name);
-		}).array()[0].fetchUsers();
-
-		//console.log(users_who_accepted.map(u => u.username).length);
-
-		let accepted_users_ids = users_who_accepted.array().map(u => u.id);
-
-		let role = rules_msg.guild.roles.find(r => r.name === "Użytkownik");
-
-		for(var mem of rules_msg.guild.members.array()) {
-			if( accepted_users_ids.indexOf(mem.user.id) !== -1 )//user has accepted rules
-				mem.addRole(role).catch(console.error);
-			//else
-			//	mem.removeRole(role).catch(console.error);
-		}
-	} 
-	catch(e) {
-		console.log('Cannot set initial roles:', e);
-	}
-}*/
-
 export default {
 	CHANNEL_ID: id,
 	init: async (bot: Discord.Client) => {
+		try {
+			target_role = bot.guilds.find(g => g.name === 'IN2RP.PL +16')
+				.roles.find(r => r.name === TARGET_ROLE_NAME);
+		}
+		catch(e) {
+			console.error('Cannot fetch target role:', e);
+		}
+
 		var rules_channel = bot.channels.get(id);
 		if(rules_channel) {
 			var messages = await (<Discord.TextChannel>rules_channel).fetchMessages();
@@ -78,16 +67,15 @@ export default {
 				const filter: Discord.CollectorFilter = (reaction, user) => 
 					isCorrectReaction(reaction.emoji.name);//optimization
 				targetMsg.createReactionCollector(filter);
-				//setUserInitialRoles(targetMsg);
 			}
 		}
 	},
 	onReactionAdded: (reaction: Discord.MessageReaction, user: Discord.User) => {
-		if(reaction.message === targetMsg && isCorrectReaction(reaction.emoji.name))
+		if(targetMsg && reaction.message.id === targetMsg.id && isCorrectReaction(reaction.emoji.name))
 			onUserAcceptedRules(user, reaction.message);
 	},
 	onReactionRemoved: (reaction: Discord.MessageReaction, user: Discord.User) => {
-		if(reaction.message === targetMsg && isCorrectReaction(reaction.emoji.name))
+		if(targetMsg && reaction.message.id === targetMsg.id && isCorrectReaction(reaction.emoji.name))
 			onUserRejectedRules(user, reaction.message);
 	}
 }
