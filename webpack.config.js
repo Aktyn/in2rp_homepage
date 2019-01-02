@@ -1,5 +1,4 @@
 const path = require('path');
-// const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -10,9 +9,11 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 module.exports = {
     entry: {
         main: './src/index.tsx',
+        //stats: './src/pages/statistics.tsx'
     },
     output: {
         filename: '[name].js',
+        chunkFilename: '[name].js',
         path: path.resolve(__dirname, 'dist'),
     },
     mode: isDevelopment ? 'development' : 'production',
@@ -27,6 +28,10 @@ module.exports = {
     },
 
     optimization: {
+        splitChunks: {
+            //chunks: 'all',
+            automaticNameDelimiter: '-'
+        },
         minimizer: [
             new UglifyJsPlugin({
                 uglifyOptions: {

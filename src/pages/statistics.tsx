@@ -2,9 +2,11 @@ import * as React from 'react';
 import Content from './../components/content';
 import Cookies from './../utils/cookies';
 import Config from './../config';
-// import Loader from './../components/loader';
 
-import {Line as LineChart} from 'react-chartjs-2';
+// import { Line as LineChart } from 'react-chartjs-2';
+
+// type Line = import('react-chartjs-2').Line;
+var LineChart: any;
 
 import './../styles/statisitcs_admin.scss';
 
@@ -110,7 +112,9 @@ interface VisitJSON {
 export default class extends React.Component<any, StatisticsState> {
 	private input_from: HTMLInputElement | null = null;
 	private input_to: HTMLInputElement | null = null;
-	private visits_chart: LineChart | null = null;
+	private visits_chart: any | null = null;
+
+	//private Line: Line | null = null;
 
 	state: StatisticsState = {
 		loading: false,
@@ -121,6 +125,12 @@ export default class extends React.Component<any, StatisticsState> {
 
 	constructor(props: any) {
 		super(props);
+	}
+
+	async componentDidMount() {
+		LineChart = (await import(
+			/* webpackChunkName: "charts", webpackPrefetch: true */ 'react-chartjs-2')).Line;
+		this.refresh();
 	}
 
 	onError(err_msg: string) {
@@ -198,8 +208,13 @@ export default class extends React.Component<any, StatisticsState> {
 		});
 	}
 
-	componentDidMount() {
-		this.refresh();
+	renderCharts() {
+		if(LineChart) {
+			return <LineChart width={600} height={400} ref={(chart: any) => this.visits_chart = chart}
+				data={DEFAULT_DATA} options={CHART_OPTIONS} />;
+		}
+		else
+			return 'Ładowanie';
 	}
 
 	render() {
@@ -220,8 +235,7 @@ export default class extends React.Component<any, StatisticsState> {
 							{this.state.loading ? 'Ładowanie' : 'Odśwież'}
 						</button>
 					</div>
-					<LineChart width={600} height={400} ref={chart => this.visits_chart = chart}
-						data={DEFAULT_DATA} options={CHART_OPTIONS} />
+					{this.renderCharts()}
 				</article>
 			</section>
 		</Content>;

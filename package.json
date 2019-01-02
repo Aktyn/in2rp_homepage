@@ -5,7 +5,7 @@
   "main": "src/index.tsx",
   "scripts": {
     "page:dev": "webpack-dev-server --config ./webpack.config.js",
-    "page:build": "webpack --config ./webpack.config.js",
+    "page:build": "rm -rf dist && webpack --config ./webpack.config.js",
     "page:publish": "rm -rf dist && NODE_ENV='production' webpack --config ./webpack.config.js -p",
     "server:dev": "NODE_ENV=dev nodemon -e js,ts --watch server_src/**/* --exec \"tsc -p ./server_src/tsconfig.json && node server_dist/index.js\"",
     "server:publish": "NODE_ENV=prod tsc -p ./server_src/tsconfig.json",
