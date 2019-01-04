@@ -12,7 +12,7 @@ const CONFIG = {
 	hostname: process.env.NODE_ENV === 'development' ? 'localhost' : 'in2rp.pl',
 	api_server_url: process.env.NODE_ENV === 'development' ? 
 		'http://localhost:1234' : 
-		location.origin, //'http://in2rp.pl',
+		location.origin, //'https://in2rp.pl',
 
 	discord_invitation_link: discord_invitation_link,
 

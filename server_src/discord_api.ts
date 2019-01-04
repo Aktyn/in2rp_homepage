@@ -73,10 +73,10 @@ if(process.env.NODE_ENV === 'dev') {
 	final_redirect = `http://localhost:${client_port}/login_result`;
 }
 else {
-	redirect = encodeURIComponent(`http://${HOST}/discord_callback`);
+	redirect = encodeURIComponent(`https://${HOST}/discord_callback`);
 
 	client_port = global.PORT;
-	final_redirect = `http://${HOST}/login_result`;
+	final_redirect = `https://${HOST}/login_result`;
 }
 
 interface DiscordUserJSON {
