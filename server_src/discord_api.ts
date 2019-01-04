@@ -7,7 +7,7 @@ import * as path from 'path';
 
 // import discordBot from './discord_bot';
 
-const HOST = 'http://54.37.128.15';// + global.PORT;//'in2rp.pl';
+const HOST = 'http://54.37.128.15:1234';// + global.PORT;//'in2rp.pl';
 
 var CLIENT_ID: string | null = null;
 var SECRET_KEY: string | null = null;
