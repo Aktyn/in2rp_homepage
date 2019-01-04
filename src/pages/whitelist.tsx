@@ -22,6 +22,10 @@ enum WL_STATUS {
 	REJECTED
 }
 
+interface QuestionsBlockSchema {
+	[index: string]: {type: QuestionType, content: string}
+}
+
 interface WhitelistState {
 	status: STATE;
 	wl_status: WL_STATUS;
@@ -67,6 +71,18 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 			clearTimeout(this.confirm_timeout as number);
 	}
 
+	private mapAnswersBlock(block: QuestionsBlockSchema, prefix: string) {
+		let answers_block: {[index: string]: string} = {};
+		Object.keys(block).map(key => {
+			var input_el = document.getElementsByName(key)[0];
+			var answer = (input_el instanceof HTMLInputElement || 
+				input_el instanceof HTMLTextAreaElement) && input_el.value;
+			if(typeof answer === 'string')
+				answers_block[prefix + key] = answer;
+		});
+		return answers_block;
+	}
+
 	sendRequest() {
 		if(this.state.send_confirm === 0) {
 			this.setState({send_confirm: 1});
@@ -76,18 +92,12 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 			return;
 		}
 
-		var _answers = {} as {[index: string]: string};
+		var _answers = {
+			...this.mapAnswersBlock(Config.WHITELIST_QUESTIONS.OOC, 'ooc_'),
+			...this.mapAnswersBlock(Config.WHITELIST_QUESTIONS.IC, 'ic_')
+		} as {[index: string]: string};
+		// console.log(_answers);
 
-		Object.keys(Config.WHITELIST_QUESTIONS).map(key => {
-			var input_el = document.getElementsByName(key)[0];
-			var answer = (input_el instanceof HTMLInputElement || 
-				input_el instanceof HTMLTextAreaElement) && input_el.value;
-			//console.log(key, ':', answer);
-			if(typeof answer === 'string')
-				_answers[key] = answer;
-		});
-		
-		//console.log(_answers);
 		var cookie_token = Cookies.getCookie('discord_token');
 		if(cookie_token === null) {
 			this.setState({error: 'Nie można wysłać formularza.', send_confirm: 0});
@@ -178,6 +188,33 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 		}).catch(e => console.error(e));
 	}
 
+	private questionsBlock(block: QuestionsBlockSchema) {
+		return Object.keys(block).map((key, id) => {
+			var data = block[key];
+
+			var answer_input;
+			switch(data.type) {
+				case QuestionType.DATE:
+					answer_input = <input type='date' maxLength={512} name={key} />;
+					break;
+				case QuestionType.INPUT:
+					answer_input = <input type='text' maxLength={512} name={key} />;
+					break;
+				case QuestionType.NUMBER_INPUT:
+					answer_input = <input type='number' maxLength={512} name={key} />;
+					break;
+				case QuestionType.TEXTAREA:
+					answer_input = <textarea name={key} maxLength={512} />;
+					break;
+			}
+
+			return <p key={id}>
+				<label>{data.content}</label>
+				{answer_input}
+			</p>;
+		});
+	}
+
 	renderQuestions() {
 		if(this.state.wl_status === WL_STATUS.UNKNOWN) {
 			this.checkWhitelistStatus();
@@ -202,31 +239,15 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 			</React.Fragment>;
 		}
 		else {
-			const q_data = Config.WHITELIST_QUESTIONS;
 			content = <React.Fragment>
 				<h3>Odpowiedz na poniższe pytania przed wysłaniem podania o whiteliste.</h3>
 				<div className='questions'>
-					{Object.keys(q_data).map((key, id) => {
-						var data = q_data[key];
-
-						var answer_input;
-						switch(data.type) {
-							case QuestionType.DATE:
-								answer_input = <input type='date' maxLength={512} name={key} />;
-								break;
-							case QuestionType.INPUT:
-								answer_input = <input type='text' maxLength={512} name={key} />;
-								break;
-							case QuestionType.TEXTAREA:
-								answer_input = <textarea name={key} maxLength={512} />;
-								break;
-						}
-
-						return <p key={id}>
-							<label>{data.content}</label>
-							{answer_input}
-						</p>;
-					})}
+					<br />
+					<h4>INFORMACJE OOC</h4>
+					{this.questionsBlock(Config.WHITELIST_QUESTIONS.OOC)}
+					<br />
+					<h4>INFORMACJE IC</h4>
+					{this.questionsBlock(Config.WHITELIST_QUESTIONS.IC)}
 				</div>
 				<hr />
 				<div style={{color: '#f55', fontWeight: 'bold'}}>{this.state.error}</div>

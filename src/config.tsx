@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export enum QuestionType {
 	DATE,
-	INPUT,
+	INPUT, NUMBER_INPUT,
 	TEXTAREA
 }
 
@@ -41,10 +41,18 @@ const CONFIG = {
 		</div>
 	</React.Fragment>,
 
-	WHITELIST_QUESTIONS: {
+	/*WHITELIST_QUESTIONS: {
+		'imie': {
+			type: QuestionType.INPUT,
+			content: 'Imię'
+		},
 		'data_ur': {
 			type: QuestionType.DATE, 		
 			content: 'Data urodzenia:'
+		},
+		'steam_id64': {
+			type: QuestionType.NUMBER_INPUT,
+			content: 'SteamID64'
 		},
 		'o_rp': { 		
 			type: QuestionType.TEXTAREA, 	
@@ -86,7 +94,26 @@ const CONFIG = {
 			type: QuestionType.TEXTAREA, 	
 			content: 'Bierzesz udział w wyścigu ulicznym. Jedziesz z bardzo szybką prędkością i niestety zahaczasz o auto przeciwnika. Skutkiem tego jest wielki karambol. Mimo to, tak bardzo zależy Ci na wygranej, że na szybko naprawiasz naprawką pojazd i dalej jedziesz w stronę mety. Czy mogłeś tak zrobić? Wyjaśnij.'
 		},
-	} as {[index: string]: {type: QuestionType, content: string}}
+	} as {[index: string]: {type: QuestionType, content: string}}*/
+
+	WHITELIST_QUESTIONS: {
+		OOC: {
+			'imie': 	{type: QuestionType.INPUT, content: 'Imię'},
+			'data_ur': 	{type: QuestionType.DATE, content: 'Data urodzenia'},
+			'steam_id': {type: QuestionType.NUMBER_INPUT, content: 'SteamID64'},
+			'o_rp': 	{type: QuestionType.TEXTAREA, content: 'Co wiesz o RP?'},
+		} as {[index: string]: {type: QuestionType, content: string}},
+		IC: {
+			'imie_nazwisko': 	{type: QuestionType.INPUT, content: 'Imię i nazwisko'},
+			'wiek': 			{type: QuestionType.NUMBER_INPUT, content: 'Wiek'},
+			'historia': 		{type: QuestionType.TEXTAREA, content: 'Historia postaci'},
+			'plan_na_postac': 	{type: QuestionType.TEXTAREA, content: 'Plan na postać'},
+			'kreatywna_akcja': {
+				type: QuestionType.TEXTAREA, 
+				content: 'Jedna kreatywna akcja IC z udziałem twojej postaci'
+			}
+		} as {[index: string]: {type: QuestionType, content: string}}
+	}
 };
 
 export default CONFIG;

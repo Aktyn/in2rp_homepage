@@ -58,12 +58,23 @@ connection.connect((err) => {
 
 const Utils = {
 	//data_ur excluded due to short length of VARCHAR
-	QUESTION_NAMES: ['o_rp', 'dosw', 'postacie', 'czy_stream', 
-		'Q1_jps', 'Q2_uc', 'Q3_napad', 'Q4_koledzy', 'Q5_pg', 'Q6_wu', ]
+	/*QUESTION_NAMES: ['o_rp', 'dosw', 'postacie', 'czy_stream', 
+		'Q1_jps', 'Q2_uc', 'Q3_napad', 'Q4_koledzy', 'Q5_pg', 'Q6_wu', ]*/
+	QUESTIONS: {
+		'ic_historia': 			'VARCHAR(512)',
+		'ic_imie_nazwisko': 	'VARCHAR(128)',
+		'ic_kreatywna_akcja': 	'VARCHAR(512)',
+		'ic_plan_na_postac': 	'VARCHAR(512)',
+		'ic_wiek': 				'INT(3)',
+		'ooc_data_ur': 			'VARCHAR(16)',
+		'ooc_imie': 			'VARCHAR(64)',
+		'ooc_o_rp': 			'VARCHAR(512)',
+		'ooc_steam_id': 		'VARCHAR(64)'
+	} as {[index: string]: string}
 };
 
 const self = {
-	QUESTION_NAMES: Utils.QUESTION_NAMES,
+	QUESTIONS: Utils.QUESTIONS,
 
 	onConnected: function(callback: () => void) {
 		if(status === STATUS.SUCCESS)
@@ -96,9 +107,9 @@ const self = {
 			  	`timestamp` VARCHAR(16) NOT NULL,\
 			  	`discord_nick` VARCHAR(128) NOT NULL,\
 			  	`discord_discriminator` INT(6) NOT NULL,\
-			  	`discord_id` VARCHAR(32) NOT NULL,\
-			  	`data_ur` VARCHAR(16) NULL," + Utils.QUESTION_NAMES.map(q => {
-			  		return "`" + q + "` VARCHAR(512) NULL, ";
+			  	`discord_id` VARCHAR(32) NOT NULL," + 
+			  	Object.keys(Utils.QUESTIONS).map(q => {
+			  		return "`" + q + "` " + Utils.QUESTIONS[q] + " NULL, ";
 			  	}).join('') +
 		  		"PRIMARY KEY (`id`),\
 		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"

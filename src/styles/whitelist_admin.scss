@@ -191,20 +191,25 @@ $max_w1: 768px;
 	justify-self: center;
 }
 
-.QandA > p {
+.user_wl_focused > .QandA > p {
 	font-size: 13px;
 }
 
-.QandA > p:not(:last-child) {//question container
+.user_wl_focused > .QandA > h4 {
+	margin-bottom: 0px;
+	margin-top: 40px;
+}
+
+.user_wl_focused > .QandA > p:not(:last-child) {//question container
 	border-bottom: 1px solid #9dafb7;
 }
 
-.QandA > p > label {//question
+.user_wl_focused > .QandA > p > label {//question
 	display: block;
 	font-weight: bold;
 }
 
-.QandA > p > span {//answer
+.user_wl_focused > .QandA > p > span {//answer
 	padding: 10px 0px;
 	display: block;
 }

@@ -9,7 +9,7 @@ export default {
 
 		var response = await discordAPI.getDiscordUserData(req.body.token);
 
-		if(response.code === 0) {
+		if(response.code === 0) {//check if client is logged in to discord account
 			return res.json({
 				result: response.message
 			});
@@ -97,7 +97,7 @@ export default {
 				data_ur: res.data_ur,
 			};
 
-			Database.QUESTION_NAMES.map(qn => {
+			Object.keys(Database.QUESTIONS).map(qn => {
 				wl_app_data[qn] = res[qn];
 			});
 

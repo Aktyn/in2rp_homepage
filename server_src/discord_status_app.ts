@@ -2,7 +2,7 @@ import * as Discord from 'discord.js';
 import fetch from 'node-fetch';
 import LOG from './log';
 
-const server_ip = '145.239.92.229:30120';
+const server_ip = '54.37.128.15:30120';
 const id = '528694912162594827';//'526137746126012416';//channel id
 
 var MainMessage: Discord.Message | null = null;

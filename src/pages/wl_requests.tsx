@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Content from './../components/content';
 import Cookies from './../utils/cookies';
-import Config from './../config';
+import Config, { QuestionType } from './../config';
 import Loader from './../components/loader';
 
 import './../styles/whitelist_admin.scss';
@@ -21,6 +21,10 @@ interface WlRequestDataJSON {
 	timestamp: string;
 
 	[index: string]: string | number;
+}
+
+interface QuestionsBlockSchema {
+	[index: string]: {type: QuestionType, content: string}
 }
 
 interface WlRequestsState {
@@ -158,11 +162,11 @@ export default class extends React.Component<any, WlRequestsState> {
 	}
 
 	renderDataHeader(data: WlRequestDataJSON, closer?: JSX.Element, h1_border_color?: string) {
-		var creation_date = new Date(parseInt(data.timestamp)).toLocaleString()
-			.replace(/(:[0-9]{2}$)|,/gi, '');
+		var creation_date = new Date(parseInt(data['timestamp'])).toLocaleString()
+			.replace(/(:[0-9]{2}$)|,/gi, '');//TODO - fixed zeros
 		var age = (() => {
 			try {
-				var dt_destructed = data.data_ur.split('-');
+				var dt_destructed = (data['ooc_data_ur'] as string).split('-');
 				var dtur = new Date();
 				dtur.setFullYear( parseInt(dt_destructed[0]) );
 				dtur.setMonth( parseInt(dt_destructed[1]) );
@@ -176,12 +180,13 @@ export default class extends React.Component<any, WlRequestsState> {
 				return 0;
 			}
 		})();
+		
 
 		return <h1 style={{borderColor: h1_border_color}}>
 			<span className='creation_date'>{creation_date}</span>
-			<span className='nick'>{data.nick + '#' + data.discriminator}</span>
+			<span className='nick'>{data['nick'] + '#' + data['discriminator']}</span>
 			<span className='age'>
-				{age} lat{(age > 21 && (age%10 > 1))?'a':''}
+				{isNaN(age) ? 'Błędny wiek' : `${age} lat${(age > 21 && (age%10 > 1))?'a':''}` }
 			</span>
 			{closer}
 		</h1>;
@@ -193,8 +198,6 @@ export default class extends React.Component<any, WlRequestsState> {
 			
 		return <div className='user_wl_entries_container'>
 			{this.state.wl_requests.map((data, i) => {
-				//console.log(data);//data.id
-
 				return <div key={i}>
 					{this.renderDataHeader(data)}
 					<button className='show_btn clean' onClick={() => this.focusOn(i)}>Pokaż</button>
@@ -203,13 +206,24 @@ export default class extends React.Component<any, WlRequestsState> {
 		</div>;
 	}
 
+	private renderBlockOfAnswers(block: QuestionsBlockSchema, prefix: string) {
+		return Object.keys(block).map((key, id) => {
+			return <p key={id}>
+				<label>{block[key].content}</label>
+				<span>{this.state.focused && 
+					decodeURIComponent(String(this.state.focused[prefix+key]))}</span>
+			</p>
+		});
+	}
+
 	renderFocused() {
 		if(this.state.focused === undefined)
 			throw new Error('No focused whitelist request in state');
 
 		//console.log(this.state.focused);
 
-		const q_data = Config.WHITELIST_QUESTIONS;
+		//const q_data = Config.WHITELIST_QUESTIONS.OOC;//TODO - separate for both blocks
+		//console.log(this.state.focused);
 
 		return <div className='user_wl_focused'>
 			{this.renderDataHeader(
@@ -220,13 +234,10 @@ export default class extends React.Component<any, WlRequestsState> {
 					(this.state.current_cat === CATEGORIES.ACCEPTED ? '#8BC34A' : '#ef5350')
 			)}
 			<div className='QandA'>
-				{Object.keys(q_data).map((key, id) => 
-					<p key={id}>
-						<label>{q_data[key].content}</label>
-						<span>{this.state.focused && 
-							decodeURIComponent(String(this.state.focused[key]))}</span>
-					</p>
-				)}
+				<h4>INFORMACJE OOC</h4>
+				{this.renderBlockOfAnswers(Config.WHITELIST_QUESTIONS.OOC, 'ooc_')}
+				<h4>INFORMACJE IC</h4>
+				{this.renderBlockOfAnswers(Config.WHITELIST_QUESTIONS.IC, 'ic_')}
 			</div>
 			<div className='control_buttons'>
 				{this.state.current_cat !== CATEGORIES.ACCEPTED && 
