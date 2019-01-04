@@ -4,6 +4,8 @@ import Cookies from './../utils/cookies';
 import Config from './../config';
 
 import { Line as LineChart } from 'react-chartjs-2';
+import * as moment from 'moment';
+moment.locale('pl');
 
 // type Line = import('react-chartjs-2').Line;
 // var LineChart: any;
