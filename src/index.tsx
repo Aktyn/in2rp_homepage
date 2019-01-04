@@ -2,9 +2,9 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-// import Config from './config';
-//if(location.hostname.replace(/^www\./i, '') !== Config.hostname)
-//	location.hostname = Config.hostname;
+import Config from './config';
+if(location.hostname.replace(/^www\./i, '') !== Config.hostname)
+	location.hostname = Config.hostname;
 
 // import './styles/normalize.css';
 import './styles/main.scss';

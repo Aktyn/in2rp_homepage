@@ -9,7 +9,7 @@ export enum QuestionType {
 const discord_invitation_link = 'https://discord.io/in2rp';
 
 const CONFIG = {
-	hostname: process.env.NODE_ENV === 'development' ? 'localhost' : 'http://54.37.128.15',//'in2rp.pl',
+	hostname: process.env.NODE_ENV === 'development' ? 'localhost' : 'in2rp.pl',
 	api_server_url: process.env.NODE_ENV === 'development' ? 
 		'http://localhost:1234' : 
 		location.origin, //'http://in2rp.pl',
