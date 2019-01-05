@@ -67,13 +67,20 @@
 }
 
 
-.wl_container .questions > p {
+.wl_container .questions > * {
 	padding: 10px 5px;
 }
 
-.wl_container .questions > div > input {//answer input
+.wl_container .questions > p > input {//answer input
 	display: block;
     width: 100%;
+    margin: auto;
+    text-align: center;
+    // max-width: 200px;
+}
+
+.wl_container .questions > p > input[type='date'] {
+	width: auto;
 }
 
 /* RESULT ICON INDICATORS */
