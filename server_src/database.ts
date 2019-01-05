@@ -57,9 +57,17 @@ connection.connect((err) => {
 });
 
 const Utils = {
-	//data_ur excluded due to short length of VARCHAR
-	/*QUESTION_NAMES: ['o_rp', 'dosw', 'postacie', 'czy_stream', 
-		'Q1_jps', 'Q2_uc', 'Q3_napad', 'Q4_koledzy', 'Q5_pg', 'Q6_wu', ]*/
+	maxLengths: {
+		'ic_historia': 			8192,
+		'ic_imie_nazwisko': 	128,
+		'ic_kreatywna_akcja': 	8192,
+		'ic_plan_na_postac': 	4096,
+		'ic_wiek': 				3,
+		'ooc_data_ur': 			16,
+		'ooc_imie': 			64,
+		'ooc_o_rp': 			512,
+		'ooc_steam_id': 		64
+	} as {[index: string]: number},
 	QUESTIONS: {
 		'ic_historia': 			'VARCHAR(8192)',
 		'ic_imie_nazwisko': 	'VARCHAR(128)',
@@ -133,7 +141,7 @@ const self = {
 			return "`" + encodeURIComponent(key) + "`";
 		}).join(', ');
 		var column_values = answer_keys.map(key => {
-			return "'" + encodeURIComponent(answers[key]) + "'";
+			return "'" + encodeURIComponent(answers[key]).substr(0, Utils.maxLengths[key] || 8192) + "'";
 		}).join(', ');
 
 		return this.customQuery("INSERT INTO `requests`\

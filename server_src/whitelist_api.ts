@@ -30,11 +30,11 @@ export default {
 				let msg = `<@${response.id}> zlożył podanie o whiteliste.`;
 				LOG(`${response.username} zlożył podanie o whiteliste.`);//not tested
 				try {
-					//if(process.env.NODE_ENV !== 'dev') {
+					if(process.env.NODE_ENV !== 'dev') {
 						discordBot.sendChannelMessage('528987808438812683', msg).catch((e: Error) => {
 							console.error('Cannot send message to channel 520748695059300383');
 						});
-					//}
+					}
 				}
 				catch(e) {
 					console.error('Sending channel message failed:', e);

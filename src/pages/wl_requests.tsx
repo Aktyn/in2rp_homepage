@@ -204,11 +204,34 @@ export default class extends React.Component<any, WlRequestsState> {
 
 	private renderBlockOfAnswers(block: QuestionsBlockSchema, prefix: string) {
 		return Object.keys(block).map((key, id) => {
+			var answer_content = this.state.focused ? String(this.state.focused[prefix+key]) : '';
+			try {
+				answer_content = decodeURIComponent(answer_content);
+			}
+			catch(e) {
+				console.log('Cannot decode uri. Trying to fix that');
+				try {
+					answer_content = answer_content.replace(/%.{0,2}$/i, '');
+					answer_content = decodeURIComponent(answer_content);
+				}
+				catch(e) {
+					console.log('First fix failed. Trying another one.');
+					try {
+						answer_content = answer_content.replace(/%.{0,2}$/i, '');
+						answer_content = decodeURIComponent(answer_content);
+					}
+					catch(e) {
+						answer_content = 'Niepoprawne dane';
+						console.log(e);
+					}
+				}
+				
+			}
+			
 			return <p key={id}>
 				<label>{block[key].content}</label>
-				<span>{this.state.focused && 
-					decodeURIComponent(String(this.state.focused[prefix+key]))}</span>
-			</p>
+				<span>{answer_content}</span>
+			</p>;
 		});
 	}
 
