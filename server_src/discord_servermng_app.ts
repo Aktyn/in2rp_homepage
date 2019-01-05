@@ -6,9 +6,9 @@ const id = '528686772679606273';//'527950073322143794';//channel id
 
 const PERMITTED_ROLES = ['Developer', 'Właściciel', 'Administrator'];
 const SERVER_CMDS: any = {
-	'start': '/home/in2rptest/start.sh',
-	'stop': '/home/in2rptest/stop.sh',
-	'restart': '/home/in2rptest/restart.sh'
+	'start': '/home/in2rp/start.sh',
+	'stop': '/home/in2rp/stop.sh',
+	'restart': '/home/in2rp/restart.sh'
 };
 
 //var target_channel: Discord.TextChannel | undefined;
