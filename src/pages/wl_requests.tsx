@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Content from './../components/content';
 import Cookies from './../utils/cookies';
-import Config, { QuestionType } from './../config';
+import Config, { QuestionsBlockSchema } from './../config';
 import Loader from './../components/loader';
 
 import './../styles/whitelist_admin.scss';
@@ -21,10 +21,6 @@ interface WlRequestDataJSON {
 	timestamp: string;
 
 	[index: string]: string | number;
-}
-
-interface QuestionsBlockSchema {
-	[index: string]: {type: QuestionType, content: string}
 }
 
 interface WlRequestsState {

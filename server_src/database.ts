@@ -61,10 +61,10 @@ const Utils = {
 	/*QUESTION_NAMES: ['o_rp', 'dosw', 'postacie', 'czy_stream', 
 		'Q1_jps', 'Q2_uc', 'Q3_napad', 'Q4_koledzy', 'Q5_pg', 'Q6_wu', ]*/
 	QUESTIONS: {
-		'ic_historia': 			'VARCHAR(512)',
+		'ic_historia': 			'VARCHAR(8192)',
 		'ic_imie_nazwisko': 	'VARCHAR(128)',
-		'ic_kreatywna_akcja': 	'VARCHAR(512)',
-		'ic_plan_na_postac': 	'VARCHAR(512)',
+		'ic_kreatywna_akcja': 	'VARCHAR(8192)',
+		'ic_plan_na_postac': 	'VARCHAR(4096)',
 		'ic_wiek': 				'INT(3)',
 		'ooc_data_ur': 			'VARCHAR(16)',
 		'ooc_imie': 			'VARCHAR(64)',
@@ -159,7 +159,7 @@ const self = {
 	},
 
 	getUserDiscordID: function(id: number) {
-		return this.customQuery("SELECT discord_id FROM requests WHERE id=" + id + ";");
+		return this.customQuery("SELECT discord_id, discord_nick FROM requests WHERE id=" + id + ";");
 	},
 
 	storeVisit: function(ip: string, user?: string) {

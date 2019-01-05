@@ -6,40 +6,46 @@ import LOG from './log';
 export default {
 	async apply_request(req: any, res: any) {
 		//console.log(req.body);
+		try {
 
-		var response = await discordAPI.getDiscordUserData(req.body.token);
+			var response = await discordAPI.getDiscordUserData(req.body.token);
 
-		if(response.code === 0) {//check if client is logged in to discord account
-			return res.json({
-				result: response.message
-			});
-		}
-
-		var user_current_request = await Database.getWhitelistRequest(response.id);
-
-		if(user_current_request.length > 0)
-			return res.json({result: 'REQUEST_ALREADY_IN_DATABASE'});
-
-		var insert_res = await Database.addWhitelistRequest(req.body.answers, 
-			response.username, response.discriminator, response.id);
-		
-		//console.log(insert_res);
-		if(insert_res.affectedRows > 0) {
-			res.json({result: 'SUCCESS'});
-			let msg = `<@${response.id}> zlożył podanie o whiteliste.`;
-			LOG(`${response.username} zlożył podanie o whiteliste.`);//not tested
-			try {
-				discordBot.sendChannelMessage('528987808438812683', msg).catch((e: Error) => {
-					console.error('Cannot send message to channel 520748695059300383');
-					//discordBot.sendChannelMessage('516321132656197661', 'test')
+			if(response.code === 0) {//check if client is logged in to discord account
+				return res.json({
+					result: response.message
 				});
 			}
-			catch(e) {
-				console.error('Sending channel message failed:', e);
+
+			var user_current_request = await Database.getWhitelistRequest(response.id);
+
+			if(user_current_request.length > 0)
+				return res.json({result: 'REQUEST_ALREADY_IN_DATABASE'});
+
+			var insert_res = await Database.addWhitelistRequest(req.body.answers, 
+				response.username, response.discriminator, response.id);
+			
+			//console.log(insert_res);
+			if(insert_res.affectedRows > 0) {
+				res.json({result: 'SUCCESS'});
+				let msg = `<@${response.id}> zlożył podanie o whiteliste.`;
+				LOG(`${response.username} zlożył podanie o whiteliste.`);//not tested
+				try {
+					//if(process.env.NODE_ENV !== 'dev') {
+						discordBot.sendChannelMessage('528987808438812683', msg).catch((e: Error) => {
+							console.error('Cannot send message to channel 520748695059300383');
+						});
+					//}
+				}
+				catch(e) {
+					console.error('Sending channel message failed:', e);
+				}
 			}
+			else
+				res.json({result: 'DATABASE_ERROR'});
 		}
-		else
+		catch(e) {
 			res.json({result: 'DATABASE_ERROR'});
+		}
 	},
 
 	async status_request(req: any, res: any) {
@@ -138,17 +144,17 @@ export default {
 			else
 				return;
 
-			var target_user_discord_id = await Database.getUserDiscordID(req.body.id);
+			var target_discord_user = await Database.getUserDiscordID(req.body.id);
 
-			if(target_user_discord_id.length > 0) {
+			if(target_discord_user.length > 0) {
 				try {
 					LOG('User', response.username, response.id, 'changed whitelist request status to',
-						req.body.requested_status, 'for user', target_user_discord_id[0].discord_id);
-					discordBot.sendPrivateMessage(target_user_discord_id[0].discord_id,
+						req.body.requested_status, 'for user', target_discord_user[0].discord_nick, target_discord_user[0].discord_id);
+					discordBot.sendPrivateMessage(target_discord_user[0].discord_id,
 						`Witaj. Twoje podanie o whiteliste zostało właśnie ${new_status}`);
 				}
 				catch(e) {
-					console.log('Cannot send private message to', target_user_discord_id[0].discord_id);
+					console.log('Cannot send private message to', target_discord_user[0].discord_id);
 				}
 			}
 		});

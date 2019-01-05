@@ -29,7 +29,7 @@ interface UserJSON {
 }
 
 function isCandidateRole(name: string) {//important roles like admin, developer etc
-	return ['Developer', 'Administrator', 'Właściciel'].indexOf(name) !== -1;
+	return ['Developer', 'Administrator', 'Właściciel', 'Community Manager'].indexOf(name) !== -1;
 }
 
 export default {

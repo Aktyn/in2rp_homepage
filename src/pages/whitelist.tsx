@@ -5,7 +5,7 @@ import Loader from './../components/loader';
 import Content from './../components/content';
 import Session from './../components/discord_session';
 // import Loader from './../components/loader';
-import Config, { QuestionType } from './../config';
+import Config, { QuestionType, QuestionsBlockSchema } from './../config';
 import Cookies from './../utils/cookies';
 
 enum STATE {
@@ -20,10 +20,6 @@ enum WL_STATUS {
 	PENDING,
 	ACCEPTED,
 	REJECTED
-}
-
-interface QuestionsBlockSchema {
-	[index: string]: {type: QuestionType, content: string}
 }
 
 interface WhitelistState {
@@ -195,16 +191,18 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 			var answer_input;
 			switch(data.type) {
 				case QuestionType.DATE:
-					answer_input = <input type='date' maxLength={512} name={key} />;
+					answer_input = <input type='date' name={key} />;
 					break;
 				case QuestionType.INPUT:
-					answer_input = <input type='text' maxLength={512} name={key} />;
+					answer_input = <input type='text' maxLength={data.maxlen} name={key} />;
 					break;
 				case QuestionType.NUMBER_INPUT:
-					answer_input = <input type='number' maxLength={512} name={key} />;
+					answer_input = <input type='number' 
+						//@ts-ignore
+						onInput={(e) => e.target.value = e.target.value.slice(0, data.maxlen)} name={key} />;
 					break;
 				case QuestionType.TEXTAREA:
-					answer_input = <textarea name={key} maxLength={512} />;
+					answer_input = <textarea name={key} maxLength={data.maxlen} />;
 					break;
 			}
 
