@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Config from './config';
-if(process.env.NODE_ENV !== 'development' && 
+if(process.env.NODE_ENV !== 'development' && location.hostname !== 'localhost' &&
 	location.hostname.replace(/^www\./i, '') !== Config.hostname) 
 {
 	location.hostname = Config.hostname;
