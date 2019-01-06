@@ -86,9 +86,9 @@ app.post('/record_visit', (req, resp) => {
 
 const dir = path.join(__dirname, '..', 'dist');
 app.use(express.static(dir));
-app.use('/main.js', express.static(path.join(__dirname, '..', 'dist', 'main.js')));
 
 const index_html = fs.readFileSync(dir + '/index.html', 'utf8');
+app.get('/main.js', express.static(path.join(__dirname, '..', 'dist', 'main.js')));
 app.get('*', (req, res) => res.send(index_html));
 
 app.listen(global.PORT, () => console.log(`Homepage server runs on: ${global.PORT}!`));
