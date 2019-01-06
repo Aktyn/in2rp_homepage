@@ -8,6 +8,7 @@ declare global {
 global.PORT = 1234;
 
 import * as express from 'express';
+import * as http from 'http';
 import * as bodyParser from 'body-parser';
 const app = express();
 
@@ -91,4 +92,6 @@ const index_html = fs.readFileSync(dir + '/index.html', 'utf8');
 app.get('/main.js', express.static(path.join(__dirname, '..', 'dist', 'main.js')));
 app.get('*', (req, res) => res.send(index_html));
 
-app.listen(global.PORT, () => console.log(`Homepage server runs on: ${global.PORT}!`));
+const server = http.createServer(app);
+server.listen(global.PORT);
+// app.listen(global.PORT, () => console.log(`Homepage server runs on: ${global.PORT}!`));
