@@ -85,7 +85,7 @@ app.post('/record_visit', (req, resp) => {
 });
 
 const dir = path.join(__dirname, '..', 'dist');
-app.use('/', express.static(dir));
+app.use(express.static(dir));
 
 const index_html = fs.readFileSync(dir + '/index.html', 'utf8');
 app.get('*', (req, res) => res.send(index_html));
