@@ -84,7 +84,7 @@ app.post('/record_visit', (req, resp) => {
 	Database.storeVisit(ip);
 });
 
-const dir = __dirname + '/../dist';
+const dir = path.join(__dirname, '..', 'dist');
 app.use('/', express.static(dir));
 
 const index_html = fs.readFileSync(dir + '/index.html', 'utf8');
