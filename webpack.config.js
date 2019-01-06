@@ -141,7 +141,7 @@ module.exports = {
 
             //inject: 'head',
         }),
-        new AppManifestWebpackPlugin({
+        /*new AppManifestWebpackPlugin({
             logo: './src/img/favicon.png',
             output: '/mobile/',
             inject: !isDevelopment,
@@ -188,6 +188,6 @@ module.exports = {
                 crawlDelay: 1,//seconds (useful for sites with huge amount of pages)
             }],
             host: "http://in2rp.pl"
-        })
+        })*/
     ]
 };
