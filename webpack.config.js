@@ -129,7 +129,7 @@ module.exports = {
     plugins: [
         new MiniCssExtractPlugin({
             filename: "[name]-styles.css",
-            chunkFilename: "[name].css"
+            chunkFilename: "[id].css"
         }),
         new HtmlWebpackPlugin({
             hash: isDevelopment,
