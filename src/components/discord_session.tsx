@@ -215,7 +215,7 @@ const Session = {
 					}
 
 				}).catch(e => {
-					Cookies.removeCookie('discord_token');
+					//Cookies.removeCookie('discord_token');
 					reject(e);
 				});
 			}
