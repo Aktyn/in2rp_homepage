@@ -5,7 +5,7 @@ declare global {
 		}
 	}
 }
-global.PORT = 1234;
+global.PORT = 80;
 
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
