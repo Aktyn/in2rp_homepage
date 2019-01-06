@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
+const runtime = require('serviceworker-webpack-plugin/lib/runtime');//no types for this package
 
 import Header from './header';
 import Footer from './footer';
@@ -16,6 +17,11 @@ class Layout extends React.Component<any, LayoutState> {
 
 	constructor(props: any) {
 		super(props);
+		if('serviceWorker' in navigator && 
+			(window.location.protocol === 'https:' || window.location.hostname === 'localhost'))
+		{ 
+			runtime.register();
+		}
 	}
 
 	componentDidMount() {
