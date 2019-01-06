@@ -37,7 +37,7 @@ module.exports = {
         },
         minimizer: [
             new UglifyJsPlugin({
-                exclude: /\/*.js/,
+                exclude: 'sw.js',
                 uglifyOptions: {
                     output: {
                         comments: false
