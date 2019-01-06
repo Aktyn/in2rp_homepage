@@ -199,7 +199,7 @@ const Session = {
 					// console.log(res);
 
 					if(res.result !== 'SUCCESS') {
-						Cookies.removeCookie('discord_token');
+						//Cookies.removeCookie('discord_token'); //changed 06.01.2019
 						resolve(false);
 					}
 					else {
