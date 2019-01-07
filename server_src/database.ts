@@ -171,13 +171,11 @@ const self = {
 	},
 
 	storeVisit: function(ip: string, user?: string) {
-		return this.customQuery("INSERT INTO `visits`\
-			(`timestamp`, `user`, `ip`)\
-			VALUES ('" + Date.now() + "', " + (user && user.length > 0 ? `'${user}'` : "NULL") + ", '" + ip + "');");
+		return this.customQuery("INSERT INTO `visits` (`timestamp`, `user`, `ip`)\
+			VALUES ('" + Date.now() + "', " + (user && user.length > 0 ? `'${encodeURIComponent(user)}'` : "NULL") + ", '" + ip + "');");
 	},
 
-	//COUNT(distinct ip) as 'distinct_ip',
-	getVisits: function(from: string, to: string) {//from and to are dates in format: YYYY-MM-DD
+	getVisits: function(from: string, to: string) {//'from' and 'to' are dates in format: YYYY-MM-DD
 		return this.customQuery("SELECT \
 				COUNT(`id`) as 'count', \
 				COUNT(distinct `ip`) as 'distinct_ip',\
@@ -185,7 +183,7 @@ const self = {
 			FROM Whitelist.visits\
 			GROUP BY day\
 			HAVING day >= '" + from + "' AND day <= '" + to + "'\
-			ORDER BY day ASC;");
+			ORDER BY day ASC LIMIT 366;");
 	}
 };
 

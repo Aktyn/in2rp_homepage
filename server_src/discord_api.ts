@@ -186,33 +186,5 @@ export default {
 			res.status(400);
 			res.json({result: e.message});
 		}
-	},
-
-	snake_gameover: async function(req: any, res: any) {
-		/*try {//TODO - restore this functionality
-			if(typeof req.body.token !== 'string') {
-				LOG('guest played snake');
-				return res.json({result: 'ERROR'});
-			}
-			var response = await getDiscordUserData(req.body.token);
-
-			if(response.code === 0)
-				return res.json({result: 'ERROR'});
-			LOG('client played snake', response.username, response.id);
-
-			var id_list = path.join(__dirname, '..', 'logs', 'snake_players');
-			if(!fs.existsSync(id_list))
-				fs.openSync(id_list, 'a+');
-
-			var ids = fs.readFileSync(id_list, 'utf8').split('\n');
-			if(!ids.find(line => line === response.id)) {
-				fs.appendFileSync(id_list, response.id + '\n', 'utf8');
-				discordBot.sendPrivateMessage(response.id, `No, no... gratulacje!\nJako jedna z nielicznych osób znalazłeś/aś na stronie easter egga w formie ukrytej gry.\nTo jednak dopiero początek, gdyż więcej tajemnic czeka na odkrycie.\nJeśli zdecydujesz się w to brnąć - oto link do pliku niespodzianki: http://in2rp.pl/bs/ftp/snake.exe\n\nPamiętaj - do odważnych świat należy.`);
-			}
-			return res.json({result: 'SUCCESS'});
-		}
-		catch(e) {
-			//ignore
-		}*/
 	}
 };

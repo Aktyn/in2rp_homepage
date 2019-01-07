@@ -52,7 +52,6 @@ import discordAPI from './discord_api';
 app.get('/discord_login', discordAPI.login_request);
 app.get('/discord_callback', discordAPI.discord_callback);
 app.post('/discord_restore_session', discordAPI.restore_session);
-app.post('/snake_gameover', discordAPI.snake_gameover);
 
 // const whitelistAPI = require('./whitelist_api.js');
 import whitelistAPI from './whitelist_api';
@@ -68,6 +67,7 @@ app.post('/update_whitelist_status', whitelistAPI.update_request);
 
 import commonAPI from './common_api';
 
+app.post('/snake_gameover', commonAPI.snake_gameover);
 app.post('/get_avaible_logs', commonAPI.get_logs);
 app.post('/get_log_content', commonAPI.get_log_content);
 app.post('/get_admins', commonAPI.get_admins);
