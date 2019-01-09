@@ -180,7 +180,6 @@ const self = {
 	},
 
 	storeVisit: function(ip: string, user_agent: string | null, user?: string) {
-		console.log(user_agent);
 		//add user agent
 		this.customQuery(`INSERT IGNORE INTO \`user_agents\` (\`agent\`)
 			VALUES (${user_agent === null ? "NULL" : `'${user_agent}'`});`);
