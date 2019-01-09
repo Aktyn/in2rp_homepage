@@ -81,7 +81,7 @@ app.post('/record_visit', (req, resp) => {
 		forwards = forwards.join(',');
 	let ip = (forwards || req.connection.remoteAddress || '').replace(/::ffff:/, '');
 	LOG('guest session', ip);
-	Database.storeVisit(ip);
+	Database.storeVisit(ip, req.headers['user-agent'] || null);
 });
 
 const dir = path.join(__dirname, '..', 'dist');

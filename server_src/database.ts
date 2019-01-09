@@ -128,6 +128,14 @@ const self = {
 			  	`timestamp` VARCHAR(16) NOT NULL,\
 			  	`user` VARCHAR(32),\
 			  	`ip` VARCHAR(32),\
+			  	`user_agent_id` INT(16),\
+			  	PRIMARY KEY (`id`),\
+		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
+	  	);
+	  	await this.customQuery(//table for user agents
+			"CREATE TABLE IF NOT EXISTS `user_agents` (\
+			  	`id` INT(16) NOT NULL AUTO_INCREMENT,\
+			  	`agent` VARCHAR(256) UNIQUE,\
 			  	PRIMARY KEY (`id`),\
 		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
 	  	);
@@ -170,9 +178,17 @@ const self = {
 		return this.customQuery("SELECT discord_id, discord_nick FROM requests WHERE id=" + id + ";");
 	},
 
-	storeVisit: function(ip: string, user?: string) {
-		return this.customQuery("INSERT INTO `visits` (`timestamp`, `user`, `ip`)\
-			VALUES ('" + Date.now() + "', " + (user && user.length > 0 ? `'${encodeURIComponent(user)}'` : "NULL") + ", '" + ip + "');");
+	storeVisit: function(ip: string, user_agent: string | null, user?: string) {
+		//add user agent
+		this.customQuery(`INSERT IGNORE INTO \`user_agents\` (\`agent\`)
+			VALUES (${user_agent === null ? "NULL" : `'${user_agent}'`});`);
+
+		const select_agent_id_query = `(SELECT id from \`user_agents\` WHERE 
+			${user_agent === null ? '`agent` IS NULL' : `\`agent\` = '${user_agent}'`})`;
+
+		return this.customQuery(`INSERT INTO \`visits\` 
+			(\`timestamp\`, \`user\`, \`ip\`, \`user_agent_id\`)
+			VALUES ('${Date.now()}', ${(user && user.length > 0) ? `'${encodeURIComponent(user)}'` : 'NULL'}, '${ip}', ${select_agent_id_query});`);
 	},
 
 	getVisits: function(from: string, to: string) {//'from' and 'to' are dates in format: YYYY-MM-DD

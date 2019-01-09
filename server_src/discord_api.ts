@@ -158,7 +158,7 @@ export default {
 			if(typeof req.body.token !== 'string') {
 				res.status(400);
 				LOG('guest session', ip);
-				Database.storeVisit(ip);
+				Database.storeVisit(ip, req.headers['user-agent'] || null);
 				return res.json({result: 'You must provide token in body request'});
 			}
 			
@@ -172,7 +172,7 @@ export default {
 			}
 			else {
 				LOG('client session', response.username, response.id, ip);
-				Database.storeVisit(ip, response.username);
+				Database.storeVisit(ip, req.headers['user-agent'], response.username);
 				res.json({
 					result: 'SUCCESS',
 					nick: response.username, 
