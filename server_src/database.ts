@@ -128,16 +128,17 @@ const self = {
 			  	`timestamp` VARCHAR(16) NOT NULL,\
 			  	`user` VARCHAR(32),\
 			  	`ip` VARCHAR(32),\
-			  	`user_agent_id` INT(16),\
+			  	`user_agent_id` INT(16) NOT NULL,\
 			  	PRIMARY KEY (`id`),\
 		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
 	  	);
 	  	await this.customQuery(//table for user agents
 			"CREATE TABLE IF NOT EXISTS `user_agents` (\
 			  	`id` INT(16) NOT NULL AUTO_INCREMENT,\
-			  	`agent` VARCHAR(256) UNIQUE,\
+			  	`agent` VARCHAR(200),\
 			  	PRIMARY KEY (`id`),\
-		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
+		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC),\
+		  		UNIQUE INDEX `agent_UNIQUE` (`agent` ASC));"
 	  	);
 	},
 
@@ -179,6 +180,7 @@ const self = {
 	},
 
 	storeVisit: function(ip: string, user_agent: string | null, user?: string) {
+		console.log(user_agent);
 		//add user agent
 		this.customQuery(`INSERT IGNORE INTO \`user_agents\` (\`agent\`)
 			VALUES (${user_agent === null ? "NULL" : `'${user_agent}'`});`);
