@@ -8,7 +8,8 @@ $height: 30px;//should match $widget_h from discord_widget.scss
 
 .main_header_container {
 	grid-area: header;
-
+	
+    background-attachment: fixed;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

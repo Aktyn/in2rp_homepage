@@ -152,10 +152,10 @@ module.exports = {
             config: {
                 appName: 'IN2RP', // Your application's name. `string`
                 appDescription: 
-                    'Strona stworzona na potrzeby serwera IN2RP (GTA V roleplay). Autor: Aktyn.',
+                    'Strona stworzona na potrzeby najlepszego polskiego serwera Roleplay GTA V - IN2RP. Autor: Aktyn.',
                 lang: 'pl',
                 developerName: 'Aktyn', // Your (or your developer's) name. `string`
-                developerURL: null, // Your (or your developer's) URL. `string`
+                developerURL: 'https://github.com/Aktyn', // Your (or your developer's) URL. `string`
                 background: '#40535d', // Background colour for flattened icons. `string`
                 theme_color: '#40535d', // Theme color for browser chrome. `string`
                 display: 'standalone', // Android display: "browser" or "standalone". `string`
