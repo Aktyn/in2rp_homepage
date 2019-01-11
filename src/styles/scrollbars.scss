@@ -19,3 +19,15 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #00ACC1; 
 }
+
+.container ::-webkit-scrollbar-track {
+	background-color: #B0BEC5;
+}
+
+.container ::-webkit-scrollbar-thumb {
+	background-color: #78909C;
+}
+
+.container ::-webkit-scrollbar-thumb:hover {
+	background-color: #90A4AE;
+}

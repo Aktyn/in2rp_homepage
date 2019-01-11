@@ -104,26 +104,35 @@ module.exports = {
                     {
                         loader: 'image-webpack-loader',
                         options: {
-                          mozjpeg: {
-                            progressive: true,
-                            quality: 90
-                          },
-                          optipng: {
-                            enabled: true,
-                          },
-                          pngquant: {
-                            quality: '80-90',
-                            speed: 4
-                          },
-                          gifsicle: {
-                            interlaced: false,
-                          },
-                          /*webp: {
-                            quality: 75
-                          }*/
+                            mozjpeg: {
+                                progressive: true,
+                                quality: 90
+                            },
+                            optipng: {
+                                enabled: true,
+                            },
+                            pngquant: {
+                                quality: '80-90',
+                                speed: 4
+                            },
+                            gifsicle: {
+                                interlaced: false,
+                            },
+                            webp: {
+                                quality: 75
+                            }
                         }
                     }
                 ]
+            },
+            {
+                test: /\.ttf$/,
+                use: [{
+                    loader: 'ttf-loader',
+                    options: {
+                        name: './font/[hash].[ext]',
+                    },
+                }]
             }
         ],
     },

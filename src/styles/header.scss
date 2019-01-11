@@ -10,19 +10,22 @@ $height: 30px;//should match $widget_h from discord_widget.scss
 	grid-area: header;
 	
     background-attachment: fixed;
-    background-size: cover;
-    background-position: center;
+    background-size: 100% auto;
+    background-position: top;
     background-repeat: no-repeat;
 
 	width: 100%;
 	padding: 0px;
 	margin: 0px;
 
-	transition: height 300ms $delay ease-in-out, font-size 300ms $delay ease-in-out;
-	font-weight: normal;
+	overflow: hidden;
+
+	transition: height 300ms $delay ease-in-out, font-size 300ms $delay ease-in-out,
+		background-position 300ms $delay ease-in-out;
+	// font-weight: normal;
 }
 
-@for $i from 0 through 3 {
+@for $i from 0 through 2 {
 	.main_header_container[data-bgid='#{$i}'] {
 		background-image: url(../img/bg_blur#{$i}.jpg);
 	}
@@ -35,7 +38,8 @@ $height: 30px;//should match $widget_h from discord_widget.scss
 .main_header_container > .header_gradient {
 	width: 100%;
 	height: 100%;
-	background: linear-gradient(45deg, #de591b80 0%, #00d4fa80 100%);
+	// background: linear-gradient(45deg, #de591b80 0%, #00d4fa80 100%);
+	background: linear-gradient(15deg, #455A64ff 0%, #FFA72680 100%);
 
 	display: inline-grid;
 
@@ -46,15 +50,22 @@ $height: 30px;//should match $widget_h from discord_widget.scss
 	justify-content: center;
 }
 
-h1.small {
+h1.main_header_container {
+	font-weight: bold;
+}
+
+h1.main_header_container.small {
 	height: $header-small;
 	font-size: 20px;
 }
 
-h1.large {
+h1.main_header_container.large {
 	height: $header-large;
+	font-size: 35px;
+	background-position: 0px -125px;
 	@media screen and (max-width: $max_w1) {
 		height: $header-small;
+		background-position: top;
 		font-size: 20px;
 	}
 }
@@ -70,7 +81,6 @@ a.logo {
 .header_separator {
 	grid-area: header_separator;
 	background: #263238;
-	// max-height: $height;
 
 	position: relative;
 
@@ -90,7 +100,6 @@ a.logo {
 	}
 
 	@media screen and (max-width: $max_w1) {
-		// min-height: 2*$height;
 		z-index: 50;
 	}
 }

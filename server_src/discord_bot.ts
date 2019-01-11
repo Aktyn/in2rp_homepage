@@ -67,10 +67,18 @@ function onLogin() {
 		manageApp.init(bot);
 
 	bot.on('message', message => {
-		//console.log(message.channel);
-		//return;
 		if(!message.author || message.author.bot)
 			return;
+
+		//if(message.channel instanceof Discord.TextChannel)
+		//	console.log( message.channel.guild.roles.find(r=>r.name==='@everyone') );
+		if(message.channel instanceof Discord.TextChannel && 
+			(message.content === '@everybody' || message.content === '@ewrybadypomarańcze')) 
+		{
+			let role = message.channel.guild.roles.find(r=>r.name==='@everyone');
+			if(role)
+				message.channel.send('@everyone');
+		}
 
 		//#co-trzeba-jeszcze-zrobic //520947668432715787
 		//#regulamin - 516320348464087054

@@ -138,6 +138,7 @@ export default class {
 	}
 
 	destroy() {
+		this.running = false;
 		window.removeEventListener('keydown', this.onKeyDown, true);
 	}
 

@@ -42,6 +42,8 @@ class Layout extends React.Component<any, LayoutState> {
 		}*/
 		if(this.props.location.pathname !== '/')
 			this.setState({headerSize: 'small'});
+		else
+			this.setState({headerSize: 'large'});
 	}
 
 	render() {

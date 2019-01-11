@@ -18,7 +18,7 @@ export default class SnakeGame extends React.Component<any, SnakeGameState> {
 		resolution: undefined
 	};
 
-	private snake?: Snake;
+	private static current_game: Snake | null = null;
 
 	constructor(props: any) {
 		super(props);
@@ -30,13 +30,15 @@ export default class SnakeGame extends React.Component<any, SnakeGameState> {
 	}
 
 	componentWillUnmount() {
-		if(this.snake)
-			this.snake.destroy();
+		if(SnakeGame.current_game !== null) {
+			SnakeGame.current_game.destroy();
+			SnakeGame.current_game = null;
+		}
 	}
 
 	init(canv: HTMLCanvasElement | null) {
-		if(canv)
-			this.snake = new Snake(canv, {}, this.onGameOver);
+		if(canv && SnakeGame.current_game === null)
+			SnakeGame.current_game = new Snake(canv, {}, this.onGameOver);
 	}
 
 	onGameOver() {
