@@ -30,7 +30,7 @@ function generateMessage(data: MessageSchema) {
 
 	var embed = new Discord.RichEmbed()
 		.setColor('#ff5555')
-		.addField('Graczy online', `**${data.players_online.length}** / **${ServerInfo.max_players}**\n${data.players_online.join(data.players_online.length < 10 ? '\n' : ' ')}`)
+		.addField('Graczy online', `**${data.players_online.length}** / **${ServerInfo.max_players}**\n${data.players_online.join(data.players_online.length < 10 ? '\n' : ', ')}`)
 		.addField('Ostatnia aktualizacja', new Date().toLocaleTimeString('en-US', {hour12: false}))
 		.setFooter(`IP serwera: ${server_ip}`);
 	return embed;
