@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Content from './../components/content';
 import Cookies from './../utils/cookies';
-import Config, { QuestionsBlockSchema } from './../config';
+import Config, { QuestionsBlockSchema, QuestionType } from './../config';
 import Loader from './../components/loader';
 
 import './../styles/whitelist_admin.scss';
@@ -227,10 +227,12 @@ export default class extends React.Component<any, WlRequestsState> {
 				}
 				
 			}
-			
+
 			return <p key={id}>
 				<label>{block[key].content}</label>
-				<span>{answer_content}</span>
+				<span style={{
+					textAlign: block[key].type === QuestionType.TEXTAREA ? 'justify' : 'center'
+				}}>{answer_content}</span>
 			</p>;
 		});
 	}
