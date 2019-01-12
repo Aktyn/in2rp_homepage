@@ -35,11 +35,11 @@ export default class Header extends React.Component<HeaderProps, any> {
 						// fontFamily: GTA_Font,
 						fontWeight: 'bold',
 						// color: '#F7FFAD',
-						textShadow: `0px -1px 0px #0008, 
-							0px 1px 0px #0008, 
-							1px 0px 0px #0008, 
-							-1px 0px 0px #0008,
-							0px 1px 3px #0008`,
+						textShadow: `0px -1px 1px #0004, 
+							0px 1px 1px #0004, 
+							1px 0px 1px #0004, 
+							-1px 0px 1px #0004,
+							0px 1px 4px #0006`,
 					}}>{Config.short_description}</div>
 				</div>
 			</h1>

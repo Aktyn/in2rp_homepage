@@ -26,6 +26,10 @@ function clearChannel(message: Discord.Message) {//removes every message from ch
 }
 
 function printList(message: Discord.Message) {
+	if(todo_list.length === 0) {
+		message.channel.send('Nic do zrobienia :open_mouth:');
+		return;
+	}
 	let list = todo_list.map((line, index) => {
 		return `${index+1} - ${line}`;
 	}).join('\n');
