@@ -1,5 +1,6 @@
 import * as Discord from 'discord.js';
 import {spawn} from 'child_process';
+import * as path from 'path';
 import LOG from './log';
 
 const id = '528686772679606273';//'527950073322143794';//channel id
@@ -41,7 +42,8 @@ function sendCommandOutput(channel: Discord.TextChannel, output: string, success
 }
 
 function generateMessage(status = '') {//\n\n**Komendy strony:**\ntodo
-	return `**Komendy serwera:**\n!start\n!stop\n!restart\n\n**Inne:**\n!clear - czyści kanał\n\n${status}`;
+	return `**Komendy serwera:**\n!start\n!stop\n!restart\n!rcon komenda - wykonuje podaną komendę w konsoli fivem\n\n**Inne:**\n!clear - czyści kanał\n
+			${status}`;//.replace(/^\ */gi, '').replace(/^\t/gi, '');
 }
 
 function update(status: string) {
@@ -56,7 +58,9 @@ function executeCommand(cmd: string): Promise<string> {
 		var stderr = '';
 
 		try {
-			const command = spawn(cmd);
+			let args = cmd.split(' ');
+			let main_cmd = args.shift() || 'echo';
+			const command = spawn(main_cmd, args);
 			command.stdout.on('data', (data: string) => stdout += data);
 			command.stderr.on('data', (data: string) => stderr += data);
 			command.on('close', (code: number) => {
@@ -73,6 +77,18 @@ function executeCommand(cmd: string): Promise<string> {
 		catch(e) {
 			reject(e);
 		}
+	});
+}
+
+function execCommand(command: string, message: Discord.Message) {
+	return executeCommand(command).then((stdout: string) => {
+		sendCommandOutput(message.channel as Discord.TextChannel, stdout, true);
+		update(`**Ostatnie polecenie:** \`${message.content}\` (${message.author.username})`);
+	}).catch((stderr: string) => {
+		sendCommandOutput(message.channel as Discord.TextChannel, stderr, false);
+		if(stderr.length > 1000)
+			stderr = stderr.substr(0, 1000) + '...';
+		update(`**Ostatnie polecenie:** \`${message.content}\` (${message.author.username})\n**Błąd:** \`${stderr}\``);
 	});
 }
 
@@ -94,8 +110,20 @@ const ManagerApp = {
 				}).catch(console.error);
 			}
 		}
+
+		//test
+		/*let full_command = path.join(__dirname, '..', 'tools', 'rcon.sh');
+		const command = spawn(full_command, ['54.37.128.15', '30120', 'ameryczkarp', 'restart esx_scoreboard']);
+		command.stdout.on('data', (data: string) => console.log(data.toString()));
+		//command.stderr.on('data', (data: string) => stderr += data);
+		command.on('close', (code: number) => {
+			console.log(code, typeof code);
+		});
+		command.on('error', (err: any) => {
+		  	console.log('error', err);
+		});*/
 	},
-	handleMessage: (message: Discord.Message, bot: Discord.Client) => {
+	handleMessage: async (message: Discord.Message, bot: Discord.Client) => {
 		//console.log(message.member.roles.array().map(role => role.name));
 
 		if(!message.content.startsWith('!'))
@@ -117,7 +145,7 @@ const ManagerApp = {
 	   		case 'stop':
 	   		case 'restart':
 	   			update(`Wykonywanie skryptu w trakcie (\`${SERVER_CMDS[cmd]}\`)`);
-		   		executeCommand(SERVER_CMDS[cmd]).then((stdout: string) => {
+		   		/*executeCommand(SERVER_CMDS[cmd]).then((stdout: string) => {
 		   			sendCommandOutput(message.channel as Discord.TextChannel, stdout, true);
 		   			update(`**Ostatnie polecenie:** \`${message.content}\` (${message.author.username})`);
 		   		}).catch((stderr: string) => {
@@ -125,7 +153,15 @@ const ManagerApp = {
 		   			if(stderr.length > 1000)
 		   				stderr = stderr.substr(0, 1000) + '...';
 		   			update(`**Ostatnie polecenie:** \`${message.content}\` (${message.author.username})\n**Błąd:** \`${stderr}\``);
-		   		});
+		   		});*/
+
+		   		await execCommand(SERVER_CMDS[cmd], message);
+		   		break;
+		   	case 'rcon':
+		   		let full_command = path.join(__dirname, '..', 'tools', 'rcon') + 
+		   			' 54.37.128.15 30120 ameryczkarp ' + args.join(' ');
+		   		update(`Wykonywanie skryptu w trakcie (\`rcon ${args.join(' ')}\`)`);
+		   		await execCommand(full_command, message);
 		   		break;
 		}
 

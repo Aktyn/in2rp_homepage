@@ -23,7 +23,7 @@ const CHART_OPTIONS: Chart.ChartOptions = {
     scales: {
         yAxes: [{
             ticks: {
-                beginAtZero: false
+                beginAtZero: true
             },
             gridLines: {
             	display: true,

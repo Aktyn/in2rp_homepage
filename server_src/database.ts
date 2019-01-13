@@ -166,7 +166,7 @@ const self = {
 
 	getRequests: function(status: string) {//1000*60*60*24 = 86400000 => miliseconds in one day
 		return this.customQuery("SELECT * FROM `requests`\
-			WHERE `status`='" + status + "' AND ((UNIX_TIMESTAMP()*1000 - `timestamp`)/86400000) < 7\
+			WHERE `status`='" + status + "' AND ((UNIX_TIMESTAMP()*1000 - `timestamp`)/86400000) < 28\
 			ORDER BY `timestamp` DESC LIMIT 100;");
 	},
 

@@ -2,6 +2,7 @@
 node_modules/
 dist/
 server_dist/
+tools/
 run_dev
 logs/
 data/
