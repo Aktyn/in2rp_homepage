@@ -42,8 +42,7 @@ function sendCommandOutput(channel: Discord.TextChannel, output: string, success
 }
 
 function generateMessage(status = '') {//\n\n**Komendy strony:**\ntodo
-	return `**Komendy serwera:**\n!start\n!stop\n!restart\n!rcon komenda - wykonuje podaną komendę w konsoli fivem\n\n**Inne:**\n!clear - czyści kanał\n
-			${status}`;//.replace(/^\ */gi, '').replace(/^\t/gi, '');
+	return `**Komendy serwera:**\n!start\n!stop\n!restart\n!rcon komenda - wykonuje podaną komendę w konsoli fivem\n\n**Inne:**\n!clear - czyści kanał\n\n${status}`;//.replace(/^\ */gi, '').replace(/^\t/gi, '');
 }
 
 function update(status: string) {
@@ -158,6 +157,7 @@ const ManagerApp = {
 		   		await execCommand(SERVER_CMDS[cmd], message);
 		   		break;
 		   	case 'rcon':
+		   		//TODO - test localhost instead of serwer ip in production
 		   		let full_command = path.join(__dirname, '..', 'tools', 'rcon') + 
 		   			' 54.37.128.15 30120 ameryczkarp ' + args.join(' ');
 		   		update(`Wykonywanie skryptu w trakcie (\`rcon ${args.join(' ')}\`)`);
