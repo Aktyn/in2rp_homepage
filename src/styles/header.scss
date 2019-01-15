@@ -268,11 +268,15 @@ a.logo {
 		z-index: 83;
 	}
 
-	&.open {
+	&.no_players::after {
+		text-align: center;
+	}
+
+	&:not(.no_players).open {
 		opacity: 1;
 	}
 
-	& .slide_list_icon {
+	&:not(.no_players) .slide_list_icon {
 		display: inline-block;
 		// margin: 5px 0px;
 		margin-top: 2px;
@@ -292,7 +296,7 @@ a.logo {
 		transition: transform 0.5s cubic-bezier(.87,-.41,.19,1.44);
 	}
 
-	&.open .slide_list_icon {
+	&:not(.no_players).open .slide_list_icon {
 		transform: rotate(90deg);
 	}
 

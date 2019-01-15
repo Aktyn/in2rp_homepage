@@ -72,7 +72,7 @@ function onLogin() {
 	//	.roles.find(r => r.name === 'Użytkownik');
 	//guild.members.array().filter(u => u.user.bot).forEach(m => m.removeRoles([target_role]));
 
-	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		statusApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);

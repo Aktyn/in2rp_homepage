@@ -55,12 +55,12 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 
 		if(!IS_MOBILE) {//not for mobile devices
 			for(var i=0; i<50; i++) {
-				var r_size = (Math.random()*60+40)|0;
+				var r_size = (1 * (Math.random()*60+40))|0;
 				this.blobs.push( <div key={i} className='header_blob' style={{
 					left: `${(Math.random()*100)|0}%`,
 					width: `${r_size}px`,
 					height: `${r_size}px`,
-					animationDuration: `${(Math.random()*7000+14000)|0}ms`,
+					animationDuration: `${(Math.random()*21000+7000)|0}ms`,
 					animationDelay: `${(-Math.random()*14000)|0}ms`
 				}}></div> );
 			}
@@ -115,7 +115,10 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 		if(!data.online)
 			return 'Serwer offline';
 
-		return <div className={`clean slide_list_btn small_button ${this.state.list_open ? 'open' : ''}`}
+		return <div className={
+				`clean slide_list_btn small_button ${this.state.list_open ? 'open' : ''} 
+				${data.players_online.length > 0 ? '' : 'no_players'}`
+			}
 			onClick={this.switchList.bind(this)} data-ct={`Graczy online: ${data.players_online.length}`}>
 			<div className='slide_list_icon'></div>
 			<div className='players_list' ref={el => this.players_list = el}>
@@ -146,7 +149,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 							<filter id="goo">
 								<feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
 								<feColorMatrix in="blur" mode="matrix" 
-									values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0 1" 
+									values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 1" 
 									result="goo" />
 								<feComposite in="SourceGraphic" in2="blur" operator="atop"/>
 							</filter>
