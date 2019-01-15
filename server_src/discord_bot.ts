@@ -40,6 +40,20 @@ function answerToMsg(author: Discord.User, message?: string) {
 	author.send(message).catch(e => console.log('Cannot answer to user:', author.username));
 }
 
+const forbiddenPatterns = ['http://discord'];
+function isProperMessage(msg: string) {
+	let matching_chars = new Uint8Array(forbiddenPatterns.length);
+	for(var i=0; i<msg.length; i++) {
+		for(var j=0; j<forbiddenPatterns.length; j++) {
+			if( msg[i] === forbiddenPatterns[j][matching_chars[j]] ) {
+				if(++matching_chars[j] === forbiddenPatterns[j].length)
+					return false;
+			}
+		}
+	}
+	return true;
+}
+
 function onLogin() {
 	console.log('Bot is running');
 
@@ -70,6 +84,8 @@ function onLogin() {
 		if(!message.author || message.author.bot)
 			return;
 
+		//if(message.channel.id === '528987808438812683') {
+
 		//if(message.channel instanceof Discord.TextChannel)
 		//	console.log( message.channel.guild.roles.find(r=>r.name==='@everyone') );
 		if(message.channel instanceof Discord.TextChannel && 
@@ -83,8 +99,10 @@ function onLogin() {
 		//#co-trzeba-jeszcze-zrobic //520947668432715787
 		//#regulamin - 516320348464087054
 		if(message.channel.type === 'text') {//non private message
+			if(!isProperMessage(message.content))
+				message.delete().catch(console.error);
 			switch(message.channel.id) {
-				case todoApp.CHANNEL_ID: 	
+				case todoApp.CHANNEL_ID:
 					if(process.env.NODE_ENV !== 'dev')
 						return todoApp.handleMessage(message);
 					break;

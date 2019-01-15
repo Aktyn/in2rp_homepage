@@ -23,6 +23,19 @@ export default class Header extends React.Component<HeaderProps, any> {
 
 	constructor(props: HeaderProps) {
 		super(props);
+
+		//TODO - SPRAWDZAC ZAWARTOSC WIADOMOSCI NA #rozmowy POD WZGLEDEM ZAWIERANIA ZNAKOW BEDACYCH
+		//LINKIEM ZAPRASZAJACYM DO DISCORDA NP WIADOMOSC: 'h.t.t.p././.d.i.scord./...' powinna zostac
+		//usunieta
+		fetch(Config.api_server_url + '/get_online_players', {
+			method: "POST",
+			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
+			headers: {
+	           "Content-Type": "application/json; charset=utf-8",
+	        }
+		}).then(res => res.json()).then(res => {
+			console.log(res);
+		}).catch(console.error);
 	}
 
 	render() {
@@ -35,16 +48,13 @@ export default class Header extends React.Component<HeaderProps, any> {
 						// fontFamily: GTA_Font,
 						fontWeight: 'bold',
 						// color: '#F7FFAD',
-						textShadow: `0px -1px 1px #0004, 
-							0px 1px 1px #0004, 
-							1px 0px 1px #0004, 
-							-1px 0px 1px #0004,
-							0px 1px 4px #0006`,
+						textShadow: `0px 1px 4px #0004`,
 					}}>{Config.short_description}</div>
 				</div>
 			</h1>
 			<div className='header_separator'>
 				<Link to='/' className='homepage_icon' />
+				<div className='players'>Graczy online: 6/32</div>
 				<div className='short_info'>{Config.short_info}</div>
 				<Discord.Widget />
 			</div>

@@ -7,6 +7,14 @@ import Cookies from './../utils/cookies';
 
 import AdminMenu from './admin_menu';
 
+var token: string | null = null;
+export interface DiscordUserSchema {
+	nick: string;
+	discriminator: number;
+	admin: boolean;
+}
+var discord_user: DiscordUserSchema | null = null;
+
 interface WidgetState {
 	session: boolean;
 	//nick?: string;
@@ -16,8 +24,8 @@ interface WidgetState {
 
 class WidgetClass extends React.Component<any, WidgetState> {
 	state: WidgetState = {
-		session: false,
-		user: undefined,
+		session: discord_user ? true : false,
+		user: discord_user ? discord_user : undefined,
 	};
 
 	constructor(props: any) {
@@ -50,7 +58,8 @@ class WidgetClass extends React.Component<any, WidgetState> {
 
 		return <div className='discord_session_widget'>
 			{this.state.user.nick}#{this.state.user.discriminator}
-			<button onClick={Session.logout} className='clean discord_logout'>Wyloguj</button>
+			<button aria-label="Wyloguj"
+				onClick={Session.logout} className='clean discord_logout'>Wyloguj</button>
 			{this.state.user.admin && <AdminMenu />}
 		</div>;
 	}
@@ -61,14 +70,6 @@ class WidgetClass extends React.Component<any, WidgetState> {
 		</div>;
 	}
 }
-
-var token: string | null = null;
-export interface DiscordUserSchema {
-	nick: string;
-	discriminator: number;
-	admin: boolean;
-}
-var discord_user: DiscordUserSchema | null = null;
 
 interface LoginListener {
 	name?: string;

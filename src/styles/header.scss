@@ -89,11 +89,12 @@ a.logo {
 	box-shadow: 0px 0px 8px #0006;
 
 	display: grid;
-	grid-template-areas: "homebtn info discord_widget";
+	grid-template-areas: "homebtn players info discord_widget";
 	grid-template-rows: auto;
-	grid-template-columns: 300px fit-content(100%) 300px;
-	justify-content: space-between;
+	grid-template-columns: $height (300px-$height) auto 300px;
+	justify-content: stretch;
 	align-items: center;
+	justify-items: center;
 
 	@media screen and (max-width: 900px) {
 		grid-template-columns: $height 0px fit-content(100%);
@@ -109,10 +110,11 @@ a.logo {
 	justify-self: right;
 }
 
-.short_info {
+.header_separator > .short_info {
 	max-width: 300px;
 	height: $height;
 	overflow: auto;
+	text-align: center;
 	grid-area: info;
 	color: #546E7A;
 	font-size: 12px;
@@ -122,18 +124,30 @@ a.logo {
 	}
 }
 
-.homepage_icon {
+.header_separator > .homepage_icon {
 	grid-area: homebtn;
+    justify-self: left;
 	display: inline-block;
-	width: $height*0.8;
-	height: $height*0.8;
+	width: $height;//*0.8;
+	height: $height;//*0.8;
 	background: url('../img/home.svg') no-repeat;
 	background-position: right;
-	background-size: auto 100%;
+	background-size: auto 80%;
 
 	opacity: 0.2;
 }
 
-.homepage_icon:hover {
+.header_separator > .homepage_icon:hover {
 	opacity: 1;
+}
+
+.header_separator > .players {
+	grid-area: players;
+    justify-self: left;
+
+    color: #546E7A;
+    line-height: 30px;
+    // font-weight: bold;
+    font-size: 12px;
+    padding: 0px 5px;
 }

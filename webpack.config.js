@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require('path');
 const autoprefixer = require('autoprefixer');
 
@@ -138,13 +139,18 @@ module.exports = {
     },
 
     plugins: [
+        new webpack.DefinePlugin({
+            _GLOBALS_: JSON.stringify({
+                update_time: Date.now()
+            })
+        }),
         new MiniCssExtractPlugin({
             filename: "[name]-styles.css",
             chunkFilename: "[id].css"
         }),
         new HtmlWebpackPlugin({
             hash: isDevelopment,
-            //favicon: './src/img/favicon.png',
+            favicon: isDevelopment ? './src/img/favicon.png' : undefined,
             title: 'IN2RP',
             minify: !isDevelopment,
             template: './src/index.html',

@@ -81,7 +81,25 @@ $discord_user_height: 30px;
 	display: grid;
 	grid-template-columns: auto auto;
 	align-items: center;
-	justify-content: end;
+	// justify-content: end;
+	@media screen and (max-width: $max_w1) {
+		grid-template-columns: auto;
+		grid-template-rows: 20px 20px;
+		height: 40px;//height for two rows
+
+		& > *:nth-child(1) {
+			justify-self: right !important;
+		}
+	}
+}
+
+.footer_bottom > *:nth-child(1) {
+	justify-self: left;
+	padding: 0px 10px;
+}
+
+.footer_bottom > *:nth-child(2) {
+	justify-self: right;
 }
 
 .footer_bottom .more_icon, .footer_bottom .close_icon {
@@ -93,10 +111,6 @@ $discord_user_height: 30px;
 	background: url('./../img/more_vert.svg') center no-repeat;
 	background-size: 80%;
 	opacity: 0.2;
-}
-
-.footer_bottom .more_icon {
-	
 }
 
 .footer_bottom .close_icon {

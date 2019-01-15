@@ -13,6 +13,13 @@ var ServerInfo = {
 	max_players: 0
 }
 
+interface MessageSchema {
+	online: boolean;
+	players_online: string[];
+}
+
+var current_status: MessageSchema = {online: false, players_online: []};
+
 function loadServerInfo() {
 	return fetch(`http://${server_ip}/info.json`).then((response) => response.json()).then(res => {
 		//console.log(res);
@@ -20,17 +27,13 @@ function loadServerInfo() {
 	}).catch(e => console.error('Cannot fetch server info data'));
 }
 
-interface MessageSchema {
-	online: boolean;
-	players_online: string[];
-}
 function generateMessage(data: MessageSchema) {
 	if(data.online === false)
 		return 'Serwer offline :dizzy_face:';
 
 	var embed = new Discord.RichEmbed()
 		.setColor('#ff5555')
-		.addField('Graczy online', `**${data.players_online.length}** / **${ServerInfo.max_players}**\n${data.players_online.join(data.players_online.length < 10 ? '\n' : ', ')}`)
+		.addField((process.env.NODE_ENV === 'dev' ? '[dev] ' : '') + 'Graczy online', `**${data.players_online.length}** / **${ServerInfo.max_players}**\n${data.players_online.join(data.players_online.length < 10 ? '\n' : ', ')}`)
 		.addField('Ostatnia aktualizacja', new Date().toLocaleTimeString('en-US', {hour12: false}))
 		.setFooter(`IP serwera: ${server_ip}`);
 	return embed;
@@ -51,10 +54,12 @@ async function startRefreshing(current_id: number) {
 	}
 	catch(e) {
 		console.error('Cannot fetch server player\'s data');
-		//@ts-ignore
-		data = {online: false};
+		data = {online: false, players_online: []};
 	}
 
+	current_status = data;
+	//console.log(current_status);
+	
 	//updating discord message
 	if(current_id !== refresher_id)
 		console.log('Current refreshing process with id:', current_id, 'expired');
@@ -84,6 +89,9 @@ function clearChannel(channel: Discord.TextChannel) {
 
 var StatusApp = {
 	CHANNEL_ID: id,
+	getStatus: () => {
+		return current_status;
+	},
 	init: async (bot: Discord.Client) => {
 		var msg: Discord.Message | Discord.Message[] | undefined;
 		var target: Discord.Channel | Discord.User | undefined;

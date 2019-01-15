@@ -1,3 +1,20 @@
+import DiscordSession from './components/discord_session';
+
+DiscordSession.restoreSession().then(res => {
+	console.log('session:', res);
+}).catch(e => {
+	console.error(e);
+	
+	try {
+		var info;
+		if(document && (info = document.getElementById('server_status_info')))
+		 	info.innerText = 'Brak połączenia z serwerem.';
+	}
+	catch(e) {
+		console.error(e);
+	}
+});
+
 import * as React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
@@ -12,12 +29,6 @@ if(process.env.NODE_ENV !== 'development' && location.hostname !== 'localhost' &
 // import './styles/normalize.css';
 import './styles/main.scss';
 import './styles/common.scss';
-
-import DiscordSession from './components/discord_session';
-
-DiscordSession.restoreSession().then(res => {
-	console.log('session:', res);
-}).catch(e => console.error(e));
 
 import Layout from './components/layout';
 import Home from './pages/home';

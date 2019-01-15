@@ -3,9 +3,7 @@ $widget_h: 30px;
 .discord_widget_main {
 	float: right;
 	margin: 0px 5px;
-	// height: 100%;
-	// line-height: $widget_h;
-	// height: $widget_h;
+	text-align: right;
 }
 
 .discord_widget_main .dw_login_btn {
@@ -106,4 +104,5 @@ $widget_h: 30px;
 
 .discord_widget_main .discord_session_widget .admin_btn {
 	background-color: #ef5350;
+	text-align: center;
 }

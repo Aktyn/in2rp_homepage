@@ -17,7 +17,8 @@ class Layout extends React.Component<any, LayoutState> {
 
 	constructor(props: any) {
 		super(props);
-		if('serviceWorker' in navigator && 
+		//disabled in dev mode
+		if(process.env.NODE_ENV !== 'development' && 'serviceWorker' in navigator && 
 			(window.location.protocol === 'https:' || window.location.hostname === 'localhost'))
 		{ 
 			runtime.register();
@@ -34,12 +35,6 @@ class Layout extends React.Component<any, LayoutState> {
 	}
 
 	update() {
-		/*switch(this.props.location.pathname) {
-			case '/': 	
-				return this.setState({headerSize: 'large'});
-			default:
-				return this.setState({headerSize: 'small'});
-		}*/
 		if(this.props.location.pathname !== '/')
 			this.setState({headerSize: 'small'});
 		else
