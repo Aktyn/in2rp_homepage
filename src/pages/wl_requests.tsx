@@ -1,5 +1,4 @@
 import * as React from 'react';
-import DiscordSession from '../components/discord_session';
 import Content from './../components/content';
 import Cookies from './../utils/cookies';
 import Config, { QuestionsBlockSchema, QuestionType } from './../config';
@@ -60,7 +59,7 @@ export default class extends React.Component<any, WlRequestsState> {
 
 	changeCategory(cat: string) {
 		var cookie_token = Cookies.getCookie('discord_token');
-		if(cookie_token === null || !DiscordSession.isLoggedIn())
+		if(cookie_token === null)
 			return this.onError('Wygląda na to, że nie jesteś zalogowany');
 
 		if(this.state.current_cat === cat)
@@ -108,7 +107,7 @@ export default class extends React.Component<any, WlRequestsState> {
 		//console.log(cat);
 
 		var cookie_token = Cookies.getCookie('discord_token');
-		if(cookie_token === null || !DiscordSession.isLoggedIn())
+		if(cookie_token === null)
 			return this.onError('Wygląda na to, że nie jesteś zalogowany');
 
 		this.setState({loading: true, focused: undefined, wl_requests: undefined});

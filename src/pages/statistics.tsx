@@ -1,5 +1,4 @@
 import * as React from 'react';
-import DiscordSession from '../components/discord_session';
 import Content from './../components/content';
 import Cookies from './../utils/cookies';
 import Config from './../config';
@@ -151,7 +150,7 @@ export default class extends React.Component<any, StatisticsState> {
 			return this.onError('Bardzo dziwny błąd');
 
 		var cookie_token = Cookies.getCookie('discord_token');
-		if(cookie_token === null || !DiscordSession.isLoggedIn())
+		if(cookie_token === null)
 			return this.onError('Wygląda na to, że nie jesteś zalogowany');
 
 		//fetching data from server
