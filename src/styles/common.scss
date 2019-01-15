@@ -1,6 +1,16 @@
 $max_w1: 769px;
 $delay: 50ms;
 
+button.clean {
+    font-size: 100%;
+    background-color: #fff;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0px;
+    margin: 0px;
+}
+
 /* FANCY BUTTON HOLDER */
 .fancy_button_holder {
 	height: 200px;
@@ -125,6 +135,28 @@ $delay: 50ms;
 .simple_button.return::after 	{	background-image: url('../img/arrow_left.svg');			}
 .simple_button.check::after 	{	background-image: url('../img/check_small.svg');		}
 
+button.small_button, .small_button {
+	cursor: pointer;
+	font-weight: bold;
+    font-size: 12px;
+	margin: 0px 5px;
+	padding: 5px 10px;
+	text-align: center;
+	color: #fff;
+	border-radius: 5px;
+	background-color: #8c9eff;
+	vertical-align: middle;
+
+	box-shadow: 0px 1px 4px #0008;
+	opacity: 0.6;
+
+	transition: opacity 300ms ease-in-out;
+}
+
+button.small_button:hover, .small_button:hover {
+	opacity: 1;
+}
+
 /* SPINNER */
 .spinner {
 	width: 40px;
@@ -175,6 +207,7 @@ $delay: 50ms;
 
 /* PAGE BLOCK CONTAINER WHITE */
 .container {
+	font-family: Helvetica, Arial;
 	max-width: 600px;
 	color: #455a64;
 	background-color: #fff;

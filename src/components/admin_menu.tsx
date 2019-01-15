@@ -23,7 +23,8 @@ export default class extends React.Component<any, AdminMenuState> {
 
 	render() {
 		return <>
-			<div data-ct='Moc admina' className={`clean admin_btn ${this.state.open ? 'open' : ''}`} 
+			<div data-ct='Moc admina' 
+				className={`clean admin_btn small_button ${this.state.open ? 'open' : ''}`} 
 				onClick={this.switchMenu.bind(this)}>
 				Moc admina
 				<div className='menu_icon'>

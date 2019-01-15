@@ -78,31 +78,6 @@ $widget_h: 30px;
 	vertical-align: baseline;
 }
 
-.discord_widget_main .discord_session_widget .discord_logout, 
-.discord_widget_main .discord_session_widget .admin_btn {
-	margin: 0px 5px;
-	padding: 5px 10px;
-	color: #fff;
-	border-radius: 5px;
-	background-color: #8c9eff;
-
-	box-shadow: 0px 1px 4px #0008;
-	opacity: 0.6;
-
-	transition: opacity 300ms ease-in-out;
-}
-
-.discord_widget_main .discord_session_widget button, .discord_widget_main .discord_session_widget a {
-	font-weight: bold;
-	font-size: 12px;
-}
-
-.discord_widget_main .discord_session_widget .discord_logout:hover,
-.discord_widget_main .discord_session_widget .admin_btn:hover {
-	opacity: 1;
-}
-
 .discord_widget_main .discord_session_widget .admin_btn {
 	background-color: #ef5350;
-	text-align: center;
 }

@@ -54,9 +54,8 @@ async function startRefreshing(current_id: number) {
 	}
 	catch(e) {
 		console.error('Cannot fetch server player\'s data');
-		data = {online: false, players_online: []};
+		data = <MessageSchema>{online: false, players_online: []};
 	}
-
 	current_status = data;
 	//console.log(current_status);
 	
@@ -89,9 +88,9 @@ function clearChannel(channel: Discord.TextChannel) {
 
 var StatusApp = {
 	CHANNEL_ID: id,
-	getStatus: () => {
-		return current_status;
-	},
+
+	getStatus: () => current_status,
+
 	init: async (bot: Discord.Client) => {
 		var msg: Discord.Message | Discord.Message[] | undefined;
 		var target: Discord.Channel | Discord.User | undefined;

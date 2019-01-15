@@ -1,9 +1,22 @@
-import DiscordSession from './components/discord_session';
+import Config from './config';
+if(process.env.NODE_ENV !== 'development' && location.hostname !== 'localhost' &&
+	location.hostname.replace(/^www\./i, '') !== Config.hostname) 
+{
+	location.hostname = Config.hostname;
+}
 
+//disable logs and errors
+if(process.env.NODE_ENV !== 'development') {
+	console.log('%cLogi wyłączone. Nie ma testowania na produkcji.\n¯\\_(ツ)_/¯', 
+		'color: #f44336; font-weight: bold; font-size: 25px;');
+	console.log = console.error = console.info = console.trace = function(){};
+}
+
+import DiscordSession from './components/discord_session';
 DiscordSession.restoreSession().then(res => {
 	console.log('session:', res);
 }).catch(e => {
-	console.error(e);
+	//console.error(e);
 	
 	try {
 		var info;
@@ -18,13 +31,6 @@ DiscordSession.restoreSession().then(res => {
 import * as React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-
-import Config from './config';
-if(process.env.NODE_ENV !== 'development' && location.hostname !== 'localhost' &&
-	location.hostname.replace(/^www\./i, '') !== Config.hostname) 
-{
-	location.hostname = Config.hostname;
-}
 
 // import './styles/normalize.css';
 import './styles/main.scss';

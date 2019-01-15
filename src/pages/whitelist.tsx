@@ -134,7 +134,7 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 	renderAuthorizeInfo() {
 		return <React.Fragment>
 			<label className='info_label'>
-				Aby odblokować formularz whitelisty, zaloguj się za pomocą konta na discordzie.
+				Aby odblokować formularz whitelisty zaloguj się za pomocą konta na discordzie.
 			</label>
 			<div className='fancy_button_holder'>
 				<button className='fancy_button clean discord' onClick={Session.login}>

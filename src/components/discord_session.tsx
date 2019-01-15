@@ -59,7 +59,7 @@ class WidgetClass extends React.Component<any, WidgetState> {
 		return <div className='discord_session_widget'>
 			{this.state.user.nick}#{this.state.user.discriminator}
 			<button aria-label="Wyloguj"
-				onClick={Session.logout} className='clean discord_logout'>Wyloguj</button>
+				onClick={Session.logout} className='clean discord_logout small_button'>Wyloguj</button>
 			{this.state.user.admin && <AdminMenu />}
 		</div>;
 	}

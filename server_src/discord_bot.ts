@@ -11,7 +11,6 @@ var TOKEN: string | undefined = undefined;
 var started = false;
 
 process.argv.forEach((val: string) => {
-	//@ts-ignore
 	if(val.startsWith('TOKEN='))
 		TOKEN = val.replace('TOKEN=', '');
 });
@@ -57,8 +56,8 @@ function isProperMessage(msg: string) {
 function onLogin() {
 	console.log('Bot is running');
 
-	if(process.env.NODE_ENV === 'dev')
-		bot.user.setActivity("Pracownia Aktyna");
+	//if(process.env.NODE_ENV === 'dev')
+	//	bot.user.setActivity("Pracownia Aktyna");
 
 	/*bot.on('presenceUpdate', member => {
 		console.log(member.user);

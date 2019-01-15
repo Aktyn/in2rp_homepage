@@ -1,1 +1,15 @@
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 101.07"><defs><style>.cls-1{fill:#37474F;}</style></defs><title>Wave-top</title><path class="cls-1" d="M1920,1.32c-61.67-3.21-351.67,35.88-351.67,35.88L1435.67,50.54l-65.33,4.67c-52.67,3.33-128-2.67-128-2.67-53.33-2.67-194-26-194-26l-56-9.33c-100-20-208-15.43-208-15.43-73.33,0-226,40.43-226,40.43C466.91,68,389.55,66.83,370.71,66.09c-3.15-.12-6.3-0.2-9.45-0.3-60.65-1.86-170.93-35.25-170.93-35.25C96.33-1.46,0,1.87,0,1.87V102.2H1920V1.32Z" transform="translate(0 -1.13)"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 101.07">
+	<defs>	
+		<filter id="f3" x="0" y="0" width="200%" height="200%">
+			<feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" />
+			<feColorMatrix result="matrixOut" in="offOut" type="matrix" values="
+				0 		0 		0     	0 		0
+              	0     	0 		0     	0     	0
+              	0     	0     	0 		0     	0
+              	0     	0     	0 		0.3     0 "/>
+			<feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="8" />
+      		<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+		</filter>
+	</defs>
+	<path filter="url(#f3)" fill="#37474F" d="M1920,1.32c-61.67-3.21-351.67,35.88-351.67,35.88L1435.67,50.54l-65.33,4.67c-52.67,3.33-128-2.67-128-2.67-53.33-2.67-194-26-194-26l-56-9.33c-100-20-208-15.43-208-15.43-73.33,0-226,40.43-226,40.43C466.91,68,389.55,66.83,370.71,66.09c-3.15-.12-6.3-0.2-9.45-0.3-60.65-1.86-170.93-35.25-170.93-35.25C96.33-1.46,0,1.87,0,1.87V102.2H1920V1.32Z" transform="translate(0 -1.13)"/>
+</svg>

@@ -6,6 +6,8 @@ $delay: 100ms;
 
 $height: 30px;//should match $widget_h from discord_widget.scss
 
+$blob_size: 100px;
+
 .main_header_container {
 	grid-area: header;
 	
@@ -17,6 +19,8 @@ $height: 30px;//should match $widget_h from discord_widget.scss
 	width: 100%;
 	padding: 0px;
 	margin: 0px;
+
+	position: relative;
 
 	overflow: hidden;
 
@@ -35,19 +39,77 @@ $height: 30px;//should match $widget_h from discord_widget.scss
 	height: 100%;
 }
 
-.main_header_container > .header_gradient {
+.main_header_container > .header_fill {
 	width: 100%;
 	height: 100%;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	display: block;
+}
+
+.main_header_container > .header_gradient {
+	display: grid;
 	// background: linear-gradient(45deg, #de591b80 0%, #00d4fa80 100%);
 	background: linear-gradient(15deg, #455A64ff 0%, #FFA72680 100%);
-
-	display: inline-grid;
 
 	grid-template-columns: 45% 55%;
 	grid-template-rows: auto;
 	align-content: stretch;
 	align-items: center;
 	justify-content: center;
+
+	color: #fffa;
+}
+
+.main_header_container > .header_fill .blobs_container {
+	width: calc(100% - 100px);//minus blob size
+	height: 100%;
+	border-radius: 0px;
+	filter: url("#goo");
+	// opacity: 0.5;
+	// background-image: url(../img/bg_blur#{$i}.jpg);
+	mix-blend-mode: overlay;//overlay difference
+}
+
+.main_header_container > .header_fill .blobs_container > .header_blob {
+	background: #fff;
+	width: $blob_size;
+	height: $blob_size;
+	margin: 0px;
+	padding: 0px;
+
+	position: absolute;
+	// left: 100%;
+	// top: 100%;
+	
+	border-radius: $blob_size;
+    display: inline-block;
+
+	animation: go_up 1s ease-in-out infinite;
+	transform: translate(0px, $header-large);
+}
+
+@media screen and (min-width: $max_w1) {
+	@keyframes go_up {
+		0% {
+			transform: translate(0px, $header-large);
+		}
+		100% {
+			transform: translate(0px, -$blob_size);
+		}
+	}
+}
+
+@media screen and (max-width: $max_w1) {
+	@keyframes go_up {
+		0% {
+			transform: translate(0px, $header-small);
+		}
+		100% {
+			transform: translate(0px, -$blob_size);
+		}
+	}
 }
 
 h1.main_header_container {
@@ -100,6 +162,25 @@ a.logo {
 		grid-template-columns: $height 0px fit-content(100%);
 	}
 
+	@media screen and (max-width: 500px) {
+		grid-template-areas: "homebtn players" "info discord_widget";
+		grid-template-columns: fit-content(100%) auto;
+	}
+
+	@media screen and (max-width: 300px) {
+		grid-template-areas: "homebtn players" "info" "discord_widget";
+		grid-template-columns: 0px auto;
+
+		& > .players {
+			justify-self: right !important;
+		}
+
+		& > .discord_widget_main {
+			justify-self: center !important;
+			text-align: center;
+		}
+	}
+
 	@media screen and (max-width: $max_w1) {
 		z-index: 50;
 	}
@@ -146,8 +227,113 @@ a.logo {
     justify-self: left;
 
     color: #546E7A;
-    line-height: 30px;
+    // line-height: 30px;
     // font-weight: bold;
     font-size: 12px;
     padding: 0px 5px;
 }
+
+.header_separator > .players .slide_list_btn {
+	white-space: nowrap !important;
+	line-height: 24px !important;
+	height: 24px !important;
+	padding: 0px 10px !important;
+	display: inline-block;
+	position: relative;
+	width: 125px;
+	text-align: left;
+	z-index: 81;
+	overflow: visible;
+	background-color: #009688;
+	box-shadow: none;
+
+	&::after, & > .players_list {
+		width: 100%;
+		height: 24px;
+		left: 0px;
+		top: 0px;
+		
+		white-space: nowrap;
+		display: block;
+		position: absolute;
+	}
+
+	&::after {
+		content: attr(data-ct);
+		padding: 0px 20px;
+		
+		width: 100%;
+		box-sizing: border-box;
+		background-color: none;
+		z-index: 83;
+	}
+
+	&.open {
+		opacity: 1;
+	}
+
+	& .slide_list_icon {
+		display: inline-block;
+		// margin: 5px 0px;
+		margin-top: 2px;
+		z-index: 82;
+		position: absolute;
+		right: 15px;
+		margin-left: 10px;
+		background: red;
+		width: 20px;
+		height: 20px;
+
+		background: url('../img/arrow_left.svg') center no-repeat;
+		background-size: cover;
+
+		transform: rotate(270deg);
+
+		transition: transform 0.5s cubic-bezier(.87,-.41,.19,1.44);
+	}
+
+	&.open .slide_list_icon {
+		transform: rotate(90deg);
+	}
+
+	& > .players_list {
+		text-align: center;
+		overflow-y: hidden;
+		// max-height: 24 + 25*2px;
+		
+		box-shadow: 0px 1px 4px #0008;
+	
+		transition: height 0.5s cubic-bezier(.36,.07,.19,.97);
+		background-color: #26A69A;
+
+		border-radius: 5px;
+	}
+
+	& > .players_list::before {
+		content: " ";
+		background-color: #009688;
+		// text-align: left;
+		display: block;
+		height: 24px;
+		width: 100%;
+	}
+
+	& > .players_list > * {//actual list of player divs
+		overflow-y: auto;
+	}
+
+	& > .players_list > *::-webkit-scrollbar-thumb {
+	    background: #00897B;
+	}
+
+	& > .players_list > *::-webkit-scrollbar-track {
+	    background: #00695C; 
+	}
+
+
+	& > .players_list > * > *:not(:last-child) {
+		border-bottom: 1px solid #fff2;
+	}
+}
+
+// .header_separator > .players .slide_list_btn > 

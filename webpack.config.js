@@ -97,6 +97,7 @@ module.exports = {
                     {
                         loader: "file-loader",
                         options: {
+                            attrs: ['img:src','link:href','image:xlink:href'],
                             name: '[name].[ext]',
                             outputPath: 'static/',
                             useRelativePath: true,

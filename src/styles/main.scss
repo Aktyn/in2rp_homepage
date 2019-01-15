@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Asap');
+
 $max_w1: 768px;
-$body-font: Helvetica, Arial;
+$body-font: 'Asap', Helvetica, Arial;
 
 $bg-dark: #455A64;
 
@@ -42,16 +44,6 @@ hr {
     border: none;
     height: 1px;
     background-color: #9dafb7;
-}
-
-button.clean {
-    font-size: 100%;
-    background-color: #fff;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 0px;
-    margin: 0px;
 }
 
 textarea, input {
