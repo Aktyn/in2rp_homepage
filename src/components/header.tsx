@@ -23,10 +23,7 @@ export default class Header extends React.Component<HeaderProps, any> {
 
 	constructor(props: HeaderProps) {
 		super(props);
-
-		//TODO - SPRAWDZAC ZAWARTOSC WIADOMOSCI NA #rozmowy POD WZGLEDEM ZAWIERANIA ZNAKOW BEDACYCH
-		//LINKIEM ZAPRASZAJACYM DO DISCORDA NP WIADOMOSC: 'h.t.t.p././.d.i.scord./...' powinna zostac
-		//usunieta
+		
 		fetch(Config.api_server_url + '/get_online_players', {
 			method: "POST",
 			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
