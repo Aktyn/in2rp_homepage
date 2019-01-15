@@ -79,7 +79,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 	           "Content-Type": "application/json; charset=utf-8",
 	        }
 		}).then(res => res.json()).then((res: {result: string; data: ServerData}) => {
-			console.log(res);
+			//console.log(res);
 			if(res.result === 'SUCCESS') {
 				this.setState({
 					server_data: {
