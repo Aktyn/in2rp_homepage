@@ -7,8 +7,8 @@ export default {
 	async apply_request(req: any, res: any) {
 		//console.log(req.body);
 		try {
-
 			var response = await discordAPI.getDiscordUserData(req.body.token);
+			console.log('test', response);
 
 			if(response.code === 0) {//check if client is logged in to discord account
 				return res.json({
@@ -40,10 +40,13 @@ export default {
 					console.error('Sending channel message failed:', e);
 				}
 			}
-			else
+			else {
+				console.log('Cannot insert row');
 				res.json({result: 'DATABASE_ERROR'});
+			}
 		}
 		catch(e) {
+			console.log(e);
 			res.json({result: 'DATABASE_ERROR'});
 		}
 	},

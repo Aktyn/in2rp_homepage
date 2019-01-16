@@ -146,7 +146,7 @@ a.logo {
 
 	position: relative;
 
-	z-index: 3;
+	z-index: 15;
 
 	box-shadow: 0px 0px 8px #0006;
 
@@ -246,6 +246,11 @@ a.logo {
 	overflow: visible;
 	background-color: #009688;
 	box-shadow: none;
+
+	&.no_players {
+		opacity: 1;
+		cursor: initial;
+	}
 
 	&::after, & > .players_list {
 		width: 100%;

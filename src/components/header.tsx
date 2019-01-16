@@ -157,7 +157,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 					</svg>
 				</div>
 				<div className='header_fill header_gradient'>
-					<Link to='/' style={{justifySelf: 'right'}} className='logo'></Link>
+					<Link aria-label='homepage link logo' to='/' style={{justifySelf: 'right'}} className='logo'></Link>
 					<div style={{
 						justifySelf: 'left', 
 						// fontFamily: GTA_Font,
@@ -167,7 +167,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 				</div>
 			</h1>
 			<div className='header_separator'>
-				<Link to='/' className='homepage_icon' />
+				<Link to='/' className='homepage_icon' aria-label='homepage link' />
 				<div className='players'>
 					{this.state.server_data && this.renderOnlinePlayersInfos(this.state.server_data)}
 				</div>
