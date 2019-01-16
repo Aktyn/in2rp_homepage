@@ -150,7 +150,7 @@ const self = {
 			return "`" + encodeURIComponent(key) + "`";
 		}).join(', ');
 		var column_values = answer_keys.map(key => {
-			let val = encodeURIComponent(answers[key]).replace("'", "\\'")
+			let val = encodeURIComponent(answers[key]).replace(/'/gi, "\\'")
 				.substr(0, Utils.maxLengths[key] || 8192);
 			if(key === 'ic_wiek')
 				return val || 0;
