@@ -162,7 +162,7 @@ const self = {
 	},
 
 	getWhitelistRequest: function(id: string) {
-		return this.customQuery("SELECT * FROM `requests` WHERE `discord_id` = '"+id+"';");
+		return this.customQuery("SELECT * FROM `requests` WHERE `discord_id` = '"+id+"' ORDER BY `timestamp` DESC;");
 	},
 
 	getRequests: function(status: string) {//1000*60*60*24 = 86400000 => miliseconds in one day

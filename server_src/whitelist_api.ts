@@ -3,6 +3,18 @@ import discordBot from './discord_bot';
 import Database from './database';
 import LOG from './log';
 
+interface RequestSchema {
+	timestamp: string;
+	status: 'rejected' | 'accepted' | 'pending'
+}
+
+const EXPIRE_TIME = 1000 * 60 * 60;// * 24 * 7;
+
+//returns true for rejected requests older than one week
+function requestExpired(request: RequestSchema) {
+	return request.status === 'rejected' && (Date.now() - parseInt(request.timestamp)) > (EXPIRE_TIME)
+}
+
 export default {
 	async apply_request(req: any, res: any) {
 		//console.log(req.body);
@@ -17,8 +29,11 @@ export default {
 
 			var user_current_request = await Database.getWhitelistRequest(response.id);
 
-			if(user_current_request.length > 0)
+			if(user_current_request.length > 0 && 
+				!user_current_request.every((user_req: any) => requestExpired(user_req)))
+			{
 				return res.json({result: 'REQUEST_ALREADY_IN_DATABASE'});
+			}
 
 			var insert_res = await Database.addWhitelistRequest(req.body.answers, 
 				response.username, response.discriminator, response.id);
@@ -61,8 +76,12 @@ export default {
 
 		var user_current_request = await Database.getWhitelistRequest(response.id);
 
-		if(user_current_request.length > 0)
-			res.json({result: 'SUCCESS', status: user_current_request[0]['status']});
+		if(user_current_request.length > 0) {
+			if( user_current_request.every( (user_req: any) => requestExpired(user_req) ) )
+				res.json({result: 'SUCCESS', status: 'expired'});
+			else//respond with newest request status
+				res.json({result: 'SUCCESS', status: user_current_request[0]['status']});
+		}
 		else
 			res.json({result: 'SUCCESS', status: 'nothing'});
 	},

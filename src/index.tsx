@@ -32,7 +32,6 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-// import './styles/normalize.css';
 import './styles/main.scss';
 import './styles/common.scss';
 

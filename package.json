@@ -58,6 +58,7 @@
     "chart.js": "^2.7.3",
     "discord.js": "^11.4.2",
     "express": "^4.16.4",
+    "express-cache-controller": "^1.1.0",
     "mysql": "^2.16.0",
     "node-fetch": "^2.3.0",
     "prompt-sync": "^4.1.6",

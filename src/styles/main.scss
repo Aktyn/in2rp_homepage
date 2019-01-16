@@ -1,7 +1,14 @@
-@import url('https://fonts.googleapis.com/css?family=Asap');
+// @import url('https://fonts.googleapis.com/css?family=Asap');
+//@import './Asap-Regular.ttf';
+
+@font-face {
+    font-family: RobotoRegular;
+    font-display: auto;
+    src: url('./Roboto-Regular.ttf') format(ttf);
+}
 
 $max_w1: 768px;
-$body-font: 'Asap', Helvetica, Arial;
+$body-font: RobotoRegular, Arial;
 
 $bg-dark: #455A64;
 

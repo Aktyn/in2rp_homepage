@@ -31,11 +31,8 @@ module.exports = {
         extensions: ['.js', '.json', '.ts', '.tsx'],
     },
 
-    optimization: {
-        splitChunks: {
-            //chunks: 'all',
-            automaticNameDelimiter: '-'
-        },
+    optimization: isDevelopment ? undefined : {
+        minimize: true,
         minimizer: [
             new UglifyJsPlugin({
                 exclude: 'sw.js',
@@ -47,7 +44,23 @@ module.exports = {
                     toplevel: true
                 }
             })
-        ]
+        ],
+        splitChunks: {
+            //chunks: 'all',
+            automaticNameDelimiter: '-',
+
+            cacheGroups: {
+                styles: {
+                    name: 'styles',
+                    test: /\.s?css$/,
+                    chunks: 'all',
+                    // minChunks: 1,
+                    priority: -1,
+                    reuseExistingChunk: true,
+                    enforce: true,
+                }
+            }
+        }
     },
 
     module: {
@@ -92,7 +105,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(jpe?g|png|gif|svg)$/,
+                test: /\.(jpe?g|png|gif|svg|ttf)$/,
                 use: [
                     {
                         loader: "file-loader",
@@ -127,15 +140,20 @@ module.exports = {
                     }
                 ]
             },
-            {
+            /*{//TODO - remove ttf-loader from npm packages
                 test: /\.ttf$/,
                 use: [{
                     loader: 'ttf-loader',
                     options: {
-                        name: './font/[hash].[ext]',
+                        attrs: ['url'],
+                        outputPath: 'static/',
+                        useRelativePath: true,
+                        // emitFile: true,
+                        // name: './font/[hash].[ext]',
+                        name: '[name].[ext]'
                     },
                 }]
-            }
+            }*/
         ],
     },
 

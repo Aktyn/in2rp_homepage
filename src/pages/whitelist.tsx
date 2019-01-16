@@ -19,7 +19,8 @@ enum WL_STATUS {
 	NOTHING,//user does not send request for whitelist
 	PENDING,
 	ACCEPTED,
-	REJECTED
+	REJECTED,
+	EXPIRED
 }
 
 interface WhitelistState {
@@ -177,6 +178,9 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 					case 'rejected':
 						WhitelistClass.cached_wl_status = WL_STATUS.REJECTED;
 						break;
+					case 'expired':
+						WhitelistClass.cached_wl_status = WL_STATUS.EXPIRED;
+						break;
 				}
 
 				this.setState({wl_status: WhitelistClass.cached_wl_status})
@@ -232,13 +236,22 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 		}
 		else if(this.state.wl_status === WL_STATUS.REJECTED) {
 			content = <React.Fragment>
-				<div>Twoje podanie zostało odrzucone.</div>
+				<div>
+					Twoje podanie zostało odrzucone.<br />
+					Będziesz mógł/mogła spróbować ponownie gdy minie tydzień od momentu złożenia.
+				</div>
 				<div className='rejected_icon'>&#x2717;</div>
 			</React.Fragment>;
 		}
 		else {
 			content = <React.Fragment>
-				<h3>Odpowiedz na poniższe pytania przed wysłaniem podania o whiteliste.</h3>
+				<h3>{this.state.wl_status === WL_STATUS.EXPIRED ? 
+					<React.Fragment>
+						Twoje poprzednie podanie zostało odrzucone.<br />
+						Możesz teraz spróbować jeszcze raz.
+					</React.Fragment> :
+					'Odpowiedz na poniższe pytania przed wysłaniem podania o whiteliste.'
+				}</h3>
 				<div className='questions'>
 					<br />
 					<h4>INFORMACJE OOC</h4>

@@ -8,6 +8,7 @@ declare global {
 global.PORT = 1234;
 
 import * as express from 'express';
+const cacheControl = require('express-cache-controller');
 import * as bodyParser from 'body-parser';
 const app = express();
 
@@ -43,6 +44,10 @@ var allowCrossDomain = function(req: any, res: any, next: any) {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cacheControl({ 
+	noCache: false,
+	maxAge: 60*60*24*7 
+}));//one week
 
 if(process.env.NODE_ENV === 'dev')
 	app.use(allowCrossDomain);
