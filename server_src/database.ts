@@ -150,13 +150,13 @@ const self = {
 			return "`" + encodeURIComponent(key) + "`";
 		}).join(', ');
 		var column_values = answer_keys.map(key => {
-			return "'" + encodeURIComponent(answers[key]).substr(0, Utils.maxLengths[key] || 8192) + "'";
+			let val = encodeURIComponent(answers[key]).substr(0, Utils.maxLengths[key] || 8192);
+			if(key === 'ic_wiek')
+				return val;
+			return "'" + val + "'";
 		}).join(', ');
 
-		return this.customQuery("INSERT INTO `requests`\
-			(`timestamp`, `discord_nick`, `discord_discriminator`, `discord_id`, " + columns_names + ")\
-			VALUES \
-			('" + Date.now() + "', '" + username + "', '" + discriminator + "', '" + id + "', " + column_values + ");"
+		return this.customQuery("INSERT INTO `requests` (`timestamp`, `discord_nick`, `discord_discriminator`, `discord_id`, " + columns_names + ") VALUES ('" + Date.now() + "', '" + username + "', " + discriminator + ", '" + id + "', " + column_values + ");"
 		);
 	},
 
