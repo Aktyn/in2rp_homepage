@@ -8,7 +8,6 @@ export default {
 		//console.log(req.body);
 		try {
 			var response = await discordAPI.getDiscordUserData(req.body.token);
-			console.log('test', response);
 
 			if(response.code === 0) {//check if client is logged in to discord account
 				return res.json({
