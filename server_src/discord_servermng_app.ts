@@ -6,7 +6,7 @@ import LOG from './log';
 const id = '528686772679606273';//'527950073322143794';//channel id
 
 const PERMITTED_ROLES = ['Developer', 'Właściciel', 'Administrator'];
-const SERVER_CMDS: any = {
+const SERVER_CMDS = {
 	'start': '/home/in2rp/start.sh',
 	'stop': '/home/in2rp/stop.sh',
 	'restart': '/home/in2rp/restart.sh'
@@ -42,7 +42,7 @@ function sendCommandOutput(channel: Discord.TextChannel, output: string, success
 }
 
 function generateMessage(status = '') {//\n\n**Komendy strony:**\ntodo
-	return `**Komendy serwera:**\n!start\n!stop\n!restart\n!rcon komenda - wykonuje podaną komendę w konsoli fivem\n\n**Inne:**\n!clear - czyści kanał\n\n${status}`;//.replace(/^\ */gi, '').replace(/^\t/gi, '');
+	return `**Komendy serwera:**\n!start\n!stop\n!restart\n!reboot X - restartuje serwer po X minutach\n!rcon komenda - wykonuje podaną komendę w konsoli fivem\n\n**Inne:**\n!clear - czyści kanał\n\n${status}`;//.replace(/^\ */gi, '').replace(/^\t/gi, '');
 }
 
 function update(status: string) {
@@ -80,14 +80,16 @@ function executeCommand(cmd: string): Promise<string> {
 }
 
 function execCommand(command: string, message: Discord.Message) {
+	var timest = new Date().toLocaleTimeString('en-US', {hour12: false});
+
 	return executeCommand(command).then((stdout: string) => {
 		sendCommandOutput(message.channel as Discord.TextChannel, stdout, true);
-		update(`**Ostatnie polecenie:** \`${message.content}\` (${message.author.username})`);
+		update(`**Ostatnie polecenie:** \`${message.content}\` (${message.author.username}) - ${timest}\n`);
 	}).catch((stderr: string) => {
 		sendCommandOutput(message.channel as Discord.TextChannel, stderr, false);
 		if(stderr.length > 1000)
 			stderr = stderr.substr(0, 1000) + '...';
-		update(`**Ostatnie polecenie:** \`${message.content}\` (${message.author.username})\n**Błąd:** \`${stderr}\``);
+		update(`**Ostatnie polecenie:** \`${message.content}\` (${message.author.username}) - ${timest}\n**Błąd:** \`${stderr}\`\n`);
 	});
 }
 
@@ -144,24 +146,27 @@ const ManagerApp = {
 	   		case 'stop':
 	   		case 'restart':
 	   			update(`Wykonywanie skryptu w trakcie (\`${SERVER_CMDS[cmd]}\`)`);
-		   		/*executeCommand(SERVER_CMDS[cmd]).then((stdout: string) => {
-		   			sendCommandOutput(message.channel as Discord.TextChannel, stdout, true);
-		   			update(`**Ostatnie polecenie:** \`${message.content}\` (${message.author.username})`);
-		   		}).catch((stderr: string) => {
-		   			sendCommandOutput(message.channel as Discord.TextChannel, stderr, false);
-		   			if(stderr.length > 1000)
-		   				stderr = stderr.substr(0, 1000) + '...';
-		   			update(`**Ostatnie polecenie:** \`${message.content}\` (${message.author.username})\n**Błąd:** \`${stderr}\``);
-		   		});*/
-
 		   		await execCommand(SERVER_CMDS[cmd], message);
+		   		break;
+		   	case 'reboot':
+		   		let full_command1 = path.join(__dirname, '..', 'tools', 'rcon') + 
+		   			' 54.37.128.15 30120 ameryczkarp reboot ' + args[0];
+		   		//console.log(full_command1);
+		   		update(`Wykonywanie polecenia konsoli fivem w trakcie (\`rcon reboot ${args.join(' ')}\`)`);
+		   		await execCommand(full_command1, message);
+
+		   		//restarts serwer after X minutes
+		   		setTimeout(() => {
+		   			console.log('Time to serwer restart passed. Restarting now.');
+		   			executeCommand(SERVER_CMDS['restart']);
+		   		}, 1000 * 60 * parseInt(args[0]));
 		   		break;
 		   	case 'rcon':
 		   		//TODO - test localhost instead of serwer ip in production
-		   		let full_command = path.join(__dirname, '..', 'tools', 'rcon') + 
+		   		let full_command2 = path.join(__dirname, '..', 'tools', 'rcon') + 
 		   			' 54.37.128.15 30120 ameryczkarp ' + args.join(' ');
-		   		update(`Wykonywanie skryptu w trakcie (\`rcon ${args.join(' ')}\`)`);
-		   		await execCommand(full_command, message);
+		   		update(`Wykonywanie polecenia konsoli fivem w trakcie (\`rcon ${args.join(' ')}\`)`);
+		   		await execCommand(full_command2, message);
 		   		break;
 		}
 

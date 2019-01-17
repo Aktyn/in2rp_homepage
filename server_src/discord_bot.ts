@@ -72,11 +72,11 @@ function onLogin() {
 	//	.roles.find(r => r.name === 'Użytkownik');
 	//guild.members.array().filter(u => u.user.bot).forEach(m => m.removeRoles([target_role]));
 
-	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
-		statusApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+		statusApp.init(bot);
+	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);
-	if(process.env.NODE_ENV !== 'dev')
+	//if(process.env.NODE_ENV !== 'dev')
 		manageApp.init(bot);
 
 	bot.on('message', message => {
@@ -110,7 +110,7 @@ function onLogin() {
 						return statusApp.handleMessage(message, bot);
 					break;
 				case manageApp.CHANNEL_ID:	
-					if(process.env.NODE_ENV !== 'dev')
+					//if(process.env.NODE_ENV !== 'dev')
 						return manageApp.handleMessage(message, bot);
 					break;
 			}

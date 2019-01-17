@@ -1,5 +1,4 @@
 // @import url('https://fonts.googleapis.com/css?family=Asap');
-//@import './Asap-Regular.ttf';
 
 @font-face {
     font-family: RobotoRegular;
@@ -11,12 +10,6 @@ $max_w1: 768px;
 $body-font: RobotoRegular, Arial;
 
 $bg-dark: #455A64;
-
-// @import 'header.scss';
-// @import 'footer.scss';
-// @import 'homepage.scss';
-// @import 'whitelist.scss';
-// @import 'rules.scss';
 
 @import 'scrollbars.scss';
 
@@ -111,6 +104,7 @@ main.content {
     .image-gallery-slide img {
         max-height: 506.25px;
         width: auto !important;
+        max-width: 100vw !important;
     }
 
     .image-gallery-slide {
@@ -120,7 +114,8 @@ main.content {
 
 .image-gallery-content.fullscreen {
     .image-gallery-slide img {
-        max-height: 100vh !important;
+        width: auto !important;
+        max-height: calc(100vh - 82px) !important;
         max-width: 100vw !important;
     }
 }

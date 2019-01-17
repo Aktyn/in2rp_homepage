@@ -88,6 +88,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 					}
 				});
 
+				//TODO - refresh after 5 minutes when server is offline
 				setTimeout(() => this.updateOnlinePlayersInfos(), 1000*60);//refresh after minute
 			}
 			else
