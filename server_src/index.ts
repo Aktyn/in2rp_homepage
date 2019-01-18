@@ -45,8 +45,8 @@ var allowCrossDomain = function(req: any, res: any, next: any) {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cacheControl({ 
-	noCache: false,
-	maxAge: 60*60*24*7 
+	noCache: true,//TODO - change to false
+	//maxAge: 60*60*24*7  //uncommenct this
 }));//one week
 
 if(process.env.NODE_ENV === 'dev')
