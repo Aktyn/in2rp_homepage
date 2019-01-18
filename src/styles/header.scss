@@ -237,10 +237,11 @@ a.logo {
 	white-space: nowrap !important;
 	line-height: 24px !important;
 	height: 24px !important;
-	padding: 0px 10px !important;
+	padding: 0px !important;
 	display: inline-block;
 	position: relative;
-	width: 125px;
+	// min-width: 125px;
+	box-sizing: border-box;
 	text-align: left;
 	z-index: 81;
 	overflow: visible;
@@ -252,43 +253,61 @@ a.logo {
 		cursor: initial;
 	}
 
-	&::after, & > .players_list {
-		width: 100%;
-		height: 24px;
-		left: 0px;
-		top: 0px;
+	/*&.list_head {
+		display: inline-block;
+		content: attr(data-ct);
+		padding-left: 15px;
 		
-		white-space: nowrap;
-		display: block;
-		position: absolute;
+		// width: 100%;
+		box-sizing: border-box;
+		background-color: transparent;
+		z-index: 83;
+	}*/
+
+	& .list_head {
+		height: 100%;
+		// width: 100%;
+		text-align: center;
+		line-height: 0px;
+		vertical-align: middle;
+		// width: 100%;
+		// background-color: red;
+		position: relative;
+		// left: 0px;
+		// top: 0px;
+		z-index: 83;
+
+		margin: 0px 3px 0px 10px;
+
+		display: grid;
+		grid-template-columns: auto 24px;
+		align-items: center;
+		justify-content: center;
 	}
 
-	&::after {
-		content: attr(data-ct);
-		padding: 0px 20px;
-		
-		width: 100%;
-		box-sizing: border-box;
-		background-color: none;
-		z-index: 83;
+	& .list_head > * {
+		//display: inline-block;
+		//height: 100%;
+		//line-height: 24px;
+		// vertical-align: middle;
 	}
 
 	&.no_players::after {
-		text-align: center;
+		text-align: left;
 	}
 
 	&:not(.no_players).open {
 		opacity: 1;
 	}
 
-	&:not(.no_players) .slide_list_icon {
+	&:not(.no_players) .list_head .slide_list_icon {
 		display: inline-block;
 		// margin: 5px 0px;
-		margin-top: 2px;
+		margin: 2px;
 		z-index: 82;
-		position: absolute;
-		right: 15px;
-		margin-left: 10px;
+		// position: absolute;
+		// right: 5px;
+		// margin-left: 10px;
 		background: red;
 		width: 20px;
 		height: 20px;
@@ -306,8 +325,17 @@ a.logo {
 	}
 
 	& > .players_list {
+		width: 100%;
+		height: 24px;
+		left: 0px;
+		top: 0px;
+		
+		white-space: nowrap;
+		display: block;
+		position: absolute;
+
 		text-align: center;
-		overflow-y: hidden;
+		overflow: hidden;
 		// max-height: 24 + 25*2px;
 		
 		box-shadow: 0px 1px 4px #0008;
@@ -329,6 +357,7 @@ a.logo {
 
 	& > .players_list > * {//actual list of player divs
 		overflow-y: auto;
+		overflow-x: hidden;
 	}
 
 	& > .players_list > *::-webkit-scrollbar-thumb {

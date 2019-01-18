@@ -114,14 +114,19 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 
 	renderOnlinePlayersInfos(data: ServerData) {
 		if(!data.online)
-			return 'Serwer offline';
+			return 'Serwer gry offline';
 
 		return <div className={
 				`clean slide_list_btn small_button ${this.state.list_open ? 'open' : ''} 
 				${data.players_online.length > 0 ? '' : 'no_players'}`
-			}
-			onClick={this.switchList.bind(this)} data-ct={`Graczy online: ${data.players_online.length}`}>
-			<div className='slide_list_icon'></div>
+			} 
+			onClick={this.switchList.bind(this)}>
+
+			<div className='list_head'>
+				<span>Graczy online: {data.players_online.length}</span>
+				<span className='slide_list_icon'></span>
+			</div>
+			
 			<div className='players_list' ref={el => this.players_list = el}>
 				<div ref={el => this.actual_players_list = el}>{
 					data.players_online.map((p, i) => <div key={i}>{p}</div>)//TODO - turn it into links redirecting to fivem users data

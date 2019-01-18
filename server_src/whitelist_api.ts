@@ -8,7 +8,8 @@ interface RequestSchema {
 	status: 'rejected' | 'accepted' | 'pending'
 }
 
-const EXPIRE_TIME = 1000 * 60 * 60;// * 24 * 7;
+//NOTE - after changing this time - text in whitelist.tsx should be updated
+const EXPIRE_TIME = 1000 * 60 * 60 * 24;// * 7;
 
 //returns true for rejected requests older than one week
 function requestExpired(request: RequestSchema) {

@@ -1,16 +1,11 @@
 import * as Discord from 'discord.js';
-import {spawn} from 'child_process';
-import * as path from 'path';
+import Utils from './utils';
+import Eclipse from './eclipse';
 import LOG from './log';
 
 const id = '528686772679606273';//'527950073322143794';//channel id
 
 const PERMITTED_ROLES = ['Developer', 'Właściciel', 'Administrator'];
-const SERVER_CMDS = {
-	'start': '/home/in2rp/start.sh',
-	'stop': '/home/in2rp/stop.sh',
-	'restart': '/home/in2rp/restart.sh'
-};
 
 //var target_channel: Discord.TextChannel | undefined;
 var MainMessage: Discord.Message | undefined;
@@ -51,38 +46,10 @@ function update(status: string) {
 	MainMessage.edit(generateMessage(status));
 }
 
-function executeCommand(cmd: string): Promise<string> {
-	return new Promise((resolve, reject) => {
-		var stdout = '';
-		var stderr = '';
-
-		try {
-			let args = cmd.split(' ');
-			let main_cmd = args.shift() || 'echo';
-			const command = spawn(main_cmd, args);
-			command.stdout.on('data', (data: string) => stdout += data);
-			command.stderr.on('data', (data: string) => stderr += data);
-			command.on('close', (code: number) => {
-				//console.log(code, typeof code);
-			  	if(code === 0)
-			  		resolve(stdout);
-			  	else
-			  		reject(stderr);
-			});
-			command.on('error', (err: any) => {
-			  	reject(err);
-			});
-		}
-		catch(e) {
-			reject(e);
-		}
-	});
-}
-
 function execCommand(command: string, message: Discord.Message) {
 	var timest = new Date().toLocaleTimeString('en-US', {hour12: false});
 
-	return executeCommand(command).then((stdout: string) => {
+	return Utils.executeCommand(command).then((stdout: string) => {
 		sendCommandOutput(message.channel as Discord.TextChannel, stdout, true);
 		update(`**Ostatnie polecenie:** \`${message.content}\` (${message.author.username}) - ${timest}\n`);
 	}).catch((stderr: string) => {
@@ -111,18 +78,6 @@ const ManagerApp = {
 				}).catch(console.error);
 			}
 		}
-
-		//test
-		/*let full_command = path.join(__dirname, '..', 'tools', 'rcon.sh');
-		const command = spawn(full_command, ['54.37.128.15', '30120', 'ameryczkarp', 'restart esx_scoreboard']);
-		command.stdout.on('data', (data: string) => console.log(data.toString()));
-		//command.stderr.on('data', (data: string) => stderr += data);
-		command.on('close', (code: number) => {
-			console.log(code, typeof code);
-		});
-		command.on('error', (err: any) => {
-		  	console.log('error', err);
-		});*/
 	},
 	handleMessage: async (message: Discord.Message, bot: Discord.Client) => {
 		//console.log(message.member.roles.array().map(role => role.name));
@@ -145,28 +100,31 @@ const ManagerApp = {
 		   	case 'start':
 	   		case 'stop':
 	   		case 'restart':
-	   			update(`Wykonywanie skryptu w trakcie (\`${SERVER_CMDS[cmd]}\`)`);
-		   		await execCommand(SERVER_CMDS[cmd], message);
+	   			update(`Wykonywanie skryptu w trakcie (\`${Utils.SERVER_CMDS[cmd]}\`)`);
+		   		await execCommand(Utils.SERVER_CMDS[cmd], message);
 		   		break;
 		   	case 'reboot':
-		   		let full_command1 = path.join(__dirname, '..', 'tools', 'rcon') + 
-		   			' 54.37.128.15 30120 ameryczkarp reboot ' + args[0];
+		   		//let full_command1 = path.join(__dirname, '..', 'tools', 'rcon') + 
+		   		//	' 54.37.128.15 30120 ameryczkarp reboot ' + args[0];
 		   		//console.log(full_command1);
+		   		let X = parseInt(args[0]);
 		   		update(`Wykonywanie polecenia konsoli fivem w trakcie (\`rcon reboot ${args.join(' ')}\`)`);
-		   		await execCommand(full_command1, message);
+		   		await execCommand(Utils.RCON_CMD_BASE + 'reboot ' + X, message);
 
 		   		//restarts serwer after X minutes
+		   		/*let X = 1000 * 60 * parseInt(args[0]);
 		   		setTimeout(() => {
 		   			console.log('Time to serwer restart passed. Restarting now.');
-		   			executeCommand(SERVER_CMDS['restart']);
-		   		}, 1000 * 60 * parseInt(args[0]));
+		   			Utils.executeCommand(Utils.SERVER_CMDS['restart']);
+		   		}, X);*/
+		   		Eclipse.start( Eclipse.getNextPeriod(X) );
 		   		break;
 		   	case 'rcon':
 		   		//TODO - test localhost instead of serwer ip in production
-		   		let full_command2 = path.join(__dirname, '..', 'tools', 'rcon') + 
-		   			' 54.37.128.15 30120 ameryczkarp ' + args.join(' ');
+		   		//let full_command2 = path.join(__dirname, '..', 'tools', 'rcon') + 
+		   		//	' 54.37.128.15 30120 ameryczkarp ' + args.join(' ');
 		   		update(`Wykonywanie polecenia konsoli fivem w trakcie (\`rcon ${args.join(' ')}\`)`);
-		   		await execCommand(full_command2, message);
+		   		await execCommand(Utils.RCON_CMD_BASE + args.join(' '), message);
 		   		break;
 		}
 

@@ -51,6 +51,7 @@
 .logs_admin_main .log_content {
 	text-align: left;
 	font-size: 14px;
+	padding-left: 5px;
 	max-height: 670px;//maximum .logs_list height - 30px (height of title)
 	overflow-y: auto;
 	word-break: break-all;

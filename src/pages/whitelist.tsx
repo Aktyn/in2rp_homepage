@@ -238,7 +238,7 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 			content = <React.Fragment>
 				<div>
 					Twoje podanie zostało odrzucone.<br />
-					Będziesz mógł/mogła spróbować ponownie gdy minie tydzień od momentu złożenia.
+					Będziesz mógł/mogła spróbować ponownie gdy minie doba od momentu złożenia.
 				</div>
 				<div className='rejected_icon'>&#x2717;</div>
 			</React.Fragment>;
