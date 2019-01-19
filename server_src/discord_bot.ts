@@ -19,6 +19,7 @@ if(!TOKEN)
 	throw new Error('You must specify bot TOKEN as argument: TOKEN=SECRET_TOKEN');
 
 var bot = new Discord.Client();
+var guild: Discord.Guild | null = null;
 
 bot.on('messageReactionAdd', rulesApp.onReactionAdded);
 bot.on('messageReactionRemove', rulesApp.onReactionRemoved);
@@ -66,7 +67,7 @@ function onLogin() {
 	//@ts-ignore
 	//console.log( bot.channels.map(ch => {return {id: ch.id, name: ch.name}}) );
 
-	//let guild = bot.guilds.find(g => g.name === 'IN2RP.PL +16');
+	guild = bot.guilds.find(g => g.id === '492333108679409674');//IN2RP guild id
 	// let role = guild.roles.find(r => r.name === "Użytkownik");
 	//let target_role = bot.guilds.find(g => g.name === 'IN2RP.PL +16')
 	//	.roles.find(r => r.name === 'Użytkownik');
@@ -74,9 +75,9 @@ function onLogin() {
 
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		statusApp.init(bot);
-	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);
-	if(process.env.NODE_ENV !== 'dev')
+	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		manageApp.init(bot);
 
 	bot.on('message', message => {
@@ -240,6 +241,29 @@ export default {
 				return undefined;
 		}
 		return undefined;
+	},
+
+	changeUserRole: function(user_id: string, role_name: string, remove_role = false) {
+		if(!started || !guild)
+			return;
+		try {
+			let member = guild.members.get(user_id);
+			if(!member)
+				throw new Error("Cannot find member with id: " + user_id);
+			guild.roles.some(rl => {
+				if(rl.name === role_name && member) {
+					if(remove_role === true && member.roles.some(rl => rl.name === role_name))
+						member.removeRoles([rl]).catch(console.error);
+					if(remove_role === false && !member.roles.some(rl => rl.name === role_name))
+						member.addRoles([rl]).catch(console.error);
+					return true;
+				}
+				return false;
+			});
+		}
+		catch(e) {
+			console.log('Cannot set user role:', e);
+		}
 	},
 
 	clearChannel: async function(channel_id: string) {
