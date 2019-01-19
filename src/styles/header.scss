@@ -1,6 +1,7 @@
 $header-small: 150px;
 $header-large: 250px;
-$max_w1: 768px;
+// $max_w1: 768px;
+$max_w1: 950px;
 
 $delay: 100ms;
 
@@ -51,26 +52,50 @@ $blob_size: 100px;
 	width: 100%;
 
 	display: grid;
-	grid-template-areas: "separator text logo";
-	grid-template-columns: $header-large auto $header-large;
+	grid-template-areas: "separator hline1 text hline2 logo";
+	grid-template-columns: $header-large 0px auto 0px $header-large;
+	grid-template-rows: 100%;
 	@media screen and (max-width: $max_w1) {
+		grid-template-areas: "separator text logo";
 		grid-template-columns: $header-small auto $header-small;
 	}
-	@media screen and (max-width: 500px) {
-		grid-template-areas: "logo";
-		grid-template-columns: auto;
+	/*@media screen and (max-width: 950px) {
+		grid-template-areas: "text logo";
+		grid-template-columns: auto $header-large;
+		justify-content: stretch;
+	}*/
+	@media screen and (max-width: 550px) {
+		grid-template-areas: "hline1 logo hline2" !important;
+		grid-template-columns: auto fit-content(100%) auto;
+		justify-content: stretch;
 
 		& .header_text {
 			display: none !important;
 		}
 
 		& .logo {
+			grid-area: logo;
 			justify-self: left !important;
 			background-position: center !important;
-			width: 100vw !important;
+			width: $header-small !important;
 
 			background-image: url('../img/favicon.png') !important;
 			background-size: auto 80% !important;
+		}
+
+		& .line1, & .line2 {
+			display: block !important;
+			height: 1px;
+			// width: 100px;
+			width: calc(40vw - (75px));//75px - $header-small / 2
+			// background-color: red;
+			// margin: auto;
+		}
+		& .line1 {
+			justify-self: right;
+		}
+		& .line2 {
+			justify-self: left;
 		}
 	}
 	grid-template-rows: auto;
@@ -79,6 +104,16 @@ $blob_size: 100px;
 	justify-content: space-between;
 
 	color: #fffa;
+
+	& .line1 {
+		grid-area: hline1;
+		display: none;
+	}
+
+	& .line2 {
+		grid-area: hline2;
+		display: none;
+	}
 
 	& .header_text {
 		display: block;
@@ -90,12 +125,12 @@ $blob_size: 100px;
 		overflow: visible;
 
 		// text-align: left;
+	}
 
-		& hr {
-			background-color: #fff5;
-			transform: scale(0, 1);
-			animation: hr_showup 0.7s 0.2s cubic-bezier(.61,.01,.26,1.51) forwards;
-		}
+	& hr, & .line1, & .line2 {
+		background-color: #fff5;
+		transform: scale(0, 1);
+		animation: hr_showup 0.7s 0.2s cubic-bezier(.61,.01,.26,1.51) forwards;
 	}
 
 	& .logo {

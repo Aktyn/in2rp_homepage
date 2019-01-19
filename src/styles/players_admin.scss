@@ -48,3 +48,21 @@
 		}*/
 	}
 }
+
+.players_admin_main .wladd_panel {
+	// padding-bottom: 20px;
+
+	& input {
+		text-align: center;
+		min-width: 50%;
+		height: 30px;
+		font-size: 15px;
+	}
+
+	& button {
+		// background-color: #b71c1c;
+		background-color: #999; cursor: auto !important;
+		opacity: 1;
+		margin: 15px 0px;
+	}
+}

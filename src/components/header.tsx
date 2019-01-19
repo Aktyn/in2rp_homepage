@@ -169,6 +169,8 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 				<div className='header_fill header_gradient'>
 					<div className='header_text'>{Config.short_description}</div>
 					<Link aria-label='homepage link logo' to='/' className='logo'></Link>
+					<div className='line1'></div>
+					<div className='line2'></div>
 				</div>
 			</h1>
 			<div className='header_separator'>

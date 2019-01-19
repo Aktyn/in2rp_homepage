@@ -24,7 +24,7 @@ const CONFIG = {
 
 	discord_invitation_link: discord_invitation_link,
 
-	short_description: <span>Polski serwer Role&nbsp;Play<hr />Grand Theft Auto V</span>,
+	short_description: <span>POLSKI SERWER ROLE&nbsp;PLAY<hr />Grand Theft Auto V</span>,
 
 	long_description: <React.Fragment>
 		<h4>Zapraszamy do wspólnej gry</h4>

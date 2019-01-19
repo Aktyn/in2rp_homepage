@@ -100,7 +100,17 @@ export default class extends React.Component<any, PlayersState> {
 	}
 
 	renderPlayersList(datas: PlayerData[]) {
-		return <div className='players_list'>{datas.map(this.renderPlayerInfoBlock)}</div>;
+		return <>
+			<div className='wladd_panel'>
+				<input type='number' placeholder='STEAM ID' /><br/>
+				<button aria-label='wladd button' className='clean small_button'>
+					Dodaj do whitelisty 
+				</button>
+				<br/>Będzie działać jak ktoś naprawi komende wladd bo nie działa przez rcona
+			</div>
+			<hr style={{marginBottom: '30px'}} />
+			<div className='players_list'>{datas.map(this.renderPlayerInfoBlock)}</div>
+		</>;
 	}
 
 	render() {
