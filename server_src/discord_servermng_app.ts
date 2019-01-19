@@ -117,7 +117,7 @@ const ManagerApp = {
 		   			console.log('Time to serwer restart passed. Restarting now.');
 		   			Utils.executeCommand(Utils.SERVER_CMDS['restart']);
 		   		}, X);*/
-		   		Eclipse.start( Eclipse.getNextPeriod(X) );
+		   		Eclipse.start(X, true);
 		   		break;
 		   	case 'rcon':
 		   		//TODO - test localhost instead of serwer ip in production

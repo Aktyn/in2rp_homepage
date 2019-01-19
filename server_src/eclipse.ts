@@ -10,7 +10,7 @@ function nextPeriod(time: number) {
 	return i < periods.length ? periods[i] : 0;
 }
 
-function step(time: number) {
+function step(time: number, skip = false) {
 	time = time|0;
 
 	if(time === 0) {
@@ -20,7 +20,8 @@ function step(time: number) {
 		return;
 	}
 
-	Utils.executeRconCommand('reboot ' + time);
+	if(!skip)
+		Utils.executeRconCommand('reboot ' + time);
 	
 	let next_period = nextPeriod(time);
 
@@ -30,13 +31,13 @@ function step(time: number) {
 }
 
 export default {
-	start: (time: number) => {//time in seconds
+	start: (time: number, skip_first = false) => {//time in seconds
 		if(current_timeout !== null) {
 			console.log('Canceling current timeout');
 			clearTimeout(current_timeout);
 		}
 
-		step(time);
+		step(time, skip_first);
 	},
 	getNextPeriod: nextPeriod
 };
