@@ -163,13 +163,8 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 					</svg>
 				</div>
 				<div className='header_fill header_gradient'>
+					<div className='header_text'>{Config.short_description}</div>
 					<Link aria-label='homepage link logo' to='/' style={{justifySelf: 'right'}} className='logo'></Link>
-					<div style={{
-						justifySelf: 'left', 
-						// fontFamily: GTA_Font,
-						fontWeight: 'bold',
-						textShadow: `0px 1px 4px #0004`,
-					}}>{Config.short_description}</div>
 				</div>
 			</h1>
 			<div className='header_separator'>

@@ -1,4 +1,4 @@
-$header-small: 100px;
+$header-small: 150px;
 $header-large: 250px;
 $max_w1: 768px;
 
@@ -35,10 +35,6 @@ $blob_size: 100px;
 	}
 }
 
-.main_header_container a.logo {
-	height: 100%;
-}
-
 .main_header_container > .header_fill {
 	width: 100%;
 	height: 100%;
@@ -49,17 +45,51 @@ $blob_size: 100px;
 }
 
 .main_header_container > .header_gradient {
-	display: grid;
 	// background: linear-gradient(45deg, #de591b80 0%, #00d4fa80 100%);
 	background: linear-gradient(15deg, #455A64ff 0%, #FFA72680 100%);
 
-	grid-template-columns: 45% 55%;
+	width: 100%;
+
+	display: grid;
+	grid-template-areas: "separator text logo";
+	grid-template-columns: $header-large fit-content(100%) $header-large;
+	@media screen and (max-width: $max_w1) {
+		grid-template-columns: $header-small auto $header-small;
+	}
 	grid-template-rows: auto;
 	align-content: stretch;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-between;
 
 	color: #fffa;
+
+	& .header_text {
+		grid-area: text;
+		font-weight: bold;
+		text-shadow: 0px 1px 4px #0004;
+
+		// text-align: left;
+
+		& hr {
+			background-color: #fff5;
+			transform: scale(0, 1);
+			animation: hr_showup 0.7s 0.2s cubic-bezier(.61,.01,.26,1.51) forwards;
+		}
+	}
+
+	& .logo {
+		grid-area: logo;
+		height: 100%;
+	}
+}
+
+@keyframes hr_showup {
+	0% {
+		transform: scale(0, 1);
+	}
+	100% {
+		transform: scale(1, 1);
+	}
 }
 
 .main_header_container > .header_fill .blobs_container {
@@ -86,31 +116,32 @@ $blob_size: 100px;
 	border-radius: $blob_size;
     display: inline-block;
 
-	animation: go_up 1s ease-in-out infinite;
+	animation: go_up_large 1s ease-in-out infinite;
 	transform: translate(0px, $header-large);
 }
 
-@media screen and (min-width: $max_w1) {
-	@keyframes go_up {
-		0% {
-			transform: translate(0px, $header-large);
-		}
-		100% {
-			transform: translate(0px, -$blob_size);
-		}
+.main_header_container.small > .header_fill .blobs_container > .header_blob {
+	animation: go_up_small 1s ease-in-out infinite;
+}
+
+@keyframes go_up_large {
+	0% {
+		transform: translate(0px, $header-large);
+	}
+	100% {
+		transform: translate(0px, -$blob_size);
 	}
 }
 
-@media screen and (max-width: $max_w1) {
-	@keyframes go_up {
-		0% {
-			transform: translate(0px, $header-small);
-		}
-		100% {
-			transform: translate(0px, -$blob_size);
-		}
+@keyframes go_up_small {
+	0% {
+		transform: translate(0px, $header-small);
+	}
+	100% {
+		transform: translate(0px, -$blob_size);
 	}
 }
+
 
 h1.main_header_container {
 	font-weight: bold;
@@ -118,7 +149,7 @@ h1.main_header_container {
 
 h1.main_header_container.small {
 	height: $header-small;
-	font-size: 20px;
+	font-size: 27px;
 }
 
 h1.main_header_container.large {

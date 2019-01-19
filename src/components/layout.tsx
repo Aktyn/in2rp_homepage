@@ -5,9 +5,6 @@ const runtime = require('serviceworker-webpack-plugin/lib/runtime');//no types f
 import Header from './header';
 import Footer from './footer';
 
-//@ts-ignore
-// import Asap from './../styles/Roboto-Regular.ttf';
-
 interface LayoutState {
 	headerSize: string;
 }
