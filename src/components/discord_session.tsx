@@ -4,6 +4,7 @@ import './../styles/discord_widget.scss';
 
 import Config from './../config';
 import Cookies from './../utils/cookies';
+import Utils from './../utils/utils';
 
 import AdminMenu from './admin_menu';
 
@@ -83,13 +84,9 @@ function invokeLoginListeners(user: DiscordUserSchema) {
 }
 
 function recordVisit() {
-	fetch(Config.api_server_url + '/record_visit', {
-		method: "POST",
-		mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
-		headers: {
-           "Content-Type": "application/json; charset=utf-8",
-        }
-	}).catch();//ignore any errors here
+	Utils.postRequest(
+		'record_visit', {}
+	).catch();//ignore any errors here
 }
 
 interface SessionTemplate {
@@ -189,16 +186,10 @@ const Session = {
 				resolve(false);
 			}
 			else {//trying to restore session using token from cookies
-				fetch(Config.api_server_url + '/discord_restore_session', {
-					method: "POST",
-        			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
-        			headers: {
-			           "Content-Type": "application/json; charset=utf-8",
-			        },
-        			body: JSON.stringify({token: cookie_token})
-				}).then(resp => resp.json()).then((res: SessionResponseJSON) => {
-					// console.log(res);
-
+				Utils.postRequest(
+					'discord_restore_session', 
+					{token: cookie_token}
+				).then(resp => resp.json()).then((res: SessionResponseJSON) => {
 					if(res.result !== 'SUCCESS') {
 						//Cookies.removeCookie('discord_token'); //changed 06.01.2019
 						resolve(false);

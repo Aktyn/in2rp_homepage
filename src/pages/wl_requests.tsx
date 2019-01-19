@@ -2,6 +2,7 @@ import * as React from 'react';
 import Content from './../components/content';
 import Cookies from './../utils/cookies';
 import Config, { QuestionsBlockSchema, QuestionType } from './../config';
+import Utils from './../utils/utils';
 import Loader from './../components/loader';
 
 import './../styles/whitelist_admin.scss';
@@ -68,12 +69,10 @@ export default class extends React.Component<any, WlRequestsState> {
 		this.setState({current_cat: cat, loading: true, focused: undefined, wl_requests: undefined});
 
 		//loading requests authors
-		fetch(Config.api_server_url + '/get_whitelist_applicants', {
-			method: "POST",
-			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
-			headers: {"Content-Type": "application/json; charset=utf-8"},
-			body: JSON.stringify({token: cookie_token, requested_status: cat})
-		}).then(res => res.json()).then(res => {
+		Utils.postRequest(
+			'get_whitelist_applicants', 
+			{token: cookie_token, requested_status: cat}
+		).then(res => res.json()).then(res => {
 			//console.log(res);
 			if(res['result'] !== 'SUCCESS') {
 				let error_msg;
@@ -112,16 +111,14 @@ export default class extends React.Component<any, WlRequestsState> {
 
 		this.setState({loading: true, focused: undefined, wl_requests: undefined});
 
-		fetch(Config.api_server_url + '/update_whitelist_status', {
-			method: "POST",
-			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
-			headers: {"Content-Type": "application/json; charset=utf-8"},
-			body: JSON.stringify({
+		Utils.postRequest(
+			'update_whitelist_status', 
+			{
 				token: cookie_token, 
 				requested_status: cat, 
 				id: this.state.focused.id
-			})
-		}).then(res => res.json()).then(res => {
+			}
+		).then(res => res.json()).then(res => {
 			//console.log(res);
 			
 			if(res['result'] !== 'SUCCESS') {

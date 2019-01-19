@@ -2,6 +2,15 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import './../styles/admin_menu.scss';
 
+const LINKS = [
+	{name: 'Podania', 		route: 'wl_requests'},
+	{name: 'Gracze', 		route: 'players'},
+	{name: 'Logi', 			route: 'logs_mng'},
+	{name: 'Adminostwo', 	route: 'admins_mng'},
+	{name: 'Statystyki', 	route: 'statistics'},
+	{name: 'Galeria', 		route: 'gallery'},
+];
+
 interface AdminMenuState {
 	open: boolean;
 }
@@ -34,12 +43,8 @@ export default class extends React.Component<any, AdminMenuState> {
 				  	<span></span>
 				</div>
 				<div className='options_container' 
-					style={{height: this.state.open ? `${25*6+4}px` : 'inherit'}}>
-					<Link to='/wl_requests'>Podania</Link>
-					<Link to='/logs_mng'>Logi</Link>
-					<Link to='/admins_mng'>Adminostwo</Link>
-					<Link to='/statistics'>Statystyki</Link>
-					<Link to='/gallery'>Galeria</Link>
+					style={{height: this.state.open ? `${25*(LINKS.length+1)+4}px` : 'inherit'}}>
+					{LINKS.map((link, i) => <Link key={i} to={link.route}>{link.name}</Link>)}
 				</div>
 			</div>
 		</>;

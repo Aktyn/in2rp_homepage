@@ -2,7 +2,7 @@ import * as React from 'react';
 // import DiscordSession from '../components/discord_session';
 import Content from './../components/content';
 import Cookies from './../utils/cookies';
-import Config from './../config';
+import Utils from './../utils/utils';
 import Loader from './../components/loader';
 
 import './../styles/admins_admin.scss';
@@ -59,12 +59,10 @@ export default class extends React.Component<any, AdminsManagerState> {
 			return this.onError('Wygląda na to, że nie jesteś zalogowany');
 
 		//getting list of avaible log files
-		fetch(Config.api_server_url + '/get_admins', {
-			method: "POST",
-			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
-			headers: {"Content-Type": "application/json; charset=utf-8"},
-			body: JSON.stringify({token: cookie_token})
-		}).then(res => res.json()).then((res: AdminResJSON) => {
+		Utils.postRequest(
+			'get_admins', 
+			{token: cookie_token}
+		).then(res => res.json()).then((res: AdminResJSON) => {
 			//console.log(res['candidats']);
 			if(res['result'] !== 'SUCCESS') {
 				let error_msg;
@@ -107,12 +105,10 @@ export default class extends React.Component<any, AdminsManagerState> {
 			return this.onError('Wygląda na to, że nie jesteś zalogowany');
 
 		//getting list of avaible log files
-		fetch(Config.api_server_url + '/remove_admin', {
-			method: "POST",
-			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
-			headers: {"Content-Type": "application/json; charset=utf-8"},
-			body: JSON.stringify({token: cookie_token, id: this.state.selected_to_remove.id})
-		}).then(res => res.json()).then((res: AdminResJSON) => {
+		Utils.postRequest(
+			'remove_admin', 
+			{token: cookie_token, id: this.state.selected_to_remove.id}
+		).then(res => res.json()).then((res: AdminResJSON) => {
 			//console.log(res);
 			if(res['result'] !== 'SUCCESS') {
 				this.setState({
@@ -139,12 +135,10 @@ export default class extends React.Component<any, AdminsManagerState> {
 			return this.onError('Wygląda na to, że nie jesteś zalogowany');
 
 		//getting list of avaible log files
-		fetch(Config.api_server_url + '/add_admin', {
-			method: "POST",
-			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
-			headers: {"Content-Type": "application/json; charset=utf-8"},
-			body: JSON.stringify({token: cookie_token, id: id})
-		}).then(res => res.json()).then((res: AdminResJSON) => {
+		Utils.postRequest(
+			'add_admin', 
+			{token: cookie_token, id: id}
+		).then(res => res.json()).then((res: AdminResJSON) => {
 			//console.log(res);
 			if(res['result'] !== 'SUCCESS')
 				this.setState({adding_result: 'Nie można dodać admina'});

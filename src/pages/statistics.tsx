@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Content from './../components/content';
 import Cookies from './../utils/cookies';
-import Config from './../config';
+import Utils from './../utils/utils';
 
 import { Line as LineChart } from 'react-chartjs-2';
 import * as moment from 'moment';
@@ -154,16 +154,14 @@ export default class extends React.Component<any, StatisticsState> {
 			return this.onError('Wygląda na to, że nie jesteś zalogowany');
 
 		//fetching data from server
-		fetch(Config.api_server_url + '/get_visits', {
-			method: "POST",
-			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
-			headers: {"Content-Type": "application/json; charset=utf-8"},
-			body: JSON.stringify({
+		Utils.postRequest(
+			'get_visits', 
+			{
 				token: cookie_token, 
 				from: this.input_from.value, 
 				to: this.input_to.value
-			})
-		}).then(res => res.json()).then((res: {result: string; visits: VisitJSON[]}) => {
+			}
+		).then(res => res.json()).then((res: {result: string; visits: VisitJSON[]}) => {
 			//console.log(res);
 			if(res['result'] !== 'SUCCESS' || res['visits'] === undefined) {
 				let error_msg;

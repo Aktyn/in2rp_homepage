@@ -1,0 +1,50 @@
+.players_admin_main .players_list {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+
+	align-items: center;
+    justify-content: space-around;
+
+	& > * {//single player block
+		width: 250px;
+		min-height: 165px;
+		// padding: 5px;
+		margin-bottom: 20px;
+		box-shadow: 0px 2px 10px #000a;
+		border-radius: 5px;
+		// border: 1px solid #0003;
+		overflow: hidden;
+
+		// text-align: left;
+		background-color: #4DB6AC;
+		border: 1px solid #009688;
+		color: #fff;
+		text-shadow: 0px 1px 1px #0003;
+
+		& > h2 {
+			background-color: #009688;
+			color: #fff;
+			margin: 0px;
+			font-size: inherit;
+			padding-bottom: 5px;
+		}
+
+		& .steam_nick {
+			font-weight: bold;
+			padding: 5px 0px;
+			// text-align: center;
+		}
+
+		& table {
+			text-align: left;
+			width: auto;
+			margin: auto;
+		}
+
+		/*& > .data_row {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}*/
+	}
+}

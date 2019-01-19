@@ -1,5 +1,3 @@
-/* jshint multistr:true */
-
 import * as MySQL from 'mysql';
 var prompt = require('prompt-sync')();
 
@@ -9,7 +7,7 @@ const STATUS = {
     SUCCESS: 2
 };
 
-var status = STATUS.PENDING;
+var status = STATUS.PENDING, fivem_status = STATUS.PENDING;
 var connection_callback: (() => void) | undefined = undefined;
 
 var mysql_login = process.env.npm_config_mysqllogin;
@@ -43,6 +41,13 @@ var connection = MySQL.createConnection({
 	database: "Whitelist"
 });
 
+var fivem_connection = MySQL.createConnection({
+	host: "localhost",
+	user: String(mysql_login),
+	password: String(mysql_pass),
+	database: "admin_in2rp"
+});
+
 connection.connect((err) => {
 	if(err) {
 		console.error('Error while connecting to MySQL database: ' + err.stack);
@@ -51,6 +56,19 @@ connection.connect((err) => {
 	}
 	status = STATUS.SUCCESS;
 	console.log('MySQL connection established');
+
+	if(typeof connection_callback === 'function')
+		connection_callback();
+});
+
+fivem_connection.connect((err) => {
+	if(err) {
+		console.error('Error while connecting to MySQL fivem database: ' + err.stack);
+		fivem_status = STATUS.ERROR;
+		return;
+	}
+	fivem_status = STATUS.SUCCESS;
+	console.log('MySQL connection established (fivem)');
 
 	if(typeof connection_callback === 'function')
 		connection_callback();
@@ -92,9 +110,9 @@ const self = {
 	},
 	customQuery: function(query: string): Promise<any> {
 		return new Promise((resolve, reject) => {
-			if(status === STATUS.PENDING)
+			if(status === STATUS.PENDING || fivem_status === STATUS.PENDING)
 				setTimeout(() => self.customQuery(query).then(resolve).catch(reject), 1000);
-			else if (status === STATUS.SUCCESS) {
+			else if(status === STATUS.SUCCESS && fivem_status === STATUS.SUCCESS) {
 				connection.query(query, function(err, result) {
 					if(err) 
 						reject(err);
@@ -202,6 +220,16 @@ const self = {
 			GROUP BY day\
 			HAVING day >= '" + from + "' AND day <= '" + to + "'\
 			ORDER BY day ASC LIMIT 366;");
+	},
+
+	getWhitelistPlayers: function() {
+		return this.customQuery("SELECT whitelist.identifier, users.name, users.firstname,\
+		    users.lastname, users.phone_number, CONCAT(users.money, ' + ', users.bank) AS 'money',\
+		    CONCAT(jobs.label, ' ', job_grades.label) AS 'job'\
+		FROM admin_in2rp.users \
+			INNER JOIN admin_in2rp.whitelist USING (identifier)\
+			INNER JOIN admin_in2rp.job_grades ON users.job_grade = job_grades.id\
+		   	INNER JOIN admin_in2rp.jobs ON jobs.name = users.job;");
 	}
 };
 

@@ -75,6 +75,9 @@ const AsyncPages = {
 	AdminsManager: __async(
 		() => import(/*webpackChunkName: "admins", webpackPrefetch: true */ "./pages/admins_manager")),
 
+	Players: __async(
+		() => import(/*webpackChunkName: "players", webpackPrefetch: true */ "./pages/players")),
+
 	Gallery: __async(
 		() => import(/* webpackChunkName: "gallery", webpackPrefetch: true */ "./pages/gallery")),
 
@@ -97,6 +100,7 @@ render(
 	    		<Route path='/wl_requests' component={AsyncPages.WlRequests} />
 	    		<Route path='/logs_mng' component={AsyncPages.LogsManager} />
 	    		<Route path='/admins_mng' component={AsyncPages.AdminsManager} />
+	    		<Route path='/players' component={AsyncPages.Players} />
 	    		<Route path='/statistics' component={AsyncPages.Statistics} />
 	    		<Route path='/gallery' component={AsyncPages.Gallery} />
 	    		<Route path='/snake' component={AsyncPages.SnakeGame} />

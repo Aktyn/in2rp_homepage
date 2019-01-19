@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import Utils from './../utils/utils';
 import Config from './../config';
 
 import './../styles/header.scss';
@@ -72,13 +73,16 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 	}
 
 	updateOnlinePlayersInfos() {
-		fetch(Config.api_server_url + '/get_online_players', {
+		/*fetch(Config.api_server_url + '/get_online_players', {
 			method: "POST",
 			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
 			headers: {
 	           "Content-Type": "application/json; charset=utf-8",
 	        }
-		}).then(res => res.json()).then((res: {result: string; data: ServerData}) => {
+		})*/
+		Utils.postRequest(
+			'get_online_players', {}
+		).then(res => res.json()).then((res: {result: string; data: ServerData}) => {
 			//console.log(res);
 			if(res.result === 'SUCCESS') {
 				this.setState({
@@ -164,7 +168,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 				</div>
 				<div className='header_fill header_gradient'>
 					<div className='header_text'>{Config.short_description}</div>
-					<Link aria-label='homepage link logo' to='/' style={{justifySelf: 'right'}} className='logo'></Link>
+					<Link aria-label='homepage link logo' to='/' className='logo'></Link>
 				</div>
 			</h1>
 			<div className='header_separator'>

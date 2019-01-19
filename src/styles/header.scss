@@ -52,9 +52,26 @@ $blob_size: 100px;
 
 	display: grid;
 	grid-template-areas: "separator text logo";
-	grid-template-columns: $header-large fit-content(100%) $header-large;
+	grid-template-columns: $header-large auto $header-large;
 	@media screen and (max-width: $max_w1) {
 		grid-template-columns: $header-small auto $header-small;
+	}
+	@media screen and (max-width: 500px) {
+		grid-template-areas: "logo";
+		grid-template-columns: auto;
+
+		& .header_text {
+			display: none !important;
+		}
+
+		& .logo {
+			justify-self: left !important;
+			background-position: center !important;
+			width: 100vw !important;
+
+			background-image: url('../img/favicon.png') !important;
+			background-size: auto 80% !important;
+		}
 	}
 	grid-template-rows: auto;
 	align-content: stretch;
@@ -64,9 +81,13 @@ $blob_size: 100px;
 	color: #fffa;
 
 	& .header_text {
+		display: block;
 		grid-area: text;
 		font-weight: bold;
 		text-shadow: 0px 1px 4px #0004;
+		white-space: nowrap;
+		width: auto;
+		overflow: visible;
 
 		// text-align: left;
 
@@ -79,7 +100,14 @@ $blob_size: 100px;
 
 	& .logo {
 		grid-area: logo;
+		justify-self: right;
+
+		background: url('../img/in2rpp.png') no-repeat;
+		background-position: right;
+		background-size: auto 100%;
+		width: 100%;
 		height: 100%;
+		width: $header-large*2;
 	}
 }
 
@@ -161,14 +189,6 @@ h1.main_header_container.large {
 		background-position: top;
 		font-size: 20px;
 	}
-}
-
-a.logo {
-	background: url('../img/in2rpp.png') no-repeat;
-	background-position: right;
-	background-size: auto 100%;
-	width: 100%;
-	width: $header-large*2;
 }
 
 .header_separator {
@@ -256,6 +276,7 @@ a.logo {
 .header_separator > .players {
 	grid-area: players;
     justify-self: left;
+    white-space: nowrap;
 
     color: #546E7A;
     // line-height: 30px;

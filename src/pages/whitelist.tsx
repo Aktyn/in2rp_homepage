@@ -6,6 +6,7 @@ import Content from './../components/content';
 import Session from './../components/discord_session';
 // import Loader from './../components/loader';
 import Config, { QuestionType, QuestionsBlockSchema } from './../config';
+import Utils from './../utils/utils';
 import Cookies from './../utils/cookies';
 
 enum STATE {
@@ -101,14 +102,10 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 			throw new Error('No discord_token cookie found');
 		}
 
-		fetch(Config.api_server_url + '/whitelist_request', {
-			method: "POST",
-			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
-			headers: {
-	           "Content-Type": "application/json; charset=utf-8",
-	        },
-			body: JSON.stringify({answers: _answers, token: cookie_token})
-		}).then(res => res.json()).then(response => {
+		Utils.postRequest(
+			'whitelist_request', 
+			{answers: _answers, token: cookie_token}
+		).then(res => res.json()).then(response => {
 			//console.log(response);
 			if(response['result'] !== 'SUCCESS') {
 				var error_msg;
@@ -152,14 +149,10 @@ export default class WhitelistClass extends React.Component<any, WhitelistState>
 			throw new Error('No discord_token cookie found');
 		}
 
-		fetch(Config.api_server_url + '/whitelist_status_request', {
-			method: "POST",
-			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
-			headers: {
-	           "Content-Type": "application/json; charset=utf-8",
-	        },
-			body: JSON.stringify({token: cookie_token})
-		}).then(res => res.json()).then(res => {
+		Utils.postRequest(
+			'whitelist_status_request', 
+			{token: cookie_token}
+		).then(res => res.json()).then(res => {
 			// console.log(res);
 			if(res['result'] !== 'SUCCESS')
 				this.setState({status: STATE.UNAUTHORIZED});

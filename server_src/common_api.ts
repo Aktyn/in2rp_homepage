@@ -144,7 +144,6 @@ export default {
 			}
 			 
 			var visits = await Database.getVisits(req.body.from, req.body.to);
-			//console.log(visits, req.body.from, req.body.to);
 			res.json({result: 'SUCCESS', visits: visits});
 		}
 		catch(e) {
@@ -188,5 +187,18 @@ export default {
 		catch(e) {//ignore
 			res.json({result: 'ERROR'});
 		}
-	}
+	},
+
+	get_whitelist_players: async function(req: any, res: any) {
+		try {
+			if(false === await testForAdmin(req, res))
+				return;
+
+			var data = await Database.getWhitelistPlayers();
+			return res.json({result: 'SUCCESS', players_data: data});
+		}
+		catch(e) {//ignore
+			res.json({result: 'ERROR'});
+		}
+	},
 };

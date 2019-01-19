@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Content from './../components/content';
 import Cookies from './../utils/cookies';
-import Config from './../config';
+import Utils from './../utils/utils';
+
 import Loader from './../components/loader';
 
 import './../styles/logs_admin.scss';
@@ -40,12 +41,10 @@ export default class extends React.Component<any, LogsManagerState> {
 			return this.onError('Wygląda na to, że nie jesteś zalogowany');
 
 		//getting list of avaible log files
-		fetch(Config.api_server_url + '/get_avaible_logs', {
-			method: "POST",
-			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
-			headers: {"Content-Type": "application/json; charset=utf-8"},
-			body: JSON.stringify({token: cookie_token})
-		}).then(res => res.json()).then(res => {
+		Utils.postRequest(
+			'get_avaible_logs', 
+			{token: cookie_token}
+		).then(res => res.json()).then(res => {
 			//console.log(res);
 			if(res['result'] !== 'SUCCESS') {
 				let error_msg;
@@ -82,12 +81,10 @@ export default class extends React.Component<any, LogsManagerState> {
 			return this.onError('Wygląda na to, że nie jesteś zalogowany');
 
 		//fetching log content
-		fetch(Config.api_server_url + '/get_log_content', {
-			method: "POST",
-			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
-			headers: {"Content-Type": "application/json; charset=utf-8"},
-			body: JSON.stringify({token: cookie_token, log_file: focus_target})
-		}).then(res => res.json()).then(res => {
+		Utils.postRequest(
+			'get_log_content', 
+			{token: cookie_token, log_file: focus_target}
+		).then(res => res.json()).then(res => {
 			//console.log(res);
 			if(res['result'] !== 'SUCCESS') {
 				let error_msg;
