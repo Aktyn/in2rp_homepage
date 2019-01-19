@@ -179,7 +179,7 @@ export default {
 						`Witaj. Twoje podanie o whiteliste zostało właśnie ${new_status}`);
 
 					if(req.body.requested_status === 'accepted')
-						discordBot.changeUserRole(user_id, 'Obywatel')//give user role
+						discordBot.changeUserRole(user_id, 'Rozmowa kwalifikacyjna')//give user role
 				}
 				catch(e) {
 					console.log('Cannot send private message to', target_discord_user[0].discord_id);

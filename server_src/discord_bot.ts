@@ -75,7 +75,7 @@ function onLogin() {
 
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		statusApp.init(bot);
-	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		manageApp.init(bot);
