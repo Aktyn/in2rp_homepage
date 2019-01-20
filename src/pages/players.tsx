@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Content from './../components/content';
 import Loader from './../components/loader';
 import Cookies from './../utils/cookies';
@@ -7,6 +8,7 @@ import Utils from './../utils/utils';
 import './../styles/players_admin.scss';
 
 interface PlayerData {
+	id: number;
 	identifier: string;
 	name: string;
 	firstname: string;
@@ -96,6 +98,9 @@ export default class extends React.Component<any, PlayersState> {
 					<td>Kasa:</td><td>{data.money}</td>
 				</tr>
 			</tbody></table>
+			<Link aria-label='player more' className='clean small_button' to={`/players/${data.id}`}>
+				OPCJE
+			</Link>
 		</div>;
 	}
 

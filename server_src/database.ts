@@ -223,7 +223,7 @@ const self = {
 	},
 
 	getWhitelistPlayers: function() {
-		return this.customQuery("SELECT whitelist.identifier, users.name, users.firstname,\
+		return this.customQuery("SELECT users.id, whitelist.identifier, users.name, users.firstname,\
 		    users.lastname, users.phone_number, CONCAT(users.money, ' + ', users.bank) AS 'money',\
 		    CONCAT(jobs.label, ' ', job_grades.label) AS 'job'\
 		FROM admin_in2rp.users \

@@ -44,7 +44,7 @@ export default class extends React.Component<any, AdminMenuState> {
 				</div>
 				<div className='options_container' 
 					style={{height: this.state.open ? `${25*(LINKS.length+1)+4}px` : 'inherit'}}>
-					{LINKS.map((link, i) => <Link key={i} to={link.route}>{link.name}</Link>)}
+					{LINKS.map((link, i) => <Link key={i} to={`/${link.route}`}>{link.name}</Link>)}
 				</div>
 			</div>
 		</>;

@@ -78,6 +78,13 @@ $discord_user_height: 30px;
 	color: #546E7A;
 	height: 20px;
 
+	& img {
+		height: 18px;
+		margin: 0px 4px;
+		opacity: 0.5;
+		vertical-align: middle;
+	}
+
 	display: grid;
 	grid-template-columns: auto auto;
 	align-items: center;

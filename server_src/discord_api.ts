@@ -85,6 +85,7 @@ interface DiscordUserJSON {
 	id: string;
 	username: string;
 	discriminator: number;
+	avatar: string;
 }
 
 function getDiscordUserData(token: string): Promise<DiscordUserJSON> {
@@ -163,6 +164,7 @@ export default {
 			}
 			
 			var response = await getDiscordUserData(req.body.token);
+			//console.log(response);
 
 			if(response.code === 0) {
 				LOG('client session expired or discord denied access', ip);
@@ -175,8 +177,10 @@ export default {
 				Database.storeVisit(ip, req.headers['user-agent'], response.username);
 				res.json({
 					result: 'SUCCESS',
+					id: response.id,
 					nick: response.username, 
 					discriminator: response.discriminator,
+					avatar: response.avatar,
 					is_admin: ADMINS.isAdmin(response.id)
 				});
 			}

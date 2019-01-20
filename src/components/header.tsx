@@ -73,13 +73,6 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 	}
 
 	updateOnlinePlayersInfos() {
-		/*fetch(Config.api_server_url + '/get_online_players', {
-			method: "POST",
-			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
-			headers: {
-	           "Content-Type": "application/json; charset=utf-8",
-	        }
-		})*/
 		Utils.postRequest(
 			'get_online_players', {}
 		).then(res => res.json()).then((res: {result: string; data: ServerData}) => {
@@ -92,8 +85,9 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 					}
 				});
 
-				//TODO - refresh after 5 minutes when server is offline
-				setTimeout(() => this.updateOnlinePlayersInfos(), 1000*60);//refresh after minute
+				//refresh after 5 minutes if server is offline
+				let delay = res.data.online ? 1 : 5;
+				setTimeout(() => this.updateOnlinePlayersInfos(), 1000*60*delay);//refresh after minute
 			}
 			else
 				this.setState({server_data: undefined});

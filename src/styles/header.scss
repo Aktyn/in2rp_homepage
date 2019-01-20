@@ -6,6 +6,7 @@ $max_w1: 950px;
 $delay: 100ms;
 
 $height: 30px;//should match $widget_h from discord_widget.scss
+$small-font: 22px;
 
 $blob_size: 100px;
 
@@ -212,7 +213,7 @@ h1.main_header_container {
 
 h1.main_header_container.small {
 	height: $header-small;
-	font-size: 27px;
+	font-size: $small-font;
 }
 
 h1.main_header_container.large {
@@ -222,7 +223,7 @@ h1.main_header_container.large {
 	@media screen and (max-width: $max_w1) {
 		height: $header-small;
 		background-position: top;
-		font-size: 20px;
+		font-size: $small-font;
 	}
 }
 
@@ -239,7 +240,7 @@ h1.main_header_container.large {
 	display: grid;
 	grid-template-areas: "homebtn players info discord_widget";
 	grid-template-rows: auto;
-	grid-template-columns: $height (300px-$height) auto 300px;
+	grid-template-columns: $height (300px-$height) auto 350px;
 	justify-content: stretch;
 	align-items: center;
 	justify-items: center;

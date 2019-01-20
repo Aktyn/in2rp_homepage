@@ -5,7 +5,7 @@ if(process.env.NODE_ENV !== 'development' && location.hostname !== 'localhost' &
 	location.hostname = Config.hostname;
 }
 
-//disable logs and errors
+//disable logs and errors in production
 if(process.env.NODE_ENV !== 'development') {
 	console.log('%cLogi wyłączone. Nie ma testowania na produkcji.\n¯\\_(ツ)_/¯', 
 		'color: #f44336; font-weight: bold; font-size: 25px;');
@@ -16,8 +16,6 @@ import DiscordSession from './components/discord_session';
 DiscordSession.restoreSession().then(res => {
 	console.log('session:', res);
 }).catch(e => {
-	//console.error(e);
-	
 	try {
 		var info;
 		if(document && (info = document.getElementById('server_status_info')))
@@ -38,15 +36,7 @@ import './styles/common.scss';
 import Layout from './components/layout';
 import Home from './pages/home';
 import Whitelist from './pages/whitelist';
-// import Rules from './pages/rules';
-// import DiscordLogin from './pages/discord_login';
-// import WlRequests from './pages/wl_requests';
-// import LogsManager from './pages/logs_manager';
-// import AdminsManager from './pages/admins_manager';
-// import Gallery from './pages/gallery';
-// import Statistics from './pages/statistics';
 
-// import SnakeGame from './pages/snake_game';
 import NotFound from './pages/not_found';
 
 import Loadable from "react-loadable";
@@ -78,6 +68,9 @@ const AsyncPages = {
 	Players: __async(
 		() => import(/*webpackChunkName: "players", webpackPrefetch: true */ "./pages/players")),
 
+	PlayerPage: __async(
+		() => import(/*webpackChunkName: "player_pg", webpackPrefetch: true */ "./pages/player_page")),
+
 	Gallery: __async(
 		() => import(/* webpackChunkName: "gallery", webpackPrefetch: true */ "./pages/gallery")),
 
@@ -100,6 +93,7 @@ render(
 	    		<Route path='/wl_requests' component={AsyncPages.WlRequests} />
 	    		<Route path='/logs_mng' component={AsyncPages.LogsManager} />
 	    		<Route path='/admins_mng' component={AsyncPages.AdminsManager} />
+	    		<Route path='/players/:id' component={AsyncPages.PlayerPage}/>
 	    		<Route path='/players' component={AsyncPages.Players} />
 	    		<Route path='/statistics' component={AsyncPages.Statistics} />
 	    		<Route path='/gallery' component={AsyncPages.Gallery} />
@@ -111,4 +105,3 @@ render(
   	</BrowserRouter>,
     document.getElementById('page'),
 );
-//})();

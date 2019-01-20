@@ -10,6 +10,8 @@ import AdminMenu from './admin_menu';
 
 var token: string | null = null;
 export interface DiscordUserSchema {
+	id: string;
+	avatar: string;
 	nick: string;
 	discriminator: number;
 	admin: boolean;
@@ -28,6 +30,8 @@ class WidgetClass extends React.Component<any, WidgetState> {
 		session: discord_user ? true : false,
 		user: discord_user ? discord_user : undefined,
 	};
+
+	private avatar_img: HTMLImageElement | null = null;
 
 	constructor(props: any) {
 		super(props);
@@ -57,7 +61,16 @@ class WidgetClass extends React.Component<any, WidgetState> {
 		if(this.state.user === undefined)
 			throw new Error('Session is true but user undefined');
 
+		let id_slash_avatar = this.state.user.id + '/' + this.state.user.avatar;
+
 		return <div className='discord_session_widget'>
+			{
+				this.state.user.id && this.state.user.avatar &&
+				<img src={`https://cdn.discordapp.com/avatars/${id_slash_avatar}.webp?size=128`} 
+					ref={img => this.avatar_img = img}
+					onError={self => this.avatar_img && (this.avatar_img.style.display = 'none')} />
+			}
+			
 			{this.state.user.nick}#{this.state.user.discriminator}
 			<button aria-label="Wyloguj"
 				onClick={Session.logout} className='clean discord_logout small_button'>Wyloguj</button>
@@ -84,9 +97,7 @@ function invokeLoginListeners(user: DiscordUserSchema) {
 }
 
 function recordVisit() {
-	Utils.postRequest(
-		'record_visit', {}
-	).catch();//ignore any errors here
+	Utils.postRequest('record_visit', {}).catch();//ignore any errors here
 }
 
 interface SessionTemplate {
@@ -165,7 +176,7 @@ const Session = {
 			invokeLoginListeners(discord_user);
 		}
 
-		Cookies.setCookie('discord_token', _token, 1000*60*60*24*7);
+		Cookies.setCookie('discord_token', _token, 1000*60*60*24*7);//on week
 	},
 
 	restoreSession: function() {
@@ -175,6 +186,8 @@ const Session = {
 
 			interface SessionResponseJSON {
 				result: string;
+				id: string;
+				avatar: string;
 				nick: string;
 				discriminator: string | number;
 				is_admin: boolean;
@@ -182,20 +195,30 @@ const Session = {
 
 			var cookie_token = Cookies.getCookie('discord_token');
 			if(cookie_token === null) {
-				recordVisit();
-				resolve(false);
+				if(window.location.pathname.replace('/', '') === 'login_result') {
+					setTimeout(() => {//try again afer a second (when cookie shall be set)
+						this.restoreSession().then(resolve).catch(reject);
+					}, 1000);
+				}
+				else {
+					recordVisit();
+					resolve(false);
+				}
 			}
 			else {//trying to restore session using token from cookies
 				Utils.postRequest(
 					'discord_restore_session', 
 					{token: cookie_token}
 				).then(resp => resp.json()).then((res: SessionResponseJSON) => {
+					//console.log(res);
 					if(res.result !== 'SUCCESS') {
 						//Cookies.removeCookie('discord_token'); //changed 06.01.2019
 						resolve(false);
 					}
 					else {
 						discord_user = {
+							id: res.id,
+							avatar: res.avatar,
 							nick: res.nick,
 							discriminator: parseInt(res.discriminator as (string)),
 							admin: res.is_admin

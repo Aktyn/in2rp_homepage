@@ -5,6 +5,8 @@ import Config from '../config';
 
 import './../styles/footer.scss';
 
+var aktyn_logo = require('../img/aktyn_logo.png');
+
 declare var _GLOBALS_: {//compile-time variable passed from webpack config
 	update_time: number;
 };
@@ -60,7 +62,8 @@ export default class extends React.Component<any, FooterState> {
 							color: '#71c1bb'
 						}} className='fader_in'>GitHub autora strony</a> : 
 						<label className='fader_in'>
-							<Link to='/snake'>Copyright ©</Link> 2018 - Aktyn - All rights reserved
+							<Link to='/snake'>Copyright ©</Link> 2018 - Aktyn 
+							<img src={aktyn_logo} /> - All rights reserved
 						</label>
 					}
 					<button aria-label="link do githuba autora"

@@ -72,12 +72,21 @@ $widget_h: 30px;
 	line-height: $widget_h;
 	font-weight: bold;
 	font-size: 12px;
-}
 
-.discord_widget_main .discord_session_widget > * {
-	vertical-align: baseline;
-}
+	& > * {
+		vertical-align: baseline;
+	}
 
-.discord_widget_main .discord_session_widget .admin_btn {
-	background-color: #ef5350;
+	& .admin_btn {
+		background-color: #ef5350;
+	}
+
+	& img {
+		display: inline-block;
+		height: $widget_h - 4px;
+		margin: 2px 5px;
+		vertical-align: middle;
+		
+		border-radius: $widget_h;
+	}
 }
