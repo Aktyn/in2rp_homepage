@@ -7,12 +7,17 @@ import statusApp from './discord_status_app';
 import rulesApp from './discord_rules_app';
 import manageApp from './discord_servermng_app';
 
-var TOKEN: string | undefined = undefined;
+var music = require("discord.js-musicbot-addon");
+
+var TOKEN: string | undefined;
+var YOUTUBE_API_KEY: string | undefined;
 var started = false;
 
 process.argv.forEach((val: string) => {
 	if(val.startsWith('TOKEN='))
 		TOKEN = val.replace('TOKEN=', '');
+	else if(val.startsWith('YOUTUBE_API_KEY='))
+		YOUTUBE_API_KEY = val.replace('YOUTUBE_API_KEY=', '');
 });
 
 if(!TOKEN)
@@ -20,6 +25,16 @@ if(!TOKEN)
 
 var bot = new Discord.Client();
 var guild: Discord.Guild | null = null;
+
+// console.log(YOUTUBE_API_KEY, music);
+music.start(bot, {
+	youtubeKey: YOUTUBE_API_KEY,
+	anyoneCanSkip: true,
+	logging: false,
+	requesterName: false,
+	ownerOverMember: true,
+  	ownerID: '204639827193364492'
+});
 
 bot.on('messageReactionAdd', rulesApp.onReactionAdded);
 bot.on('messageReactionRemove', rulesApp.onReactionRemoved);
