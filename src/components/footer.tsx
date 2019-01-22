@@ -11,22 +11,61 @@ declare var _GLOBALS_: {//compile-time variable passed from webpack config
 	update_time: number;
 };
 
+interface MemberJSON {
+	avatar_url: string;
+	discriminator: string;
+	game: {name: string};
+	id: string;
+	status: string;
+	username: string;
+}
+
 interface FooterState {
 	revealed: boolean;
+	instant_invite?: string;
+	members: MemberJSON[];
 }
 
 function padZ(n: number) {//pad zero at the beginning
 	return ('0'+n).slice(-2);
 }
 
+function trimDots(str: string, maxlen = 10) {
+	if(str.length > maxlen)
+		return str.substr(0, maxlen-3) + '...';
+	return str;
+}
+
 export default class extends React.Component<any, FooterState> {
 
 	state: FooterState = {
-		revealed: false
+		revealed: false,
+		instant_invite: undefined,
+		members: []
 	};
 
 	constructor(props: any) {
 		super(props);
+	}
+
+	componentDidMount() {
+		this.refreshUsersList();
+	}
+
+	refreshUsersList() {
+		fetch(`https://discordapp.com/api/guilds/${Config.discord_guild_id}/widget.json`, {
+			method: 'GET',
+			mode: 'cors',
+			headers: {"Content-Type": "application/json; charset=utf-8"},
+			cache: 'reload'
+		}).then(res => res.json()).then(res => {
+			//console.log(res);
+			this.setState({
+				members: res.members,
+				instant_invite: res.instant_invite
+			});
+			setTimeout(() => this.refreshUsersList(), 1000*60*5);//each 5 minutes
+		}).catch(console.error);
 	}
 
 	switchView() {
@@ -49,6 +88,26 @@ export default class extends React.Component<any, FooterState> {
 				<div className='footer_bg_clipped'>
 					<article>{Config.long_description}</article>
 					<article>{Config.contacs}</article>
+					<article className='discord_info'>
+						<h3>
+							Użytkownicy online ({this.state.members && this.state.members.length}):
+							{this.state.instant_invite &&
+								<a href={this.state.instant_invite} 
+									target='_blank' className='clean small_button'>
+									Otwórz Discord
+								</a>
+							}
+						</h3>
+						<div className='users_list'><table><tbody>
+							{this.state.members.map((member, i) => {
+								return <tr key={i}>
+									<td><img src={`${member.avatar_url}?size=32`} /></td>
+									<td>{trimDots(member.username, 30)}</td>
+									<td>{member.game && trimDots(member.game.name, 35)}</td>
+								</tr>;
+							})}
+						</tbody></table></div>
+					</article>
 				</div>
 			</section>
 			<div className='footer_bottom'>

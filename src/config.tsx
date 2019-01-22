@@ -22,6 +22,7 @@ const CONFIG = {
 		'http://localhost:1234' : 
 		location.origin, //'https://in2rp.pl',
 
+	discord_guild_id: '492333108679409674',
 	discord_invitation_link: discord_invitation_link,
 
 	short_description: <span>POLSKI SERWER ROLE&nbsp;PLAY<hr />Grand Theft Auto V</span>,

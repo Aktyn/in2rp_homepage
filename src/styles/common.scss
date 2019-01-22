@@ -135,7 +135,7 @@ button.clean {
 .simple_button.return::after 	{	background-image: url('../img/arrow_left.svg');			}
 .simple_button.check::after 	{	background-image: url('../img/check_small.svg');		}
 
-button.small_button, .small_button {
+button.small_button, a.small_button, .small_button {
 	cursor: pointer;
 	font-weight: bold;
     font-size: 12px;
@@ -153,7 +153,7 @@ button.small_button, .small_button {
 	transition: opacity 300ms ease-in-out;
 }
 
-button.small_button:hover, .small_button:hover {
+button.small_button:hover, a.small_button:hover, .small_button:hover {
 	opacity: 1;
 }
 

@@ -33,7 +33,8 @@ music.start(bot, {
 	logging: false,
 	requesterName: false,
 	ownerOverMember: true,
-  	ownerID: '204639827193364492'
+  	ownerID: '204639827193364492',
+  	botAdmins: ['204639827193364492']
 });
 
 bot.on('messageReactionAdd', rulesApp.onReactionAdded);
