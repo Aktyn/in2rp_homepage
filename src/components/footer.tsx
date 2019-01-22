@@ -101,7 +101,11 @@ export default class extends React.Component<any, FooterState> {
 						<div className='users_list'><table><tbody>
 							{this.state.members.map((member, i) => {
 								return <tr key={i}>
-									<td><img src={`${member.avatar_url}?size=32`} /></td>
+									<td>
+										<span className={`d_avatar ${member.status}`} style={{
+											backgroundImage: `url(${member.avatar_url}?size=32)`
+										}}></span>
+									</td>
 									<td>{trimDots(member.username, 30)}</td>
 									<td>{member.game && trimDots(member.game.name, 35)}</td>
 								</tr>;

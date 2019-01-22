@@ -146,7 +146,7 @@ $max_height: 180px;
 			}
 
 			& table tr:nth-child(even) {
-				background-color: #ffffff08;
+				background-color: #ffffff04;
 			}
 
 			& table tr > td {
@@ -156,11 +156,33 @@ $max_height: 180px;
 				// border-bottom: 1px solid #ffffff08;
 			}
 
-			& table tr > td img {
+			& table tr > td .d_avatar {
+				display: inline-block;
 				margin-right: 5px;
 				height: $user_entry_h;
+				width: $user_entry_h;
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
 				border-radius: $user_entry_h;
+				position: relative;
 			}
+
+			& table tr > td .d_avatar::after {
+				content: " ";
+				display: block;
+				position: absolute;
+				right: 0px;
+				bottom: 0px;
+				background-color: #5f5;
+				width: 6px;
+				height: 6px;
+				border-radius: 8px;
+			}
+
+			& table tr > td .d_avatar.online::after { background-color: #66BB6A; }
+			& table tr > td .d_avatar.idle::after 	{ background-color: #FF9800; }
+			& table tr > td .d_avatar.dnd::after 	{ background-color: #ef5350; }
 		}
 
 		@media screen and (max-width: $max_w1) {
