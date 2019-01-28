@@ -80,8 +80,10 @@ function onLogin() {
 		console.log(member.user);
 	});*/
 	
-	//@ts-ignore
-	//console.log( bot.channels.map(ch => {return {id: ch.id, name: ch.name}}) );
+	//@ts-ignore //537689969561567233
+	//console.log(
+	//	bot.channels.map(ch => {return {id: ch.id, name: ch.name}}).sort((a,b)=>b.name>a.name
+	//));
 
 	guild = bot.guilds.find(g => g.id === '492333108679409674');//IN2RP guild id
 	// let role = guild.roles.find(r => r.name === "Użytkownik");
@@ -119,7 +121,8 @@ function onLogin() {
 				message.delete().catch(console.error);
 			switch(message.channel.id) {
 				case todoApp.CHANNEL_ID:
-					if(process.env.NODE_ENV !== 'dev')
+				case todoApp.CHANNEL_ID2:
+					//if(process.env.NODE_ENV !== 'dev')
 						return todoApp.handleMessage(message);
 					break;
 				case statusApp.CHANNEL_ID: 	

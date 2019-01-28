@@ -1,6 +1,6 @@
 {
   "name": "xrp_homepage",
-  "version": "19.1.20",
+  "version": "27.1.20",
   "description": "Homepage project",
   "main": "src/index.tsx",
   "scripts": {

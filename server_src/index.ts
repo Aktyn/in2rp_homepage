@@ -28,9 +28,10 @@ discordBot.start();
 
 //#administracja - 528687540937424955
 //#whitelist - 528681859882811421
+//#zlozone podania - 528987808438812683
 /*setTimeout(() => {
-	discordBot.sendChannelMessage('528987808438812683', 'test');
-}, 1000);*/
+	discordBot.sendChannelMessage('528987808438812683', 'W lutym start');
+}, 5000);*/
 
 // console.log('ENV:', process.env.NODE_ENV);
 

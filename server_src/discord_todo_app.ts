@@ -5,20 +5,32 @@ import LOG from './log';
 
 const MAX_HISTORY_SIZE = 69;
 
+const TODO_CHANNEL_ID = '528686895836692480';
+const TODO_AUTA_CHANNEL_ID = '537689969561567233';
+
 const data_path = path.join(__dirname, '..', 'data');
 if(!fs.existsSync(data_path))
 	fs.mkdirSync(data_path);
-const todo_path = path.join(data_path, 'todo');
-if(!fs.existsSync(todo_path))
-	fs.appendFileSync(todo_path, '', 'utf8');
 
-var history: string[][] = [];
-var todo_list: string[] = fs.readFileSync(todo_path, 'utf8').split('\n').filter(line => line.length > 0);
+const todo_path_common = path.join(data_path, 'todo');
+if(!fs.existsSync(todo_path_common))
+	fs.appendFileSync(todo_path_common, '', 'utf8');
+
+const todo_path_auta = path.join(data_path, 'todo_auta');
+if(!fs.existsSync(todo_path_auta))
+	fs.appendFileSync(todo_path_auta, '', 'utf8');
+
+var history_common: string[][] = [];
+var history_auta: string[][] = [];
+
+var todo_list_common: string[] = 
+	fs.readFileSync(todo_path_common, 'utf8').split('\n').filter(line => line.length > 0);
+var todo_list_auta: string[] = 
+	fs.readFileSync(todo_path_auta, 'utf8').split('\n').filter(line => line.length > 0);
 
 function clearChannel(message: Discord.Message) {//removes every message from channel
 	message.channel.fetchMessages().then(messages => {
 		message.channel.bulkDelete(messages);
-		//var messagesDeleted = messages.array().length; // number of messages deleted
 	}).catch(err => {
 		console.log('Error while deleting channel messages');
 		console.log(err);
@@ -26,6 +38,8 @@ function clearChannel(message: Discord.Message) {//removes every message from ch
 }
 
 function printList(message: Discord.Message) {
+	let todo_list = message.channel.id === TODO_CHANNEL_ID ? todo_list_common : todo_list_auta;
+
 	if(todo_list.length === 0) {
 		message.channel.send('Nic do zrobienia :open_mouth:');
 		return;
@@ -62,7 +76,8 @@ function printHelp(message: Discord.Message) {
 }
 
 export default {
-	CHANNEL_ID: '528686895836692480',//'520947668432715787',
+	CHANNEL_ID: TODO_CHANNEL_ID,//
+	CHANNEL_ID2: TODO_AUTA_CHANNEL_ID,//to-do-auta
 	handleMessage: (message: Discord.Message) => {
 		if(process.env.NODE_ENV === 'dev') {
 			if(!message.content.startsWith('!dev_'))
@@ -71,6 +86,9 @@ export default {
 		}
 		if(!message.content.startsWith('!'))
 			return printHelp(message);
+		let todo_list = message.channel.id === TODO_CHANNEL_ID ? todo_list_common : todo_list_auta;
+		let todo_path = message.channel.id === TODO_CHANNEL_ID ? todo_path_common : todo_path_auta;
+		let history = message.channel.id === TODO_CHANNEL_ID ? history_common : history_auta;
 
 		LOG(`user ${message.author.username}#${message.author.discriminator} used todo app command: ${message}`);
 
@@ -109,7 +127,10 @@ export default {
 		   		break;
 		   	case 'undo':
 		   		if(history.length > 0) {
-		   			todo_list = history.pop() || [];
+		   			if(message.channel.id === TODO_CHANNEL_ID)
+		   				todo_list_common = history.pop() || [];
+		   			else
+		   				todo_list_auta = history.pop() || [];
 		   			fs.writeFileSync(todo_path, todo_list.join('\n'));
 		   			clearChannel(message);
 		   			printList(message);
