@@ -142,7 +142,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
 	render() {
 		return <React.Fragment>
-			<h1 className={this.props.type + ' main_header_container'} data-bgid={Header.BG_ID}>
+			<h1 className={`${this.props.type} main_header_container`} data-bgid={Header.BG_ID}>
 				<div className='header_fill'>
 					{!IS_MOBILE && 
 						<div className='blobs_container'>{this.blobs}</div>
