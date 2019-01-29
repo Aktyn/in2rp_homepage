@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Utils from './../utils/utils';
 import Config from './../config';
@@ -16,7 +17,7 @@ const IS_MOBILE = (function() {
 	return check;
 })();
 
-interface HeaderProps {
+interface HeaderProps extends RouteComponentProps {
 	type: string;//small, large
 }
 
@@ -32,7 +33,7 @@ interface HeaderState {
 
 const MAX_LIST_ITEMS = 7;
 
-export default class Header extends React.Component<HeaderProps, HeaderState> {
+class Header extends React.Component<HeaderProps, HeaderState> {
 	private static BG_ID = process.env.NODE_ENV === 'development' ? 
 		(Math.random()*3)|0 : 
 		(new Date().getHours() % 3);
@@ -55,10 +56,11 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 		super(props);
 
 		if(!IS_MOBILE) {//not for mobile devices
-			for(var i=0; i<50; i++) {
-				var r_size = (1 * (Math.random()*60+40))|0;
+			const bubbles = 20;
+			for(var i=0; i<bubbles; i++) {
+				var r_size = (1 * (Math.random()*5+5))|0;
 				this.blobs.push( <div key={i} className='header_blob' style={{
-					left: `${(Math.random()*100)|0}%`,
+					left: `${i*100/bubbles + (Math.random()*100/bubbles)|0}%`,
 					width: `${r_size}px`,
 					height: `${r_size}px`,
 					animationDuration: `${(Math.random()*21000+7000)|0}ms`,
@@ -71,6 +73,11 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 	componentDidMount() {
 		this.updateOnlinePlayersInfos();
 	}
+
+	/*componentDidUpdate(prevProps: any) {
+		//@ts-ignore
+		console.log(this.props.location);//routed
+	}*/
 
 	updateOnlinePlayersInfos() {
 		Utils.postRequest(
@@ -140,27 +147,21 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 					{!IS_MOBILE && 
 						<div className='blobs_container'>{this.blobs}</div>
 					}
-					<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-						<defs>
-							{/*<filter id="goo_old">
-								<feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-								<feColorMatrix in="blur" mode="matrix" 
-									values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" 
-									result="goo" />
-								<feGaussianBlur in="goo" stdDeviation="5" result="blur2" />
-								<feComposite in="SourceGraphic" in2="goo" operator="atop"/>
-							</filter>*/}
-							<filter id="goo">
-								<feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-								<feColorMatrix in="blur" mode="matrix" 
-									values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 1" 
-									result="goo" />
-								<feComposite in="SourceGraphic" in2="blur" operator="atop"/>
-							</filter>
-						</defs>
-					</svg>
 				</div>
 				<div className='header_fill header_gradient'>
+					<div className='header_links'>
+						<a href='/forum' className={
+							`forum ${this.props.location.pathname==='/forum' ? 'current' : ''}`
+						}></a>
+						<a target="_blank" href={Config.discord_invitation_link} rel="noreferrer"
+							className='discord'></a>
+						<Link to='/wl' className={
+							`whitelist ${this.props.location.pathname==='/wl' ? 'current' : ''}`
+						}></Link>
+						<Link to='/rules' className={
+							`rules ${this.props.location.pathname==='/rules' ? 'current' : ''}`
+						}></Link>
+					</div>
 					<div className='header_text'>{Config.short_description}</div>
 					<Link aria-label='homepage link logo' to='/' className='logo'></Link>
 					<div className='line1'></div>
@@ -178,3 +179,5 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 		</React.Fragment>;
 	}
 }
+
+export default withRouter(Header);

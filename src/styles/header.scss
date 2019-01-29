@@ -8,14 +8,14 @@ $delay: 100ms;
 $height: 30px;//should match $widget_h from discord_widget.scss
 $small-font: 22px;
 
-$blob_size: 100px;
+$blob_size: 10px;
 
 .main_header_container {
 	grid-area: header;
 	
-    background-attachment: fixed;
+    // background-attachment: fixed;
     background-size: 100% auto;
-    background-position: top;
+    background-position: center;
     background-repeat: no-repeat;
 
 	width: 100%;
@@ -53,11 +53,11 @@ $blob_size: 100px;
 	width: 100%;
 
 	display: grid;
-	grid-template-areas: "separator hline1 text hline2 logo";
+	grid-template-areas: "links hline1 text hline2 logo";
 	grid-template-columns: $header-large 0px auto 0px $header-large;
 	grid-template-rows: 100%;
 	@media screen and (max-width: $max_w1) {
-		grid-template-areas: "separator text logo";
+		grid-template-areas: "links text logo";
 		grid-template-columns: $header-small auto $header-small;
 	}
 	/*@media screen and (max-width: 950px) {
@@ -66,9 +66,9 @@ $blob_size: 100px;
 		justify-content: stretch;
 	}*/
 	@media screen and (max-width: 550px) {
-		grid-template-areas: "hline1 logo hline2" !important;
-		grid-template-columns: auto fit-content(100%) auto;
-		justify-content: stretch;
+		grid-template-areas: "links hline1 logo hline2 sep" !important;
+		grid-template-columns: 0px auto fit-content(100%) auto 0px;
+		justify-content: center;
 
 		& .header_text {
 			display: none !important;
@@ -87,16 +87,18 @@ $blob_size: 100px;
 		& .line1, & .line2 {
 			display: block !important;
 			height: 1px;
-			// width: 100px;
+			//width: 100px;
 			width: calc(40vw - (75px));//75px - $header-small / 2
-			// background-color: red;
-			// margin: auto;
 		}
 		& .line1 {
 			justify-self: right;
 		}
 		& .line2 {
 			justify-self: left;
+		}
+
+		& .header_links {
+			display: none !important;
 		}
 	}
 	grid-template-rows: auto;
@@ -145,6 +147,94 @@ $blob_size: 100px;
 		height: 100%;
 		width: $header-large*2;
 	}
+
+	& .header_links {
+		grid-area: links;
+		display: block;
+		
+		height: auto;//$header-small;
+		line-height: 0px;
+		max-width: $header-small;
+		max-height: $header-small;
+		// background-color: red;
+		justify-self: stretch;
+		text-align: left;
+
+		& a, & button {
+			display: block;
+			height: $header-small/4;
+			width: $header-small/4;
+			margin: 0px;
+			// margin: 5px 0px 0px 5px;
+			background-color: transparent;
+			position: relative;
+
+			transform: translate(-($header-small/4 + 1), 0px);
+
+			cursor: auto;
+			&:not(.current) {
+				cursor: pointer;
+			}
+
+			transition: transform 0.4s cubic-bezier(.87,-.41,.19,1.44);
+
+			@for $i from 1 through 4 {
+				&:nth-child(#{$i}) {
+					transition-delay: #{$i*100}ms;
+				}
+			}
+
+			&::before {
+				content: " ";
+				display: block;
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				background-color: #0004;
+				
+				height: 100%;
+				width: 0%;
+				transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+			}
+
+			&::after {
+				content: " ";
+				display: block;
+				background-repeat: no-repeat;
+				background-position: 50% 50%;
+				background-size: contain;
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				left: 0px;
+				top: 0px;
+
+				opacity: 0.3;
+				transition: opacity 0.3s ease-in-out;
+			}
+
+			&:not(.current):hover::before {
+				width: 100%;
+			}
+
+			&:not(.current):hover::after {
+				opacity: 1;
+			}
+
+			&.current::before {
+				width: 2px;
+				background-color: #fff4;
+			}
+
+			&.current::after {
+				opacity: 0.6;
+			}
+		}
+	}
+}
+
+.main_header_container.small .header_links a, .main_header_container.small .header_links button {
+	transform: translate(0px, 0px);
 }
 
 @keyframes hr_showup {
@@ -160,10 +250,10 @@ $blob_size: 100px;
 	width: calc(100% - 100px);//minus blob size
 	height: 100%;
 	border-radius: 0px;
-	filter: url("#goo");
-	// opacity: 0.5;
+	// filter: url("#goo");
+	opacity: 0.15;
 	// background-image: url(../img/bg_blur#{$i}.jpg);
-	mix-blend-mode: overlay;//overlay difference
+	//mix-blend-mode: overlay;//overlay difference
 }
 
 .main_header_container > .header_fill .blobs_container > .header_blob {

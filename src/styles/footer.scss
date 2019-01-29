@@ -360,7 +360,8 @@ $max_height: 180px;
 	    		$dir: alternate-reverse;
 	    	}
 
-	    	animation: anim_wave #{$i*7 + 10}s ease-in-out infinite $dir;
+	    	animation: anim_wave #{20}s ease-in-out infinite $dir;
+	    	animation-delay: -#{$i*10}s;
 	    	z-index: #{5 - $i};
 		}
 	}

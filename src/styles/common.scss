@@ -127,13 +127,19 @@ button.clean {
 	background: linear-gradient(135deg, #f65746 0%, #f65746 50%, #f44336 50%, #f44336 100%);
 }
 
-.fancy_button.forum::after 		{	background-image: url('../img/forum_icon.png');			}
-.fancy_button.discord::after 	{	background-image: url('../img/discord_icon.png');		}
-.fancy_button.whitelist::after 	{	background-image: url('../img/whitelist_icon.png');		}
-.fancy_button.rules::after 		{	background-image: url('../img/rules_icon.png');			}
+.forum::after 		{	background-image: url('../img/forum_icon.png');			}
+.discord::after 	{	background-image: url('../img/discord_icon.png');		}
+.whitelist::after 	{	background-image: url('../img/whitelist_icon.png');		}
+.rules::after 		{	background-image: url('../img/rules_icon.png');			}
 
-.simple_button.return::after 	{	background-image: url('../img/arrow_left.svg');			}
-.simple_button.check::after 	{	background-image: url('../img/check_small.svg');		}
+.return::after 	{	background-image: url('../img/arrow_left.svg');			}
+.check::after 	{	background-image: url('../img/check_small.svg');		}
+// .fancy_button
+// .fancy_button
+// .fancy_button
+// .fancy_button
+// .simple_button
+// .simple_button
 
 button.small_button, a.small_button, .small_button {
 	cursor: pointer;

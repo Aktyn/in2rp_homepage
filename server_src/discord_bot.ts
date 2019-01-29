@@ -122,7 +122,7 @@ function onLogin() {
 			switch(message.channel.id) {
 				case todoApp.CHANNEL_ID:
 				case todoApp.CHANNEL_ID2:
-					//if(process.env.NODE_ENV !== 'dev')
+					if(process.env.NODE_ENV !== 'dev')
 						return todoApp.handleMessage(message);
 					break;
 				case statusApp.CHANNEL_ID: 	
