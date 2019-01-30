@@ -175,7 +175,7 @@ const self = {
 			return "'" + val + "'";
 		}).join(', ');
 
-		return this.customQuery("INSERT INTO `requests` (`timestamp`, `discord_nick`, `discord_discriminator`, `discord_id`, " + columns_names + ") VALUES ('" + Date.now() + "', '" + username + "', '" + discriminator + "', '" + id + "', " + column_values + ");"
+		return this.customQuery("INSERT INTO `requests` (`timestamp`, `discord_nick`, `discord_discriminator`, `discord_id`, " + columns_names + ") VALUES ('" + Date.now() + "', '" + encodeURIComponent(username) + "', '" + discriminator + "', '" + id + "', " + column_values + ");"
 		);
 	},
 

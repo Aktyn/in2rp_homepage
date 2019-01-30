@@ -7,6 +7,31 @@ import Loader from './../components/loader';
 
 import './../styles/whitelist_admin.scss';
 
+function deepUriDecode(str: string) {
+	try {
+		return decodeURIComponent(str);
+	}
+	catch(e) {
+		console.log('Cannot decode uri. Trying to fix that');
+		try {
+			str = str.replace(/%.{0,2}$/i, '');
+			return decodeURIComponent(str);
+		}
+		catch(e) {
+			console.log('First fix failed. Trying another one.');
+			try {
+				str = str.replace(/%.{0,2}$/i, '');
+				return decodeURIComponent(str);
+			}
+			catch(e) {
+				return 'Niepoprawne dane';
+				console.log(e);
+			}
+		}
+	}
+	return 'undefined behaviour';
+}
+
 const CATEGORIES = {
 	UNKNOWN: 'unknown',
 	PENDING: 'pending',
@@ -156,7 +181,7 @@ export default class extends React.Component<any, WlRequestsState> {
 
 	renderDataHeader(data: WlRequestDataJSON, closer?: JSX.Element, h1_border_color?: string) {
 		var creation_date = new Date(parseInt(data['timestamp'])).toLocaleString()
-			.replace(/(:[0-9]{2}$)|,/gi, '');//TODO - fixed zeros
+			.replace(/(:[0-9]{2}$)|,/gi, '');
 		var age = (() => {
 			try {
 				var dt_destructed = (data['ooc_data_ur'] as string).split('-');
@@ -173,11 +198,10 @@ export default class extends React.Component<any, WlRequestsState> {
 				return 0;
 			}
 		})();
-		
 
 		return <h1 style={{borderColor: h1_border_color}}>
 			<span className='creation_date'>{creation_date}</span>
-			<span className='nick'>{data['nick'] + '#' + data['discriminator']}</span>
+			<span className='nick'>{deepUriDecode(data['nick']) + '#' + data['discriminator']}</span>
 			<span className='age'>
 				{isNaN(age) ? 'Błędny wiek' : `${age} lat${(age > 21 && (age%10 > 1))?'a':''}` }
 			</span>
@@ -202,28 +226,7 @@ export default class extends React.Component<any, WlRequestsState> {
 	private renderBlockOfAnswers(block: QuestionsBlockSchema, prefix: string) {
 		return Object.keys(block).map((key, id) => {
 			var answer_content = this.state.focused ? String(this.state.focused[prefix+key]) : '';
-			try {
-				answer_content = decodeURIComponent(answer_content);
-			}
-			catch(e) {
-				console.log('Cannot decode uri. Trying to fix that');
-				try {
-					answer_content = answer_content.replace(/%.{0,2}$/i, '');
-					answer_content = decodeURIComponent(answer_content);
-				}
-				catch(e) {
-					console.log('First fix failed. Trying another one.');
-					try {
-						answer_content = answer_content.replace(/%.{0,2}$/i, '');
-						answer_content = decodeURIComponent(answer_content);
-					}
-					catch(e) {
-						answer_content = 'Niepoprawne dane';
-						console.log(e);
-					}
-				}
-				
-			}
+			answer_content = deepUriDecode(answer_content);
 
 			return <p key={id}>
 				<label>{block[key].content}</label>
