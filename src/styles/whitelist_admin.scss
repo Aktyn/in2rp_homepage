@@ -5,7 +5,8 @@ $max_w2: 640px;
 	width: 100%;
 }
 
-.whitelist_admin_main .control_panel > button {
+.whitelist_admin_main .control_panel > * {
+	display: inline-block;
 	padding: 10px 10px;
 	font-weight: bold;
 	background-color: transparent;
@@ -19,21 +20,21 @@ $max_w2: 640px;
 	transition: color 150ms ease-in-out;
 }
 
-.whitelist_admin_main .control_panel > button:not(.active):hover {
+.whitelist_admin_main .control_panel > *:not(.active):hover {
 	cursor: pointer;
 }
 
-.whitelist_admin_main .control_panel > button:nth-child(1):not(.active):hover {
+.whitelist_admin_main .control_panel > *:nth-child(1):not(.active):hover {
 	color: #42A5F5;
 }
-.whitelist_admin_main .control_panel > button:nth-child(2):not(.active):hover {
+.whitelist_admin_main .control_panel > *:nth-child(2):not(.active):hover {
 	color: #8BC34A;
 }
-.whitelist_admin_main .control_panel > button:nth-child(3):not(.active):hover {
+.whitelist_admin_main .control_panel > *:nth-child(3):not(.active):hover {
 	color: #ef5350;
 }
 
-.whitelist_admin_main .control_panel > button::after {
+.whitelist_admin_main .control_panel > *::after {
 	// border-bottom: 2px solid #8BC34A;
 	content: " ";
 	display: block;
@@ -49,17 +50,17 @@ $max_w2: 640px;
 	transition: width 500ms cubic-bezier(.87,-.41,.19,1.44);
 }
 
-.whitelist_admin_main .control_panel > button:nth-child(1)::after {
+.whitelist_admin_main .control_panel > *:nth-child(1)::after {
 	background-color: #42A5F5;
 }
-.whitelist_admin_main .control_panel > button:nth-child(2)::after {
+.whitelist_admin_main .control_panel > *:nth-child(2)::after {
 	background-color: #8BC34A;
 }
-.whitelist_admin_main .control_panel > button:nth-child(3)::after {
+.whitelist_admin_main .control_panel > *:nth-child(3)::after {
 	background-color: #ef5350;
 }
 
-.whitelist_admin_main .control_panel > button.active::after {
+.whitelist_admin_main .control_panel > *.active::after {
 	width: 100%;
 }
 

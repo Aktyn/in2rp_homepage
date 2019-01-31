@@ -90,6 +90,7 @@ render(
 	    		<Route path='/login_result' component={AsyncPages.DiscordLogin} />
 	    		<Route path='/wl' component={Whitelist} />
 	    		<Route path='/rules' component={AsyncPages.Rules} />
+	    		<Route path='/wl_requests/:category' component={AsyncPages.WlRequests} />
 	    		<Route path='/wl_requests' component={AsyncPages.WlRequests} />
 	    		<Route path='/logs_mng' component={AsyncPages.LogsManager} />
 	    		<Route path='/admins_mng' component={AsyncPages.AdminsManager} />

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+// import { Redirect } from 'react-router-dom';
 import Content from './../components/content';
 import Cookies from './../utils/cookies';
 import Config, { QuestionsBlockSchema, QuestionType } from './../config';
@@ -71,7 +73,11 @@ export default class extends React.Component<any, WlRequestsState> {
 	}
 
 	componentDidMount() {
-		this.changeCategory(CATEGORIES.PENDING);
+		this.changeCategory();
+	}
+
+	componentDidUpdate() {
+		this.changeCategory();
 	}
 
 	onError(err_msg: string) {
@@ -83,13 +89,15 @@ export default class extends React.Component<any, WlRequestsState> {
 		});
 	}
 
-	changeCategory(cat: string) {
-		var cookie_token = Cookies.getCookie('discord_token');
-		if(cookie_token === null)
-			return this.onError('Wygląda na to, że nie jesteś zalogowany');
+	changeCategory() {
+		let cat = this.props.match.params.category || 'pending';
 
 		if(this.state.current_cat === cat)
 			return;
+
+		var cookie_token = Cookies.getCookie('discord_token');
+		if(cookie_token === null)
+			return this.onError('Wygląda na to, że nie jesteś zalogowany');
 
 		this.setState({current_cat: cat, loading: true, focused: undefined, wl_requests: undefined});
 
@@ -160,7 +168,8 @@ export default class extends React.Component<any, WlRequestsState> {
 				this.setState({error: error_msg || 'Nieznany błąd', loading: false});
 			}
 			else {
-				this.changeCategory(cat);
+				const { history: { push } } = this.props;
+				push('/wl_requests/' + cat);//redirecting to new category
 			}
 		}).catch(e => {
 			return this.onError('Niewłaściwa odpowiedź serwera');
@@ -279,15 +288,18 @@ export default class extends React.Component<any, WlRequestsState> {
 		return <Content>
 			<section className='whitelist_admin_main container' style={{paddingTop: '0px'}}>
 				<div className='control_panel'>
-					<button className={
-						`clean ${this.state.current_cat === CATEGORIES.PENDING ? 'active' : ''}`} 
-						onClick={() => this.changeCategory(CATEGORIES.PENDING)}>Oczekujące</button>
-					<button className={
-						`clean ${this.state.current_cat === CATEGORIES.ACCEPTED ? 'active' : ''}`} 
-						onClick={() => this.changeCategory(CATEGORIES.ACCEPTED)}>Zaakceptowane</button>
-					<button className={
-						`clean ${this.state.current_cat === CATEGORIES.REJECTED ? 'active' : ''}`} 
-						onClick={() => this.changeCategory(CATEGORIES.REJECTED)}>Odrzucone</button>
+					<Link to='/wl_requests/pending' className={
+						`clean ${this.state.current_cat === CATEGORIES.PENDING ? 'active' : ''}`}>
+						Oczekujące
+					</Link>
+					<Link to='/wl_requests/accepted' className={
+						`clean ${this.state.current_cat === CATEGORIES.ACCEPTED ? 'active' : ''}`}>
+						Zaakceptowane
+					</Link>
+					<Link to='/wl_requests/rejected' className={
+						`clean ${this.state.current_cat === CATEGORIES.REJECTED ? 'active' : ''}`}>
+						Odrzucone
+					</Link>
 				</div>
 				<article>
 					{this.state.error && <span className='error'>{this.state.error}</span>}

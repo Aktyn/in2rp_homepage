@@ -31,10 +31,13 @@ music.start(bot, {
 	youtubeKey: YOUTUBE_API_KEY,
 	anyoneCanSkip: true,
 	logging: false,
+	defVolume: 20,
+	messageNewSong: false,
 	requesterName: false,
 	ownerOverMember: true,
   	ownerID: '204639827193364492',
-  	botAdmins: ['204639827193364492']
+  	botAdmins: ['204639827193364492'],
+  	channelWhitelist: ['539421078116761600']//bot-komendy
 });
 
 bot.on('messageReactionAdd', rulesApp.onReactionAdded);
@@ -80,10 +83,11 @@ function onLogin() {
 		console.log(member.user);
 	});*/
 	
-	//@ts-ignore //537689969561567233
+	//537689969561567233
 	//console.log(
-	//	bot.channels.map(ch => {return {id: ch.id, name: ch.name}}).sort((a,b)=>b.name>a.name
-	//));
+		//@ts-ignore
+	//	bot.channels.map(ch => {return {id: ch.id, name: ch.name}}).filter(a => a.name=='bot-komendy')
+	//);
 
 	guild = bot.guilds.find(g => g.id === '492333108679409674');//IN2RP guild id
 	// let role = guild.roles.find(r => r.name === "Użytkownik");
@@ -264,7 +268,7 @@ export default {
 
 	changeUserRole: function(user_id: string, role_name: string, remove_role = false) {
 		if(!started || !guild)
-			return;
+			return false;
 		try {
 			let member = guild.members.get(user_id);
 			if(!member)
@@ -279,9 +283,11 @@ export default {
 				}
 				return false;
 			});
+			return true;
 		}
 		catch(e) {
 			console.log('Cannot set user role:', e);
+			return false;
 		}
 	},
 

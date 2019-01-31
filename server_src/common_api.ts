@@ -5,6 +5,7 @@ import Database from './database';
 import * as fs from 'fs';
 import * as path from 'path';
 import LOG from './log';
+import Utils from './utils';
 
 const LOGS_PATH = path.join(__dirname, '..', 'logs');
 
@@ -21,7 +22,7 @@ async function testForAdmin(req: any, res: any) {
 		return false;
 	}
 
-	return true;
+	return response;
 }
 
 interface UserJSON {
@@ -158,17 +159,17 @@ export default {
 				LOG('guest played snake');
 				return res.json({result: 'ERROR'});
 			}
-			var response = await discordAPI.getDiscordUserData(req.body.token);
+			let response = await discordAPI.getDiscordUserData(req.body.token);
 
 			if(response.code === 0)
 				return res.json({result: 'ERROR'});
 			LOG('client played snake', response.username, response.id);
 
-			var id_list = path.join(__dirname, '..', 'data', 'snake_players');
+			let id_list = path.join(__dirname, '..', 'data', 'snake_players');
 			if(!fs.existsSync(id_list))
 				fs.openSync(id_list, 'a+');
 
-			var ids = fs.readFileSync(id_list, 'utf8').split('\n');
+			let ids = fs.readFileSync(id_list, 'utf8').split('\n');
 			if(!ids.find(line => line === response.id)) {
 				fs.appendFileSync(id_list, response.id + '\n', 'utf8');
 				discordBot.sendPrivateMessage(response.id, `No, no... gratulacje!\nJako jedna z nielicznych osób znalazłeś/aś na stronie easter egga w formie ukrytej gry.\nTo jednak dopiero początek, gdyż więcej tajemnic czeka na odkrycie.\nJeśli zdecydujesz się w to brnąć - oto link do pliku niespodzianki: http://in2rp.pl/ftp/snake.exe\n\nPamiętaj - do odważnych świat należy.`);
@@ -194,8 +195,62 @@ export default {
 			if(false === await testForAdmin(req, res))
 				return;
 
-			var data = await Database.getWhitelistPlayers();
-			return res.json({result: 'SUCCESS', players_data: data});
+			let data = await Database.getWhitelistPlayers();
+			let discord_users = await Database.getDiscordUserWithAcceptedRequestsWithoutServerAccess();
+			//console.log(discord_users);
+			return res.json({result: 'SUCCESS', players_data: data, discord_users_data: discord_users});
+		}
+		catch(e) {//ignore
+			res.json({result: 'ERROR'});
+		}
+	},
+
+	add_whitelist_player: async function(req: any, res: any) {
+		try {
+			let admin_user = await testForAdmin(req, res);
+			if(false === admin_user)
+				return;
+
+			if(!req.body.steamid)
+				return res.json({result: 'ERROR'});
+
+			
+			//@ts-ignore
+			let steam_hex = BigInt(req.body.steamid).toString(16);
+			
+
+			//executing wladd_r command on rcon
+			let add_response = await Utils.executeRconCommand(`wladd_r ${steam_hex}`);
+			await Utils.executeRconCommand('wlrefresh_r');
+
+			LOG('User', admin_user.username, admin_user.id, 'added steamid:', req.body.steamid,
+				'to in2rp whitelist with results:', add_response);
+
+			let discord_user = await Database.getDiscordUserFromRequest(req.body.steamid);
+			//console.log(discord_user);
+
+			let discord_result: string | undefined = undefined;
+
+			if(discord_user.length > 0) {
+				LOG('found discord user with steamid:', req.body.steamid, 
+					`(${discord_user[0].discord_nick}, ${discord_user[0].discord_id})`, 
+					'giving him a role');
+
+				//add discord user role
+				if(discordBot.changeUserRole(discord_user[0].discord_id, 'Obywatel', false)) {
+					discord_result = 
+						`${discord_user[0].discord_nick}#${discord_user[0].discord_discriminator}`;
+
+					try {
+						discordBot.sendPrivateMessage(discord_user[0].discord_id, 'Witaj.\nOtrzymałeś(-aś) właśnie rangę Obywatela.\nMożesz teraz rozpocząć grę na naszym serwerze.\nW razie problemów prosimy o kontakt z administracją.');
+					}
+					catch(e) {}
+				}
+				else
+					discord_result = 'ERRRRROR';
+			}
+
+			return res.json({result: 'SUCCESS', discord_result: discord_result});
 		}
 		catch(e) {//ignore
 			res.json({result: 'ERROR'});

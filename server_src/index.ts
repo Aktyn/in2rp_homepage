@@ -82,6 +82,7 @@ app.post('/add_admin', commonAPI.add_admin);
 app.post('/get_visits', commonAPI.get_visits);
 app.post('/get_online_players', commonAPI.get_online_players);
 app.post('/get_whitelist_players', commonAPI.get_whitelist_players);
+app.post('/add_whitelist_player', commonAPI.add_whitelist_player);
 
 app.post('/record_visit', (req, resp) => {
 	let forwards = req.headers['x-forwarded-for'];

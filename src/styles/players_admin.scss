@@ -1,63 +1,61 @@
-.players_admin_main .players_list {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
+.players_admin_main {
+	& .players_list {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
 
-	align-items: center;
-    justify-content: space-around;
+		align-items: center;
+	    justify-content: space-around;
 
-	& > * {//single player block
-		width: 250px;
-		// min-height: 165px;
-		// padding: 5px;
-		margin-bottom: 20px;
-		box-shadow: 0px 2px 10px #000a;
-		border-radius: 5px;
-		// border: 1px solid #0003;
-		overflow: hidden;
+		& > * {//single player block
+			width: 250px;
+			// min-height: 165px;
+			// padding: 5px;
+			margin-bottom: 20px;
+			box-shadow: 0px 2px 10px #000a;
+			border-radius: 5px;
+			// border: 1px solid #0003;
+			overflow: hidden;
 
-		// text-align: left;
-		background-color: #4DB6AC;
-		border: 1px solid #009688;
-		color: #fff;
-		text-shadow: 0px 1px 1px #0003;
-
-		& > h2 {
-			background-color: #009688;
+			// text-align: left;
+			background-color: #4DB6AC;
+			border: 1px solid #009688;
 			color: #fff;
-			margin: 0px;
-			font-size: inherit;
-			padding-bottom: 5px;
-		}
+			text-shadow: 0px 1px 1px #0003;
 
-		& .steam_nick {
-			font-weight: bold;
-			padding: 5px 0px;
-			// text-align: center;
-		}
+			& > h2 {
+				background-color: #009688;
+				color: #fff;
+				margin: 0px;
+				font-size: inherit;
+				padding-bottom: 5px;
+			}
 
-		& table {
-			text-align: left;
-			width: auto;
-			margin: auto;
-		}
+			& .steam_nick {
+				font-weight: bold;
+				padding: 5px 0px;
+				// text-align: center;
+			}
 
-		& button, & a {
-			display: inline-block;
-			background-color: #fff;
-			color: #455a64;
-			margin: 10px 0px;
-		}
+			& table {
+				text-align: left;
+				width: auto;
+				margin: auto;
+			}
 
-		/*& > .data_row {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-		}*/
+			& button, & a {
+				display: inline-block;
+				background-color: #fff;
+				color: #455a64;
+				margin: 10px 0px;
+			}
+
+			/*& > .data_row {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+			}*/
+		}
 	}
-}
-
-.players_admin_main .wladd_panel {
-	// padding-bottom: 20px;
 
 	& input {
 		text-align: center;
@@ -66,10 +64,148 @@
 		font-size: 15px;
 	}
 
-	& button {
-		// background-color: #b71c1c;
-		background-color: #999; cursor: auto !important;
-		opacity: 1;
-		margin: 15px 0px;
+	& .converter_container {
+		max-height: 30px;
+		overflow: hidden;
+		transition: max-height 0.5s ease-in-out;
+
+		&.open {
+			max-height: 90px;
+		}
+
+		& .switcher_container {
+			display: block;
+			// background-color: red;
+			height: 30px;
+			// position: relative;
+
+			$switch_anim: 0.7s cubic-bezier(.87,-.41,.19,1.44);
+
+			transition: transform $switch_anim;
+
+			& > button {
+				width: 120px;
+				height: 24px;
+				overflow: hidden;
+				position: relative;
+				opacity: 1;
+				background-color: #9575CD;
+
+				&:hover {
+					background-color: #B39DDB;
+				}
+
+				box-shadow: 0px 1px 5px #000a;
+
+				&::before {
+					content: "Pokaż konwerter";
+					overflow: hidden;
+					white-space: nowrap;
+					transition: opacity 1s ease-in-out;
+				}
+
+				&::after {
+					content: ' ';
+					display: block;
+					width: 24px;
+					height: 24px;
+					background: url('./../img/close.svg') center no-repeat;
+					background-size: 61% auto;
+					background-position: center;
+					position: absolute;
+					left: 0px;
+					top: 0px;
+					opacity: 0;
+					transition: opacity 1s ease-in-out;
+				}
+
+				transition: width $switch_anim, border-radius $switch_anim;
+			}
+		}
+		
+		&.open .switcher_container {
+			transform: translateX(50%) translateX(-50px);
+		}
+
+		&.open .switcher_container > button {
+			// right: 0px;
+			
+			width: 24px;
+			display: inline-block;
+			border-radius: 24px;
+			// background-image: url('./../img/close.svg');
+			// background-size: contain;
+
+			&::before {
+				opacity: 0;
+			}
+
+			&::after {
+				opacity: 1;
+			}
+		}
+
+		& .input_field_container {
+			display: inline-grid;
+			grid-template-columns: 30px auto 30px;
+			align-items: center;
+			min-width: calc(50% + 60px);
+		}
+
+		& input {
+			margin: 5px 0px;
+		}
+
+		& .reverse_btn {
+			width: 30px;
+			height: 30px;
+			background: url('./../img/swap.svg') center no-repeat;
+			background-size: contain;
+			opacity: 0.66;
+			// background-color: red;
+
+			&:hover {
+				opacity: 1;
+			}
+		}
+	}
+
+	& .wladd_panel {
+		// padding-bottom: 20px;
+
+		
+
+		& button {
+			background-color: #b71c1c;
+			//background-color: #999; cursor: auto !important;
+			//opacity: 1;
+			margin: 5px 0px;
+		}
+
+		& .result_info {
+			color: #f55;
+		}
+	}
+
+	& .discord_users_list {
+		display: flex;
+	    flex-direction: row;
+	    flex-wrap: wrap;
+	    align-items: center;
+	    justify-content: start;
+
+		& button {
+			margin: 8px 2px;
+		    border-bottom: 4px solid #00796B;
+	        background-color: #009688;
+    		color: #fff;
+    		font-size: 12px;
+    		opacity: 1;
+
+    		&:hover {
+    			background-color: #26A69A;
+    			border-color: #009688;
+    		}
+		}
 	}
 }

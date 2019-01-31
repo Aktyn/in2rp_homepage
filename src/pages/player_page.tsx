@@ -64,7 +64,7 @@ export default class extends React.Component<any, PlayerPageState> {
 	}*/
 
 	render() {
-		console.log(this.props.match);
+		//console.log(this.props.match);
 		return <Content>
 			<section className='container players_admin_main'>
 				<article>

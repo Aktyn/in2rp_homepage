@@ -99,6 +99,12 @@ const Utils = {
 	} as {[index: string]: string}
 };
 
+interface DiscordUserJSON {
+	discord_nick: string;
+	discord_discriminator: number;
+	discord_id: string;
+}
+
 const self = {
 	QUESTIONS: Utils.QUESTIONS,
 
@@ -224,13 +230,32 @@ const self = {
 
 	getWhitelistPlayers: function() {
 		return this.customQuery("SELECT users.id, whitelist.identifier, users.name, users.firstname,\
-		    users.lastname, users.phone_number, CONCAT(users.money, ' + ', users.bank) AS 'money',\
-		    CONCAT(jobs.label, ' ', job_grades.label) AS 'job'\
-		FROM admin_in2rp.users \
-			INNER JOIN admin_in2rp.whitelist USING (identifier)\
-			INNER JOIN admin_in2rp.job_grades ON users.job_grade = job_grades.id\
-		   	INNER JOIN admin_in2rp.jobs ON jobs.name = users.job;");
-	}
+			    users.lastname, users.phone_number, CONCAT(users.money, ' + ', users.bank) AS 'money',\
+			    CONCAT(jobs.label, ' ', job_grades.label) AS 'job'\
+			FROM admin_in2rp.users \
+				RIGHT JOIN admin_in2rp.whitelist USING (identifier)\
+				LEFT JOIN admin_in2rp.job_grades ON users.job_grade = job_grades.id\
+			   	LEFT JOIN admin_in2rp.jobs ON jobs.name = users.job;");
+	},
+
+	getDiscordUserWithAcceptedRequestsWithoutServerAccess: function() {
+		return this.customQuery(`SELECT 
+			    requests.discord_nick, requests.discord_discriminator, requests.ooc_steam_id
+			FROM
+			    Whitelist.requests
+			WHERE
+			    status = 'accepted'
+			        AND CONVERT(CONCAT('steam:',
+			            LOWER(HEX(CAST(ooc_steam_id AS UNSIGNED)))) USING utf8) NOT IN (SELECT 
+			            CONVERT(identifier USING utf8)
+			        FROM
+			            admin_in2rp.whitelist)
+			ORDER BY timestamp DESC;`)
+	},
+
+	getDiscordUserFromRequest: function(steamid: string): Promise<DiscordUserJSON[]> {
+		return this.customQuery(`SELECT discord_nick, discord_discriminator, discord_id FROM Whitelist.requests where ooc_steam_id = '${steamid}' LIMIT 1;`);
+	},
 };
 
 export default self;
