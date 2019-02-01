@@ -32,12 +32,12 @@ enum ConverterState {
 interface PlayerData {
 	id: number;
 	identifier: string;
-	name: string;
-	firstname: string;
-	lastname: string;
-	phone_number: string;
-	money: string;
-	job: string;
+	name?: string;
+	firstname?: string;
+	lastname?: string;
+	phone_number?: string;
+	money?: string;
+	job?: string;
 }
 
 interface DiscordUserData {
@@ -173,6 +173,55 @@ export default class extends React.Component<any, PlayersState> {
 		});
 	}
 
+	search(str: string) {
+		if(!this.state.players_data)
+			return;
+
+		let match_scores = new Float32Array(this.state.players_data.length);
+
+		this.state.players_data.forEach((player, i) => {
+			if(!player.name) {
+				match_scores[i] = 0;
+				return;
+			}
+
+			const target_strings = [
+				{str: player.name.toLowerCase(), 				importance: 12},
+				{str: (player.firstname || '').toLowerCase(), 	importance: 4},
+				{str: (player.lastname || '').toLowerCase(), 	importance: 4},
+				{str: (player.phone_number || '').toLowerCase(), importance: 1},
+			];
+
+			let score = 0;
+
+			for(var t_string of target_strings) {
+				let search_index = -1;
+				for(var j=0; j<str.length; j++) {//for each letter in matching string
+					var letter_index = t_string.str.indexOf(str[j], search_index);
+					if(letter_index > search_index) {
+						score += t_string.importance / (letter_index - search_index);
+						search_index = letter_index;
+					}
+				}
+			}
+
+			match_scores[i] = score;
+
+			//console.log('name:', player.name, 'score:', score);
+		});
+
+		this.setState({
+			players_data: this.state.players_data.sort((a, b) => {
+				//@ts-ignore
+				let a_i: number = this.state.players_data.indexOf(a);
+				//@ts-ignore
+				let b_i: number = this.state.players_data.indexOf(b);
+				return match_scores[b_i] - match_scores[a_i];
+				//(a.name || '').localeCompare(b.name || '');
+			})
+		});
+	}
+
 	renderPlayerInfoBlock(data: PlayerData, index: number) {
 		return <div key={index}>
 			<h2>
@@ -273,7 +322,13 @@ export default class extends React.Component<any, PlayersState> {
 					}
 				)}</div>
 			</div>
-			<hr style={{marginBottom: '30px'}} />
+			<hr style={{marginBottom: '15px'}} />
+			<div style={{marginBottom: '15px'}}>
+				<input type='text' placeholder='SZUKAJ' onChange={el => {
+					//@ts-ignore
+					this.search(el.nativeEvent.target.value.toLowerCase());
+				}} />
+			</div>
 			<div className='players_list'>{datas.map(this.renderPlayerInfoBlock)}</div>
 		</>;
 	}
