@@ -205,6 +205,25 @@ export default {
 		}
 	},
 
+	get_whitelist_player_details: async function(req: any, res: any) {
+		try {
+			if(false === await testForAdmin(req, res))
+				return;
+
+			if(!req.body.user_id)
+				return res.json({result: 'ERROR'});
+
+			let data = await Database.getPlayerDetails(req.body.user_id);
+			if(data.length > 0)
+				return res.json({result: 'SUCCESS', player_data: data[0]});
+			else
+				return res.json({result: 'DATABASE_ERROR'});
+		}
+		catch(e) {//ignore
+			res.json({result: 'ERROR'});
+		}
+	},
+
 	add_whitelist_player: async function(req: any, res: any) {
 		try {
 			let admin_user = await testForAdmin(req, res);
@@ -213,7 +232,6 @@ export default {
 
 			if(!req.body.steamid)
 				return res.json({result: 'ERROR'});
-
 			
 			//@ts-ignore
 			let steam_hex = BigInt(req.body.steamid).toString(16);

@@ -171,10 +171,6 @@
 	}
 
 	& .wladd_panel {
-		// padding-bottom: 20px;
-
-		
-
 		& button {
 			background-color: #b71c1c;
 			//background-color: #999; cursor: auto !important;
@@ -206,6 +202,34 @@
     			background-color: #26A69A;
     			border-color: #009688;
     		}
+		}
+	}
+
+	& .return_button {
+		background-color: #263238;
+	}
+
+	& .remove_btn {
+		background-color: #f44336 !important;
+		padding: 8px 10px;
+		height: auto;
+		line-height: initial;
+	}
+
+	table.player_data {
+		margin: auto;
+
+		& tr td {
+			text-align: left;
+			padding: 3px 10px;
+		}
+
+		& tr th {
+			padding: 3px 10px;
+		}
+
+		& tr td:first-child {
+			text-align: right;
 		}
 	}
 }

@@ -125,7 +125,7 @@ export default class extends React.Component<any, FooterState> {
 							color: '#71c1bb'
 						}} className='fader_in'>GitHub autora strony</a> : 
 						<label className='fader_in'>
-							<Link to='/snake'>Copyright ©</Link> 2018 - Aktyn 
+							<Link to='/snake'>Copyright &copy;</Link> 2018 - Aktyn 
 							<img src={aktyn_logo} /> - All rights reserved
 						</label>
 					}

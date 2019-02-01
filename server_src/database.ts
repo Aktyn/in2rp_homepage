@@ -238,6 +238,20 @@ const self = {
 			   	LEFT JOIN admin_in2rp.jobs ON jobs.name = users.job;");
 	},
 
+	getPlayerDetails: function(user_id: number) {
+		return this.customQuery(`SELECT users.id, users.identifier, users.name, users.group,
+			    users.firstname, users.lastname, users.dateofbirth, users.sex, users.height,
+			    users.phone_number, users.money, users.bank, users.loadout, users.status,
+			    CONCAT(jobs.label, ' ', job_grades.label) AS 'job'
+			FROM
+			    admin_in2rp.users
+			        LEFT JOIN admin_in2rp.job_grades ON users.job_grade = job_grades.id
+			        LEFT JOIN admin_in2rp.jobs ON jobs.name = users.job
+			WHERE
+			    users.id = ${user_id}
+			LIMIT 1;`);
+	},
+
 	getDiscordUserWithAcceptedRequestsWithoutServerAccess: function() {
 		return this.customQuery(`SELECT 
 			    requests.discord_nick, requests.discord_discriminator, requests.ooc_steam_id
