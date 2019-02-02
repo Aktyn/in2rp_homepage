@@ -116,6 +116,7 @@ $max_w2: 640px;
 	justify-self: left;
     max-width: 130px;
     overflow: auto;
+    padding: 0px;
 }
 
 .whitelist_admin_main h1 > .age {
@@ -164,6 +165,31 @@ $max_w2: 640px;
 
 .user_wl_focused {
 	margin-top: 20px;
+
+	& .plagiarism_test {
+		background-color: #b71c1c;
+	}
+
+	& .plagiarism_block {
+		& h3 {
+			display: grid;
+			grid-template-columns: fit-content(100%) fit-content(100%);
+			justify-content: space-between;
+			margin-bottom: 5px;
+		}
+
+		& > div {
+			text-align: justify;
+
+			& > strong {
+				color: #f44336;
+			}
+
+			& > span {
+				color: #9c4f4d;
+			}
+		}
+	}
 }
 
 .user_wl_focused > h1 {
@@ -207,7 +233,7 @@ $max_w2: 640px;
 	justify-self: center;
 }
 
-.user_wl_focused > .QandA > p {
+.user_wl_focused > .QandA > p, .user_wl_focused .plagiarism_block > div {
 	font-size: 13px;
 }
 

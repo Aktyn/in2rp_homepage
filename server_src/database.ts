@@ -189,10 +189,19 @@ const self = {
 		return this.customQuery("SELECT * FROM `requests` WHERE `discord_id` = '"+id+"' ORDER BY `timestamp` DESC;");
 	},
 
+	getWhitelistRequestByID: function(id: number) {
+		return this.customQuery("SELECT * FROM `requests` WHERE `id` = "+id+" LIMIT 1;");
+	},
+
 	getRequests: function(status: string) {//1000*60*60*24 = 86400000 => miliseconds in one day
 		return this.customQuery("SELECT * FROM `requests`\
 			WHERE `status`='" + status + "' AND ((UNIX_TIMESTAMP()*1000 - `timestamp`)/86400000) < 28\
 			ORDER BY `timestamp` DESC LIMIT 100;");
+	},
+
+	getAllRequests: function() {//1000*60*60*24 = 86400000 => miliseconds in one day
+		return this.customQuery("SELECT * FROM `requests`\
+			ORDER BY `timestamp` DESC LIMIT 1000;");
 	},
 
 	changeStatus: function(id: number, new_status: string) {

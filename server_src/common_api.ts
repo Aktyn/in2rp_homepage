@@ -9,22 +9,6 @@ import Utils from './utils';
 
 const LOGS_PATH = path.join(__dirname, '..', 'logs');
 
-async function testForAdmin(req: any, res: any) {
-	var response = await discordAPI.getDiscordUserData(req.body.token);
-
-	if(response.code === 0) {
-		res.json({ result: response.message });
-		return false;
-	}
-
-	if(discordAPI.Admins.isAdmin(response.id) === false) {
-		res.json({ result: 'INSUFICIENT_PERMISSIONS' });
-		return false;
-	}
-
-	return response;
-}
-
 interface UserJSON {
 	id: string;
 	nick: string;
@@ -38,7 +22,7 @@ function isCandidateRole(name: string) {//important roles like admin, developer 
 export default {
 	get_logs: async (req: any, res: any) => {//responds with list of files inside logs folder
 		try {
-			if(false === await testForAdmin(req, res))
+			if(false === await Utils.testForAdmin(req, res))
 				return;
 
 			let log_files = fs.readdirSync(LOGS_PATH);
@@ -52,7 +36,7 @@ export default {
 
 	get_log_content: async (req: any, res: any) => {
 		try {
-			if(false === await testForAdmin(req, res))
+			if(false === await Utils.testForAdmin(req, res))
 				return;
 
 			let log_content = fs.readFileSync(path.join(LOGS_PATH, req.body.log_file), 'utf8');
@@ -66,7 +50,7 @@ export default {
 
 	get_admins: async (req: any, res: any) => {//TODO - cache this
 		try {
-			if(false === await testForAdmin(req, res))
+			if(false === await Utils.testForAdmin(req, res))
 				return;
 
 			var admins = discordAPI.Admins.getAdmins().map(user_id => {
@@ -98,7 +82,7 @@ export default {
 
 	remove_admin: async (req: any, res: any) => {
 		try {
-			if(false === await testForAdmin(req, res))
+			if(false === await Utils.testForAdmin(req, res))
 				return;
 
 			//console.log(req.body);
@@ -117,7 +101,7 @@ export default {
 	},
 	add_admin: async (req: any, res: any) => {
 		try {
-			if(false === await testForAdmin(req, res))
+			if(false === await Utils.testForAdmin(req, res))
 				return;
 
 			//console.log(req.body);
@@ -136,7 +120,7 @@ export default {
 
 	get_visits: async (req: any, res: any) => {//TODO - cache this
 		try {
-			if(false === await testForAdmin(req, res))
+			if(false === await Utils.testForAdmin(req, res))
 				return;
 
 			if(!req.body.from || !req.body.to) {
@@ -192,7 +176,7 @@ export default {
 
 	get_whitelist_players: async function(req: any, res: any) {
 		try {
-			if(false === await testForAdmin(req, res))
+			if(false === await Utils.testForAdmin(req, res))
 				return;
 
 			let data = await Database.getWhitelistPlayers();
@@ -207,7 +191,7 @@ export default {
 
 	get_whitelist_player_details: async function(req: any, res: any) {
 		try {
-			if(false === await testForAdmin(req, res))
+			if(false === await Utils.testForAdmin(req, res))
 				return;
 
 			if(!req.body.user_id)
@@ -226,7 +210,7 @@ export default {
 
 	add_whitelist_player: async function(req: any, res: any) {
 		try {
-			let admin_user = await testForAdmin(req, res);
+			let admin_user = await Utils.testForAdmin(req, res);
 			if(false === admin_user)
 				return;
 
@@ -269,6 +253,28 @@ export default {
 			}
 
 			return res.json({result: 'SUCCESS', discord_result: discord_result});
+		}
+		catch(e) {//ignore
+			res.json({result: 'ERROR'});
+		}
+	},
+
+	remove_whitelist_player: async function(req: any, res: any) {
+		try {
+			let admin_user = await Utils.testForAdmin(req, res);
+			if(false === admin_user)
+				return;
+
+			if(!req.body.steamhex)
+				return res.json({result: 'ERROR'});
+
+			let remove_response = await Utils.executeRconCommand(`wladd_r ${req.body.steamhex}`);
+			await Utils.executeRconCommand('wlrefresh_r');
+
+			LOG('User', admin_user.username, admin_user.id, 'removed steamhex:', req.body.steamhex,
+				'from in2rp whitelist with results:', remove_response);
+
+			return res.json({result: 'SUCCESS'});
 		}
 		catch(e) {//ignore
 			res.json({result: 'ERROR'});

@@ -2,6 +2,7 @@ import discordAPI from './discord_api';
 import discordBot from './discord_bot';
 import Database from './database';
 import LOG from './log';
+import Utils from './utils';
 
 interface RequestSchema {
 	timestamp: string;
@@ -88,13 +89,8 @@ export default {
 	},
 
 	async applicants_request(req: any, res: any) {
-		var response = await discordAPI.getDiscordUserData(req.body.token);
-
-		if(response.code === 0)
-			return res.json({ result: response.message });
-
-		if(discordAPI.Admins.isAdmin(response.id) === false)
-			return res.json({ result: 'INSUFICIENT_PERMISSIONS' });
+		if(false === await Utils.testForAdmin(req, res))
+			return;
 		
 		if(req.body.requested_status !== 'accepted' && req.body.requested_status !== 'rejected')
 			req.body.requested_status = 'pending';
@@ -136,11 +132,9 @@ export default {
 	},
 
 	async update_request(req: any, res: any) {
-		var response = await discordAPI.getDiscordUserData(req.body.token);
-
-		if(response.code === 0)
-			return res.json({ result: response.message });
-
+		let response = await Utils.testForAdmin(req, res);
+		if(false === response)
+			return;
 		//console.log(response);
 
 		if(discordAPI.Admins.isAdmin(response.id) === false) {
@@ -158,6 +152,8 @@ export default {
 		res.json({result: 'SUCCESS'});
 
 		setTimeout(async () => {//asynchronosly deal with discord bot sending message to user
+			if(false === response)
+				return;
 			var target_discord_user = await Database.getUserDiscordID(req.body.id);
 
 			var new_status;
@@ -186,5 +182,68 @@ export default {
 				}
 			}
 		});
+	},
+
+	async plagiarism_test(req: any, res: any) {
+		try {
+			let response = await Utils.testForAdmin(req, res);
+			if(false === response)
+				return;
+
+			let user_request = await Database.getWhitelistRequestByID(req.body.id);
+			if(user_request.length < 1)
+				return res.json({result: 'DATABASE_ERROR'});
+
+			let accepted_request = await Database.getAllRequests();
+
+			let user_words_arrays = [
+				decodeURIComponent(user_request[0]['ic_historia']).split(' '),
+				//decodeURIComponent(user_request[0]['ic_plan_na_postac']).split(' '),
+				//decodeURIComponent(user_request[0]['ic_kreatywna_akcja']).split(' ')
+			];
+
+			var matches: {id: number, nick: string, percent: number, history: string}[] = [];
+
+			for(var request of accepted_request) {
+				if(request['id'] === user_request[0]['id'])//skip same request
+					continue;
+
+				var req_words_arrays = [//must be same order as user_words_arrays
+					decodeURIComponent(request['ic_historia']).split(' '),
+					//decodeURIComponent(request['ic_plan_na_postac']).split(' '),
+					//decodeURIComponent(request['ic_kreatywna_akcja']).split(' ')
+				];
+
+				var m_percent = 0;
+
+				for(var i=0; i<user_words_arrays.length; i++) {
+					var user_words = user_words_arrays[i];
+					var req_words = req_words_arrays[i];
+
+					//count number of words in user_words that appear in req_words
+					let score = 0;
+					for(var word of user_words) {
+						if(req_words.indexOf(word) !== -1)
+							score++;
+					}
+					m_percent = Math.max(m_percent, score / user_words.length);
+				}
+
+				if(m_percent > 0.5) {//threshold
+					matches.push({
+						id: request['id'], 
+						nick: request['discord_nick'], 
+						percent: m_percent,
+						history: req_words_arrays[0].join(' ')
+					});
+				}
+			}
+
+			res.json({result: 'SUCCESS', matches: matches.sort((a, b) => b.percent - a.percent)});
+		}
+		catch(e) {
+			console.error(e);
+			res.json({result: 'ERROR'});
+		}
 	}
 };

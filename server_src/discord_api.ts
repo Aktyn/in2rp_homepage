@@ -79,7 +79,7 @@ else {
 	final_redirect = `https://${HOST}/login_result`;
 }
 
-interface DiscordUserJSON {
+export interface DiscordUserJSON {
 	code: number;
 	message: string;
 	id: string;

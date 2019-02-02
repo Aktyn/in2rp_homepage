@@ -88,6 +88,18 @@ function onLogin() {
 		//@ts-ignore
 	//	bot.channels.map(ch => {return {id: ch.id, name: ch.name}}).filter(a => a.name=='bot-komendy')
 	//);
+	let ch = bot.channels.get('539421078116761600');
+	if(ch instanceof Discord.TextChannel) {
+		ch.fetchMessages({limit: 100}).then(msgs => msgs.array()).then(msgs => {
+			msgs.forEach((msg, i) => {
+				if(i !== msgs.length-1)//skip first message
+					msg.delete();
+				//msg.pin().then(res => console.log(res)).catch(console.error);
+				//if(msg.content.indexOf('podanie o whiteliste') === -1)
+					//msg.delete();
+			});
+		});
+	}
 
 	guild = bot.guilds.find(g => g.id === '492333108679409674');//IN2RP guild id
 	// let role = guild.roles.find(r => r.name === "Użytkownik");
@@ -102,27 +114,19 @@ function onLogin() {
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		manageApp.init(bot);
 
-	bot.on('message', message => {
+	bot.on('message', (message) => {
 		if(!message.author || message.author.bot)
 			return;
 
-		//if(message.channel.id === '528987808438812683') {
-
-		//if(message.channel instanceof Discord.TextChannel)
-		//	console.log( message.channel.guild.roles.find(r=>r.name==='@everyone') );
-		if(message.channel instanceof Discord.TextChannel && 
-			(message.content === '@everybody' || message.content === '@ewrybadypomarańcze')) 
-		{
-			let role = message.channel.guild.roles.find(r=>r.name==='@everyone');
-			if(role)
-				message.channel.send('@everyone');
-		}
-
-		//#co-trzeba-jeszcze-zrobic //520947668432715787
-		//#regulamin - 516320348464087054
-		if(message.channel.type === 'text') {//non private message
+		if(message.channel instanceof Discord.TextChannel) {//non private message
 			if(!isProperMessage(message.content))
 				message.delete().catch(console.error);
+
+			if(message.content.indexOf('@everybody') !== -1) {
+				if( message.channel.guild.roles.find(r=>r.name==='@everyone') )
+					message.channel.send('@everyone');
+			}
+
 			switch(message.channel.id) {
 				case todoApp.CHANNEL_ID:
 				case todoApp.CHANNEL_ID2:
@@ -136,6 +140,11 @@ function onLogin() {
 				case manageApp.CHANNEL_ID:	
 					if(process.env.NODE_ENV !== 'dev')
 						return manageApp.handleMessage(message, bot);
+					break;
+
+				case '539421078116761600'://#bot-komendy
+					if(!message.author.bot)
+						setTimeout(() => message.delete(), 5000);//remove users messages after 5 secs
 					break;
 			}
 			return;

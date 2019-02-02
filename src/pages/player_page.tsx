@@ -30,14 +30,19 @@ interface PlayerPageState {
 	loading: boolean;
 	error?: string;
 	data?: PlayerData;
+	remove_confirm: boolean;
+	remove_result?: string;
 }
 
 export default class extends React.Component<any, PlayerPageState> {
+	private confirm_timeout: NodeJS.Timeout | number | null = null;
 
 	state: PlayerPageState = {
 		loading: true,
 		error: undefined,
-		data: undefined
+		data: undefined,
+		remove_confirm: false,
+		remove_result: undefined
 	}
 
 	constructor(props: any) {
@@ -87,9 +92,61 @@ export default class extends React.Component<any, PlayerPageState> {
 		});
 	}
 
-	renderPlayerData(data: PlayerData) {
-		//console.log(data);
+	componentWillUnmount() {
+		if(this.confirm_timeout !== null)
+			clearTimeout(this.confirm_timeout as number);
+	}
 
+	tryRemove(data: PlayerData) {
+		if(this.state.remove_confirm === false) {
+			this.setState({remove_confirm: true});
+			this.confirm_timeout = setTimeout(() => {
+				this.setState({remove_confirm: false});
+			}, 5000);
+			return;
+		}
+
+		var cookie_token = Cookies.getCookie('discord_token');
+		if(cookie_token === null)
+			return this.onError('Wygląda na to, że nie jesteś zalogowany');
+
+		this.setState({remove_result: 'Czekanie na odpowiedź serwera...'});
+
+		Utils.postRequest(
+			'remove_whitelist_player', 
+			{token: cookie_token, steamhex: data.identifier.replace(/^steam:/i, '')}
+		).then(res => res.json()).then((res: {result: string}) => {
+			//console.log(res);
+			if(res['result'] !== 'SUCCESS') {
+				let error_msg;
+				switch(res['result']) {
+					case 'INSUFICIENT_PERMISSIONS':
+						error_msg = 'Nie masz uprawnień do tego kontentu.';
+						break;
+					case 'DATABASE_ERROR':
+						error_msg = 'Błąd bazy danych.';
+						break;
+				}
+
+				this.setState({error: error_msg || 'Nieznany błąd', loading: false});
+			}
+			else {
+				/*this.setState({
+					error: undefined, 
+					loading: false, 
+					remove_confirm: false,
+					remove_result: 'Done'
+				});*/
+				const { history: { push } } = this.props;
+				push('/players');//redirecting back to players page
+			}
+		}).catch(e => {
+			return this.onError('Niewłaściwa odpowiedź serwera');
+			console.error(e);
+		});
+	}
+
+	renderPlayerData(data: PlayerData) {
 		let status: {drunk?: number, hunger?: number, thirst?: number} = {};
 		try {
 			let status_json = JSON.parse(data.status);
@@ -143,9 +200,11 @@ export default class extends React.Component<any, PlayerPageState> {
 					})}
 				</tbody>
 			</table>
-			<button className='clean simple_button remove_btn'>
-				Usuń z whitelisty (w&nbsp;budowie)
+			<hr />
+			<button className='clean simple_button remove_btn' onClick={() => this.tryRemove(data)}>
+				{this.state.remove_confirm ? 'Na pewno?' : 'Usuń z whitelisty'}
 			</button>
+			<div>{this.state.remove_result}</div>
 		</>;
 	}
 

@@ -47,8 +47,16 @@ interface WlRequestDataJSON {
 	discriminator: number;
 	nick: string;
 	timestamp: string;
+	ic_historia: string;
 
 	[index: string]: string | number;
+}
+
+interface PlagiarismMatchSchema {
+	id: number;
+	nick: string;
+	percent: number;
+	history: string;
 }
 
 interface WlRequestsState {
@@ -57,6 +65,7 @@ interface WlRequestsState {
 	loading: boolean;
 	wl_requests?: WlRequestDataJSON[];
 	focused?: WlRequestDataJSON;
+	plagiarism_result?: PlagiarismMatchSchema[] | string;
 }
 
 export default class extends React.Component<any, WlRequestsState> {
@@ -65,7 +74,8 @@ export default class extends React.Component<any, WlRequestsState> {
 		error: undefined,
 		loading: true,
 		wl_requests: undefined,
-		focused: undefined
+		focused: undefined,
+		plagiarism_result: undefined
 	};
 
 	constructor(props: any) {
@@ -124,7 +134,8 @@ export default class extends React.Component<any, WlRequestsState> {
 					error: undefined, 
 					loading: false, 
 					wl_requests: res['data'],
-					focused: undefined
+					focused: undefined,
+					plagiarism_result: undefined
 				});
 			}
 		}).catch(e => {
@@ -177,11 +188,48 @@ export default class extends React.Component<any, WlRequestsState> {
 		});
 	}
 
+	plagiarismTest() {
+		if(!this.state.focused)
+			return;
+
+		var cookie_token = Cookies.getCookie('discord_token');
+		if(cookie_token === null)
+			return this.setState({plagiarism_result: 'Wygląda na to, że nie jesteś zalogowany'});
+
+		this.setState({plagiarism_result: 'Trwa testowanie...'});
+
+		Utils.postRequest(
+			'plagiarism_test', {token: cookie_token, id: this.state.focused.id}
+		).then(res => res.json()).then((res: {result: string, matches: PlagiarismMatchSchema[]}) => {
+			//console.log(res);
+			
+			if(res['result'] !== 'SUCCESS') {
+				let error_msg;
+				switch(res['result']) {
+					case 'INSUFICIENT_PERMISSIONS':
+						error_msg = 'Nie masz uprawnień do tego kontentu.';
+						break;
+					case 'DATABASE_ERROR':
+						error_msg = 'Błąd bazy danych';
+						break;
+				}
+
+				this.setState({plagiarism_result: error_msg || 'Nieznany błąd'});
+			}
+			else {
+				this.setState({plagiarism_result: res['matches']});
+			}
+		}).catch(e => {
+			this.setState({plagiarism_result: 'Niewłaściwa odpowiedź serwera'});
+			console.error(e);
+		});
+	}
+
 	focusOn(index: number) {
 		if(this.state.wl_requests === undefined)
 			throw new Error('No wl_requests data in state');
 
-		this.setState({focused: this.state.wl_requests[index]});
+		this.setState({focused: this.state.wl_requests[index], plagiarism_result: undefined});
 	}
 
 	closeFocused() {
@@ -246,6 +294,37 @@ export default class extends React.Component<any, WlRequestsState> {
 		});
 	}
 
+	renderPlagiarismResult(data: PlagiarismMatchSchema[] | string) {
+		if(typeof data === 'string')
+			return data;
+		if(!this.state.focused)
+			return 'Błąd - nie znaleziono wybranego podania';
+
+		if(data.length === 0)
+			return 'Nie znaleziono plagiatów';
+
+		let focused_history_words = deepUriDecode(this.state.focused.ic_historia).split(' ');
+		
+		return <div>{data.map((match, i) => {
+			var history_words = match.history.split(' ').map((word, i) => {
+				if(focused_history_words.indexOf(word) === -1)
+					return word + ' ';
+				if(word.length < 4)
+					return <span key={i}>{word} </span>;
+				else
+					return <strong key={i}>{word} </strong>;
+			});//.join(' ');
+
+			return <div key={i} className='plagiarism_block'>
+				<h3>
+					<span>{deepUriDecode(match.nick)}</span>
+					<span>Zgodność: {Math.round(match.percent*100)}%</span>
+				</h3>
+				<div>{history_words}</div>
+			</div>;
+		})}</div>;
+	}
+
 	renderFocused() {
 		if(this.state.focused === undefined)
 			throw new Error('No focused whitelist request in state');
@@ -280,6 +359,13 @@ export default class extends React.Component<any, WlRequestsState> {
 						onClick={() => this.sendStatusUpdateRequest(CATEGORIES.REJECTED)}>
 						ODRZUĆ
 					</button>}
+			</div>
+			<hr style={{margin: '10px 0px'}} />
+			<div>
+				<button className='clean small_button plagiarism_test' 
+					onClick={this.plagiarismTest.bind(this)}>Test na plagiat</button>
+				<div>{this.state.plagiarism_result && 
+					this.renderPlagiarismResult(this.state.plagiarism_result)}</div>
 			</div>
 		</div>;
 	}

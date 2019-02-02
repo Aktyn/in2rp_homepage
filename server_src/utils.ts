@@ -1,5 +1,6 @@
 import {spawn} from 'child_process';
 import * as path from 'path';
+import discordAPI, {DiscordUserJSON} from './discord_api';
 
 export default {
 	RCON_CMD_BASE: path.join(__dirname, '..', 'tools', 'rcon') + ' 54.37.128.15 30120 ameryczkarp ',
@@ -36,5 +37,21 @@ export default {
 	},
 	executeRconCommand: function(cmd: string): Promise<string> {
 		return this.executeCommand(this.RCON_CMD_BASE + cmd);
+	},
+
+	testForAdmin: async function(req: any, res: any): Promise<false | DiscordUserJSON> {
+		var response = await discordAPI.getDiscordUserData(req.body.token);
+
+		if(response.code === 0) {
+			res.json({ result: response.message });
+			return false;
+		}
+
+		if(discordAPI.Admins.isAdmin(response.id) === false) {
+			res.json({ result: 'INSUFICIENT_PERMISSIONS' });
+			return false;
+		}
+
+		return response;
 	}
 };
