@@ -59,9 +59,20 @@ function answerToMsg(author: Discord.User, message?: string) {
 	author.send(message).catch(e => console.log('Cannot answer to user:', author.username));
 }
 
-const forbiddenPatterns = ['http://discord'];
+const good_links = [
+	new RegExp('https?://in2rp.pl', 'i'), 
+	new RegExp('https?://discord.gg/4aa6F7Q', 'i')
+];
+//const forbiddenPatterns = ['http://discord'];
 function isProperMessage(msg: string) {
-	let matching_chars = new Uint8Array(forbiddenPatterns.length);
+	//check whitelisted links
+	for(var link of good_links) {
+		if(msg.match(link))
+			return true;
+	}
+
+	//check for discord invitations hidden in messages
+	/*let matching_chars = new Uint8Array(forbiddenPatterns.length);
 	for(var i=0; i<msg.length; i++) {
 		for(var j=0; j<forbiddenPatterns.length; j++) {
 			if( msg[i] === forbiddenPatterns[j][matching_chars[j]] ) {
@@ -69,8 +80,10 @@ function isProperMessage(msg: string) {
 					return false;
 			}
 		}
-	}
-	return true;
+	}*/
+
+	//check for regular link
+	return !msg.match(/(https?:\/\/|www\.).+\..+/gi);
 }
 
 function onLogin() {
@@ -88,6 +101,7 @@ function onLogin() {
 		//@ts-ignore
 	//	bot.channels.map(ch => {return {id: ch.id, name: ch.name}}).filter(a => a.name=='bot-komendy')
 	//);
+
 	let ch = bot.channels.get('539421078116761600');
 	if(ch instanceof Discord.TextChannel) {
 		ch.fetchMessages({limit: 100}).then(msgs => msgs.array()).then(msgs => {
@@ -102,10 +116,7 @@ function onLogin() {
 	}
 
 	guild = bot.guilds.find(g => g.id === '492333108679409674');//IN2RP guild id
-	// let role = guild.roles.find(r => r.name === "Użytkownik");
-	//let target_role = bot.guilds.find(g => g.name === 'IN2RP.PL +16')
-	//	.roles.find(r => r.name === 'Użytkownik');
-	//guild.members.array().filter(u => u.user.bot).forEach(m => m.removeRoles([target_role]));
+	//let role = guild.roles.find(r => r.name === "Użytkownik");
 
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		statusApp.init(bot);
@@ -119,8 +130,10 @@ function onLogin() {
 			return;
 
 		if(message.channel instanceof Discord.TextChannel) {//non private message
-			if(!isProperMessage(message.content))
+			if(!isProperMessage(message.content)) {
+				console.log('removing:', message.content);
 				message.delete().catch(console.error);
+			}
 
 			if(message.content.indexOf('@everybody') !== -1) {
 				if( message.channel.guild.roles.find(r=>r.name==='@everyone') )

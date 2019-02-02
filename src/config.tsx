@@ -38,8 +38,8 @@ const CONFIG = {
 	</React.Fragment>,
 
 	short_info: <span>
-		Start wkrótce.<br/>
-		Dołącz do naszego discorda by być na bieżąco.
+		Planowana data startu: 15.02.2019 18:00.<br/>
+		Zapraszamy na discord po więcej informacji.
 	</span>,
 
 	contacs: <React.Fragment>
