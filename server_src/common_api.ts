@@ -268,7 +268,7 @@ export default {
 			if(!req.body.steamhex)
 				return res.json({result: 'ERROR'});
 
-			let remove_response = await Utils.executeRconCommand(`wladd_r ${req.body.steamhex}`);
+			let remove_response = await Utils.executeRconCommand(`wlremove_r ${req.body.steamhex}`);
 			await Utils.executeRconCommand('wlrefresh_r');
 
 			LOG('User', admin_user.username, admin_user.id, 'removed steamhex:', req.body.steamhex,
