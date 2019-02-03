@@ -1,0 +1,231 @@
+/* n-th child order:
+ 1111
+2	 3
+2	 3
+ 4444
+5	 6
+5	 6
+ 7777
+*/
+
+$blockSize: 75px;//height of block (should be divisable by 2)
+$digitsSpace: 10px;
+$lineSize: 3px;
+$separatorWidth: 30px;
+$glowcolor: #00BCD4;
+
+:root {
+	--mouseX: 0;
+	--mouseY: 0;
+}
+
+/** {
+	transform-style: preserve-3d;
+	perspective: 2000px;
+}*/
+
+.perspectiveHandler {
+	&, & *, & *::before, & *::after {
+		transform-style: preserve-3d;
+		perspective: 1000px;
+	}
+	display: block;
+
+	padding: 20px;
+}
+
+.countdown_main {
+	//background-color: #fff5;
+	display: inline-block;
+	//padding: 15px 5px;
+
+	transform: translateZ(0px);
+  	transform: translateZ(20px)
+    	rotateX(calc(var(--mouseY) * 45deg))
+    	rotateY(calc(var(--mouseX) * 45deg));
+
+	& * {
+		display: inline-block;
+		
+		//transform-style: preserve-3d;
+		//perspective: 1000px;
+		//height: $blockSize;
+		//transform-style: preserve-3d;
+		//perspective: 1000px;
+	}
+
+	& .block_width {
+		width: $blockSize + $digitsSpace;
+	}
+
+	& section {//block as container for two digits
+		//background-color: #345;
+
+		height: $blockSize;
+		width: $blockSize + $digitsSpace;
+
+		display: inline-grid;
+		grid-template-columns: $blockSize/2 $digitsSpace $blockSize/2;
+		grid-template-areas: "digit1 separator digit2";
+
+		& > article {
+			&:first-child {
+				grid-area: digit1;
+			}
+
+			&:last-child {
+				grid-area: digit2;
+			}
+			
+			//background-color: #5f58;
+			position: relative;
+			z-index: 160;
+
+			& > div {//single liner
+				position: absolute;
+				left: 0px;
+				top: 0px;
+
+				margin: auto;
+
+				$lineWidth: $blockSize/2 - $lineSize;
+				$lineOff: ($blockSize/2 - $lineWidth)/2;
+				$list: (//width, height, left, right, top, bottom
+					($lineWidth, $lineSize, 0px, 0px, 0px, auto), 
+					($lineSize, $lineWidth, 0px, auto, $lineOff, auto),
+					($lineSize, $lineWidth, auto, 0px, $lineOff, auto), 
+					($lineWidth, $lineSize, 0px, 0px, 0px, 0px), 
+					($lineSize, $lineWidth, 0px, auto, auto, $lineOff), 
+					($lineSize, $lineWidth, auto, 0px, auto, $lineOff), 
+					($lineWidth, $lineSize, 0px, 0px, auto, 0px)
+				);
+
+				&::before, &::after {
+					content: " ";
+					display: block;
+					width: 100%;
+					height: 100%;
+					position: absolute;
+					background-color: #fff;
+
+					transition: transform 0.5s cubic-bezier(.87,-.41,.19,1.44), 
+						opacity 0.5s ease-in-out;
+
+					//transform-origin: center;
+					//transform-style: preserve-3d;
+  					//perspective: 1000px;
+				}
+
+				&::before {
+					left: 0px;
+					top: 0px;
+					transition-duration: 0.7s;
+				}
+
+				&::after {
+					right: 0px;
+					bottom: 0px;
+				}
+
+				@for $i from 1 through length($list) {
+					&:nth-child(#{$i}) {
+						width: nth(nth($list, $i), 1);
+						height: nth(nth($list, $i), 2);
+
+						left: nth(nth($list, $i), 3);
+						right: nth(nth($list, $i), 4);
+						top: nth(nth($list, $i), 5);
+						bottom: nth(nth($list, $i), 6);
+
+						&::before, &::after {
+							//if width < height
+							@if nth(nth($list, $i), 1) < nth(nth($list, $i), 2) {
+								height: 50%;
+							}
+							@else {
+								width: 50%;
+							}
+						}
+
+						&::before {
+							@if nth(nth($list, $i), 1) < nth(nth($list, $i), 2) {
+								border-top-left-radius: $lineSize;
+								border-top-right-radius: $lineSize;
+							}
+							@else {
+								border-top-left-radius: $lineSize;
+								border-bottom-left-radius: $lineSize;
+							}
+						}
+
+						&::after {
+							@if nth(nth($list, $i), 1) < nth(nth($list, $i), 2) {
+								border-bottom-left-radius: $lineSize;
+								border-bottom-right-radius: $lineSize;
+							}
+							@else {
+								border-top-right-radius: $lineSize;
+								border-bottom-right-radius: $lineSize;
+							}
+						}
+					}
+				}
+			
+  				transform: translateZ(1.5vmax);
+
+				&.off::before, &.off::after {
+					opacity: 0.1;
+					transform: translateZ(-1.5vmax) scale(0.75);
+				}
+			}
+		}
+	}
+
+	& .time_separator {
+		width: $separatorWidth;
+		height: $blockSize;
+		// background-color: red;
+		position: relative;
+		transform: translateZ(2vmax);
+
+
+		&::before, &::after {
+			content: " ";
+			display: block;
+			position: absolute;
+			margin: auto;
+			left: 0px; right: 0px;
+			top: 0px; bottom: 0px;
+			width: $separatorWidth/3;
+			height: $separatorWidth/3;
+			background-color: #fff;
+			border-radius: $separatorWidth/12;
+		}
+
+		&::before {
+			transform: translateY(-$separatorWidth/2);
+		}
+		&::after {
+			transform: translateY($separatorWidth/2);
+		}
+	}
+
+	& .space_separator {
+		width: $separatorWidth;
+		//height: $blockSize;
+	}
+
+	& label {
+		padding-top: 10px;
+		color: #fff;
+		text-shadow: 0px 0px 2px $glowcolor;
+	}
+
+	//glow effect
+	& .time_separator::before, & .time_separator::after, 
+	& section > article > div::before, & section > article > div::after {
+		box-shadow:
+			0 0 8px $glowcolor,
+			inset 0 0 0.125vmin $glowcolor;//, 10px 10px 5px 0px #0002;
+	}
+}

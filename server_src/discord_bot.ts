@@ -97,10 +97,10 @@ function onLogin() {
 	});*/
 	
 	//537689969561567233
-	//console.log(
+	/*console.log(
 		//@ts-ignore
-	//	bot.channels.map(ch => {return {id: ch.id, name: ch.name}}).filter(a => a.name=='bot-komendy')
-	//);
+		bot.channels.map(ch => {return {id: ch.id, name: ch.name}}).filter(a => a.name=='przywitania')
+	);*/
 
 	let ch = bot.channels.get('539421078116761600');
 	if(ch instanceof Discord.TextChannel) {
