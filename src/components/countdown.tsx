@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import Utils from './../utils/utils';
 import './../styles/countdown.scss';
 
 /* n-th child order:
@@ -68,19 +68,17 @@ export default class extends React.Component<CountdownProps, CountdownState> {
 				this.update_interval = setInterval(this.update.bind(this), 1000) as any;
 			else
 				setTimeout(tryFit, 500-ms);
-			//console.log(ms, Date.now()%1000);
 		}
 
 		tryFit();
 
 		window.addEventListener('mousemove', this.onMouseMoved.bind(this));
 
-		this.running = true;
+		this.running = !Utils.IS_MOBILE;
 
 		var now = 0, dt = 0;
 		const smooth_factor = 10;
 		var smoothPerspective = (time: number) => {
-			// this.state.mouseX
 			dt = (time - now);
 			now = time;
 
@@ -165,9 +163,8 @@ export default class extends React.Component<CountdownProps, CountdownState> {
 			this.running = false;
 			return '';
 		}
-		//{this.state.rem_t.days} dni<br/>
-		//{this.state.rem_t.hours}:{this.state.rem_t.minutes}:{this.state.rem_t.seconds}
-		return <div className='perspectiveHandler' style={{marginTop: '30px'}}>
+
+		return <div className='perspectiveHandler'>
 			<div className='countdown_main'>
 				<div>
 					{this.state.rem_t.days > 0 && <>

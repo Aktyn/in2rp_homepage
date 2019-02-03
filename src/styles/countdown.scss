@@ -8,6 +8,8 @@
  7777
 */
 
+$max_w1: 768px;
+
 $blockSize: 75px;//height of block (should be divisable by 2)
 $digitsSpace: 10px;
 $lineSize: 3px;
@@ -25,16 +27,34 @@ $glowcolor: #00BCD4;
 }*/
 
 .perspectiveHandler {
-	&, & *, & *::before, & *::after {
-		transform-style: preserve-3d;
-		perspective: 1000px;
+	@media screen and (min-width: $max_w1) {
+		&, & *, & *::before, & *::after {
+			transform-style: preserve-3d;
+			perspective: 1000px;
+		}
 	}
-	display: block;
 
-	padding: 20px;
+	display: block;
+	box-sizing: border-box;
+	//width: 100vw;
+	overflow: visible;
+
+	padding: 20px 0px;
+	margin-top: 30px;
+
+	@media screen and (max-width: $max_w1) {
+		& {
+			transform: scale(0.5) translateX(-50%);
+			// background-color: red;
+			padding: 5px 0px;
+			width: 200vw;
+			margin-top: 0px;
+		}
+	}
 }
 
 .countdown_main {
+	white-space: nowrap;
 	//background-color: #fff5;
 	display: inline-block;
 	//padding: 15px 5px;
@@ -196,10 +216,10 @@ $glowcolor: #00BCD4;
 			margin: auto;
 			left: 0px; right: 0px;
 			top: 0px; bottom: 0px;
-			width: $separatorWidth/3;
-			height: $separatorWidth/3;
+			width: $separatorWidth/4;
+			height: $separatorWidth/4;
 			background-color: #fff;
-			border-radius: $separatorWidth/12;
+			border-radius: $separatorWidth/16;
 		}
 
 		&::before {
