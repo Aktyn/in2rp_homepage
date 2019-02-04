@@ -127,7 +127,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 			
 			<div className='players_list' ref={el => this.players_list = el}>
 				<div ref={el => this.actual_players_list = el}>{
-					data.players_online.map((p, i) => <div key={i}>{p}</div>)//TODO - turn it into links redirecting to fivem users data
+					data.players_online.map((p, i) => <div key={i}>{Utils.deepUriDecode(p)}</div>)
+					//TODO - turn it into links redirecting to fivem users data
 				}</div>
 			</div>
 		</div>;

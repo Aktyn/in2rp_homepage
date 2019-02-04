@@ -112,11 +112,6 @@ const ManagerApp = {
 		   		await execCommand(Utils.RCON_CMD_BASE + 'reboot ' + X, message);
 
 		   		//restarts serwer after X minutes
-		   		/*let X = 1000 * 60 * parseInt(args[0]);
-		   		setTimeout(() => {
-		   			console.log('Time to serwer restart passed. Restarting now.');
-		   			Utils.executeCommand(Utils.SERVER_CMDS['restart']);
-		   		}, X);*/
 		   		Eclipse.start(X, true);
 		   		break;
 		   	case 'rcon':

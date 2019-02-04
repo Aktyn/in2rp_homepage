@@ -159,7 +159,6 @@ export default {
 			var new_status;
 			if(req.body.requested_status === 'accepted') {
 				new_status = `zaakceptowane. Zapraszamy na rozmowę, w której sprawdzimy twoją znajomość regulaminu. <#528681859882811421>`;
-				
 			}
 			else if(req.body.requested_status === 'rejected')
 				new_status = 'odrzucone.';
@@ -174,8 +173,13 @@ export default {
 					discordBot.sendPrivateMessage(user_id,
 						`Witaj. Twoje podanie o whiteliste zostało właśnie ${new_status}`);
 
-					if(req.body.requested_status === 'accepted')
-						discordBot.changeUserRole(user_id, 'Rozmowa kwalifikacyjna')//give user role
+					if(req.body.requested_status === 'accepted') {
+						discordBot.changeUserRole(user_id, 'Rozmowa kwalifikacyjna');//give user role
+
+						//#zaakceptowane-podania
+						discordBot.sendChannelMessage('528960010420617216', //528960010420617216
+							`Podanie użytkownika <@${user_id}> zostało zaakceptowane.`);
+					}
 				}
 				catch(e) {
 					console.log('Cannot send private message to', target_discord_user[0].discord_id);

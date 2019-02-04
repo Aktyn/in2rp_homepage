@@ -19,6 +19,24 @@ function isCandidateRole(name: string) {//important roles like admin, developer 
 	return ['Developer', 'Administrator', 'Właściciel', 'Moderacja', 'Partner'].indexOf(name) !== -1;
 }
 
+function hexToDec(s: string) {
+    var i, j, digits = [0], carry;
+    for (i = 0; i < s.length; i += 1) {
+        carry = parseInt(s.charAt(i), 16);
+        for (j = 0; j < digits.length; j += 1) {
+            digits[j] = digits[j] * 16 + carry;
+            carry = digits[j] / 10 | 0;
+            digits[j] %= 10;
+        }
+        while (carry > 0) {
+            digits.push(carry % 10);
+            carry = carry / 10 | 0;
+        }
+    }
+    return digits.reverse().join('');
+}
+
+
 export default {
 	get_logs: async (req: any, res: any) => {//responds with list of files inside logs folder
 		try {
@@ -234,17 +252,22 @@ export default {
 			let discord_result: string | undefined = undefined;
 
 			if(discord_user.length > 0) {
+				let dis_id = discord_user[0].discord_id;
+
 				LOG('found discord user with steamid:', req.body.steamid, 
-					`(${discord_user[0].discord_nick}, ${discord_user[0].discord_id})`, 
+					`(${discord_user[0].discord_nick}, ${dis_id})`, 
 					'giving him a role');
 
 				//add discord user role
-				if(discordBot.changeUserRole(discord_user[0].discord_id, 'Obywatel', false)) {
+
+				if(discordBot.changeUserRole(dis_id, 'Obywatel', false) &&
+					discordBot.changeUserRole(dis_id, 'Rozmowa kwalifikacyjna', true) )
+				{
 					discord_result = 
 						`${discord_user[0].discord_nick}#${discord_user[0].discord_discriminator}`;
 
 					try {
-						discordBot.sendPrivateMessage(discord_user[0].discord_id, 'Witaj.\nOtrzymałeś(-aś) właśnie rangę Obywatela.\nMożesz teraz rozpocząć grę na naszym serwerze.\nW razie problemów prosimy o kontakt z administracją.');
+						discordBot.sendPrivateMessage(dis_id, 'Witaj.\nOtrzymałeś(-aś) właśnie rangę Obywatela.\nMożesz teraz rozpocząć grę na naszym serwerze.\nW razie problemów prosimy o kontakt z administracją.');
 					}
 					catch(e) {}
 				}
@@ -267,6 +290,17 @@ export default {
 
 			if(!req.body.steamhex)
 				return res.json({result: 'ERROR'});
+
+			let steamid = hexToDec(req.body.steamhex);
+
+			let discord_user = await Database.getDiscordUserFromRequest(steamid);
+			if(discord_user.length > 0) {
+				LOG('found discord user with steamid:', steamid, 
+					`(${discord_user[0].discord_nick}, ${discord_user[0].discord_id})`, 
+					'removing a role');
+				if(false === discordBot.changeUserRole(discord_user[0].discord_id, 'Obywatel', true))
+					LOG('Cannot remove user role with steamid:', steamid);
+			}
 
 			let remove_response = await Utils.executeRconCommand(`wlremove_r ${req.body.steamhex}`);
 			await Utils.executeRconCommand('wlrefresh_r');

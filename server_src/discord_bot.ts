@@ -99,9 +99,10 @@ function onLogin() {
 	//537689969561567233
 	/*console.log(
 		//@ts-ignore
-		bot.channels.map(ch => {return {id: ch.id, name: ch.name}}).filter(a => a.name=='przywitania')
+		bot.channels.map(ch => {return {id: ch.id, name: ch.name}}).filter(a => a.name=='zaakceptowane-podania')
 	);*/
 
+	//clear #bot-komendy channel
 	let ch = bot.channels.get('539421078116761600');
 	if(ch instanceof Discord.TextChannel) {
 		ch.fetchMessages({limit: 100}).then(msgs => msgs.array()).then(msgs => {
@@ -115,6 +116,8 @@ function onLogin() {
 		});
 	}
 
+	//let embed = new Discord.RichEmbed().setColor('#26A69A').setTitle(`Zaćmienie za **${1337}** minut`);
+
 	guild = bot.guilds.find(g => g.id === '492333108679409674');//IN2RP guild id
 	//let role = guild.roles.find(r => r.name === "Użytkownik");
 
@@ -126,6 +129,15 @@ function onLogin() {
 		manageApp.init(bot);
 
 	bot.on('message', (message) => {
+		if(message.channel instanceof Discord.TextChannel && 
+			message.channel.id === '539421078116761600') 
+		{//#bot-komendy
+			if(!message.author.bot)
+				setTimeout(() => message.delete(), 5000);//remove user message after 5 secs
+			else
+				setTimeout(() => message.delete(), 60000*3);//remove bot message after 3 minutes
+		}
+
 		if(!message.author || message.author.bot)
 			return;
 
@@ -153,11 +165,6 @@ function onLogin() {
 				case manageApp.CHANNEL_ID:	
 					if(process.env.NODE_ENV !== 'dev')
 						return manageApp.handleMessage(message, bot);
-					break;
-
-				case '539421078116761600'://#bot-komendy
-					if(!message.author.bot)
-						setTimeout(() => message.delete(), 5000);//remove users messages after 5 secs
 					break;
 			}
 			return;
