@@ -7,6 +7,9 @@ import statusApp from './discord_status_app';
 import rulesApp from './discord_rules_app';
 import manageApp from './discord_servermng_app';
 
+// import Utils from './utils';
+// Utils.executeRconCommand('say POGCZAMP');
+
 var music = require("discord.js-musicbot-addon");
 
 var TOKEN: string | undefined;
@@ -123,7 +126,7 @@ function onLogin() {
 
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		statusApp.init(bot);
-	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		manageApp.init(bot);

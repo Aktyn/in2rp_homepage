@@ -28,7 +28,7 @@ $glowcolor: #00BCD4;
 
 .perspectiveHandler {
 	@media screen and (min-width: $max_w1) {
-		&, & *, & *::before, & *::after {
+		&.is_v8, &.is_v8 *, &.is_v8 *::before, &.is_v8 *::after {
 			transform-style: preserve-3d;
 			perspective: 1000px;
 		}

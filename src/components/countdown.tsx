@@ -74,7 +74,7 @@ export default class extends React.Component<CountdownProps, CountdownState> {
 
 		window.addEventListener('mousemove', this.onMouseMoved.bind(this));
 
-		this.running = !Utils.IS_MOBILE;
+		this.running = !Utils.IS_MOBILE && Utils.IS_V8;
 
 		var now = 0, dt = 0;
 		const smooth_factor = 10;
@@ -164,7 +164,7 @@ export default class extends React.Component<CountdownProps, CountdownState> {
 			return '';
 		}
 
-		return <div className='perspectiveHandler'>
+		return <div className={`perspectiveHandler ${Utils.IS_V8 ? 'is_v8' : ''}`}>
 			<div className='countdown_main'>
 				<div>
 					{this.state.rem_t.days > 0 && <>

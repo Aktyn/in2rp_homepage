@@ -22,6 +22,20 @@ export default {
 		return check;
 	})(),
 
+	IS_V8: (function() {
+		const v8string = 'function%20javaEnabled%28%29%20%7B%20%5Bnative%20code%5D%20%7D';
+
+		//@ts-ignore
+		if('WebkitAppearance' in document.documentElement.style) { //If (probably) WebKit browser
+		    if(escape(navigator.javaEnabled.toString()) === v8string)
+		        return true;//IS V8
+		    else
+		    	return false;//JSC engine
+		} 
+		else
+			return false;//not event a webkit browser
+	})(),
+
 	deepUriDecode: function(str: string) {
 		try {
 			return decodeURIComponent(str);

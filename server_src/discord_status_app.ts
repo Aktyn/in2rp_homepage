@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import LOG from './log';
 import Eclipse from './eclipse';
 
-const server_ip = '54.37.128.15:30120';
+const server_ip = '213.32.7.56:30120';//TODO - try localhost
 const id = '528694912162594827';//'526137746126012416';//channel id
 
 var target_channel: Discord.TextChannel | undefined;
