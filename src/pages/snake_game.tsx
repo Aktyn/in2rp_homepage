@@ -43,12 +43,13 @@ export default class SnakeGame extends React.Component<any, SnakeGameState> {
 
 	onGameOver() {
 		//stage two with discordbot
+		/*
 		var cookie_token = Cookies.getCookie('discord_token');
 		Utils.postRequest(
 			'snake_gameover', 
 			{token: cookie_token}
 		).catch();//ignore any errors here
-
+		*/
 	}
 
 	render() {

@@ -89,6 +89,7 @@ function isProperMessage(msg: string) {
 	return !msg.match(/(https?:\/\/|www\.).+\..+/gi);
 }
 
+//import Database from './database';//tmp
 function onLogin() {
 	console.log('Bot is running');
 
@@ -102,8 +103,23 @@ function onLogin() {
 	//537689969561567233
 	/*console.log(
 		//@ts-ignore
-		bot.channels.map(ch => {return {id: ch.id, name: ch.name}}).filter(a => a.name=='zaakceptowane-podania')
+		bot.channels.map(ch => {return {id: ch.id, name: <string>ch.name}})
+			.sort((a,b) => b.name.localeCompare(a.name))
 	);*/
+
+	/*setTimeout(() => {
+		
+		Database.customQuery("select discord_nick, discord_id from `Whitelist`.`requests` where status='accepted' order by timestamp").then(r => {
+			let ch2 = bot.channels.get('528960010420617216');
+				//ch2.send('wiadomość testowa').catch(console.error);
+			r.forEach((rr: any) => {
+				if(ch2 instanceof Discord.TextChannel)
+					ch2.send(`Podanie użytkownika <@${rr.discord_id}> zostało zaakceptowane.`);
+				console.log(`Podanie użytkownika ${decodeURI(rr.discord_nick)} zostało zaakceptowane.`);
+			});
+			console.log(r.length);
+		});
+	}, 5000);*/
 
 	//clear #bot-komendy channel
 	let ch = bot.channels.get('539421078116761600');
@@ -119,6 +135,8 @@ function onLogin() {
 		});
 	}
 
+	
+
 	//let embed = new Discord.RichEmbed().setColor('#26A69A').setTitle(`Zaćmienie za **${1337}** minut`);
 
 	guild = bot.guilds.find(g => g.id === '492333108679409674');//IN2RP guild id
@@ -126,7 +144,7 @@ function onLogin() {
 
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		statusApp.init(bot);
-	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		manageApp.init(bot);
