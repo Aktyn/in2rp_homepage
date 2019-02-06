@@ -3,7 +3,7 @@ import * as path from 'path';
 import discordAPI, {DiscordUserJSON} from './discord_api';
 
 export default {
-	RCON_CMD_BASE: path.join(__dirname, '..', 'tools', 'rcon') + ' 54.37.128.15 30120 ameryczkarp ',
+	RCON_CMD_BASE: path.join(__dirname, '..', 'tools', 'rcon') + ' 213.32.7.56 30120 ameryczkarp ',
 	SERVER_CMDS: {
 		'start': '/home/in2rp/start.sh',
 		'stop': '/home/in2rp/stop.sh',

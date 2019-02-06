@@ -5,7 +5,7 @@ import LOG from './log';
 
 const id = '528686772679606273';//'527950073322143794';//channel id
 
-const PERMITTED_ROLES = ['Developer', 'Właściciel', 'Administrator'];
+const PERMITTED_ROLES = ['Developer', 'Właściciel', 'Administrator', 'Moderacja'];
 
 //var target_channel: Discord.TextChannel | undefined;
 var MainMessage: Discord.Message | undefined;
