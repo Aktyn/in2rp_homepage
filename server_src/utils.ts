@@ -3,11 +3,18 @@ import * as path from 'path';
 import discordAPI, {DiscordUserJSON} from './discord_api';
 
 export default {
-	RCON_CMD_BASE: path.join(__dirname, '..', 'tools', 'rcon') + ' 213.32.7.56 30120 ameryczkarp ',
+	RCON_CMD_BASE: function(port = 30120) {
+		return path.join(__dirname, '..', 'tools', 'rcon') + ` 213.32.7.56 ${port} ameryczkarp `
+	},
 	SERVER_CMDS: {
 		'start': '/home/in2rp/start.sh',
 		'stop': '/home/in2rp/stop.sh',
 		'restart': '/home/in2rp/restart.sh'
+	},
+	SERVER_CMDS2: {
+		'start': '/home/in2rp/start2.sh',
+		'stop': '/home/in2rp/stop2.sh',
+		'restart': '/home/in2rp/restart2.sh'
 	},
 	executeCommand: function(cmd: string): Promise<string> {
 		return new Promise((resolve, reject) => {
@@ -36,7 +43,7 @@ export default {
 		});
 	},
 	executeRconCommand: function(cmd: string): Promise<string> {
-		return this.executeCommand(this.RCON_CMD_BASE + cmd);
+		return this.executeCommand(this.RCON_CMD_BASE() + cmd);
 	},
 
 	testForAdmin: async function(req: any, res: any): Promise<false | DiscordUserJSON> {

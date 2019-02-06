@@ -183,7 +183,8 @@ function onLogin() {
 					if(process.env.NODE_ENV !== 'dev')
 						return statusApp.handleMessage(message, bot);
 					break;
-				case manageApp.CHANNEL_ID:	
+				case manageApp.CHANNEL_ID:
+				case manageApp.CHANNEL_ID2:	
 					if(process.env.NODE_ENV !== 'dev')
 						return manageApp.handleMessage(message, bot);
 					break;

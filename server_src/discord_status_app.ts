@@ -4,7 +4,7 @@ import LOG from './log';
 import Eclipse from './eclipse';
 
 const server_ip = '213.32.7.56:30120';//TODO - try localhost
-const id = '528694912162594827';//'526137746126012416';//channel id
+const id = '528694912162594827';//channel id
 
 var target_channel: Discord.TextChannel | undefined;
 var MainMessage: Discord.Message | null = null;
