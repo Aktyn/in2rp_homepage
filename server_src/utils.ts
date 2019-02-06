@@ -53,5 +53,12 @@ export default {
 		}
 
 		return response;
+	},
+
+	extractIP: function(req: any) {
+		let forwards = req.headers['x-forwarded-for'];
+		if(typeof forwards === 'object')//an array
+			forwards = forwards[0];// forwards.join(',');
+		return (forwards || req.connection.remoteAddress || '').replace(/::ffff:/, '');
 	}
 };

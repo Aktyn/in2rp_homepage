@@ -5,6 +5,7 @@ import LOG from './log';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import Utils from './utils';
 // import discordBot from './discord_bot';
 
 const HOST = 'in2rp.pl';
@@ -151,10 +152,7 @@ export default {
 	
 	restore_session: async function(req: any, res: any) {
 		try {
-			let forwards = req.headers['x-forwarded-for'];
-			if(typeof forwards === 'object')
-				forwards = forwards.join(',');
-			var ip = (forwards || req.connection.remoteAddress || '').replace(/::ffff:/, '');
+			let ip = Utils.extractIP(req);
 
 			if(typeof req.body.token !== 'string') {
 				res.status(400);

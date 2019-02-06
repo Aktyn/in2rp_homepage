@@ -21,6 +21,7 @@ if(fs.existsSync( path.join(__dirname, '..', 'data') ) === false)
 import LOG from './log';
 
 import Database from './database';
+import Utils from './utils';
 
 //DISCORD
 import discordBot from './discord_bot';
@@ -88,10 +89,7 @@ app.post('/add_whitelist_player', commonAPI.add_whitelist_player);
 app.post('/remove_whitelist_player', commonAPI.remove_whitelist_player);
 
 app.post('/record_visit', (req, resp) => {
-	let forwards = req.headers['x-forwarded-for'];
-	if(typeof forwards === 'object')
-		forwards = forwards.join(',');
-	let ip = (forwards || req.connection.remoteAddress || '').replace(/::ffff:/, '');
+	let ip = Utils.extractIP(req);
 	LOG('guest session', ip);
 	Database.storeVisit(ip, req.headers['user-agent'] || null);
 });
