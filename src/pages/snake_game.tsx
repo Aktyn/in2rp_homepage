@@ -2,8 +2,8 @@ import * as React from 'react';
 import Content from './../components/content';
 
 import Snake from './../utils/snake';
-import Utils from './../utils/utils';
-import Cookies from './../utils/cookies';
+//import Utils from './../utils/utils';
+//import Cookies from './../utils/cookies';
 
 interface SnakeGameState {
 	resolution?: {w: number; h: number};
