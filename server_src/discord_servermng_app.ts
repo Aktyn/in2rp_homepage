@@ -6,7 +6,7 @@ import LOG from './log';
 const id = '528686772679606273';//channel id
 const id2 = '542828808252948480';//#zarzadzanie-serverem-test
 
-const PERMITTED_ROLES = ['Developer', 'Właściciel', 'Administrator', 'Moderacja', 'Mechanik'];
+const PERMITTED_ROLES = ['Developer', 'Właściciel', 'Administrator', 'Moderacja', 'Car Master'];
 
 var MainMessage: Discord.Message | undefined;
 var MainMessage2: Discord.Message | undefined;
