@@ -1,5 +1,5 @@
+import Utils from './utils';
 import * as MySQL from 'mysql';
-var prompt = require('prompt-sync')();
 
 const STATUS = {
     ERROR: 0,
@@ -10,71 +10,59 @@ const STATUS = {
 var status = STATUS.PENDING, fivem_status = STATUS.PENDING;
 var connection_callback: (() => void) | undefined = undefined;
 
-var mysql_login = process.env.npm_config_mysqllogin;
-if(!mysql_login) {
-	try {//ask user to type password in console
-		mysql_login = prompt('MySQL login: ');
-	}
-	catch(e) {
-		console.error(
-			'You must specify mysql login adding --mysqllogin=LOGIN to console npm command');
-		process.exit();
-	}
-}
+var connection: MySQL.Connection, fivem_connection: MySQL.Connection;
 
-var mysql_pass = process.env.npm_config_mysqlpass;
-if(!mysql_pass) {
-	try {//ask user to type password in console
-		mysql_pass = prompt('MySQL password: ');
-	}
-	catch(e) {
-		console.error(
-			'You must specify mysql password adding --mysqlpass=PASSWORD to console npm command');
-		process.exit();
-	}
-}
+setTimeout(() => {
+	var mysql_login = Utils.getArgument('MYSQL_LOGIN');
+	//process.env.npm_config_mysqllogin || Utils.inputPrompt('MySQL login', 
+		//'You must specify mysql login adding --mysqllogin=LOGIN to console npm command');
 
-var connection = MySQL.createConnection({
-	host: "localhost",
-	user: String(mysql_login),
-	password: String(mysql_pass),
-	database: "Whitelist"
+	var mysql_pass = Utils.getArgument('MYSQL_PASS');
+	//process.env.npm_config_mysqlpass || Utils.inputPrompt('MySQL password', 
+		//'You must specify mysql password adding --mysqlpass=PASSWORD to console npm command');
+
+	connection = MySQL.createConnection({
+		host: "localhost",
+		user: String(mysql_login),
+		password: String(mysql_pass),
+		database: "Whitelist"
+	});
+
+	fivem_connection = MySQL.createConnection({
+		host: "localhost",
+		user: String(mysql_login),
+		password: String(mysql_pass),
+		database: "admin_in2rp"
+	});
+
+	connection.connect((err) => {
+		if(err) {
+			console.error('Error while connecting to MySQL database: ' + err.stack);
+			status = STATUS.ERROR;
+			return;
+		}
+		status = STATUS.SUCCESS;
+		console.log('MySQL connection established');
+
+		if(typeof connection_callback === 'function')
+			connection_callback();
+	});
+
+	fivem_connection.connect((err) => {
+		if(err) {
+			console.error('Error while connecting to MySQL fivem database: ' + err.stack);
+			fivem_status = STATUS.ERROR;
+			return;
+		}
+		fivem_status = STATUS.SUCCESS;
+		console.log('MySQL connection established (fivem)');
+
+		if(typeof connection_callback === 'function')
+			connection_callback();
+	});
 });
 
-var fivem_connection = MySQL.createConnection({
-	host: "localhost",
-	user: String(mysql_login),
-	password: String(mysql_pass),
-	database: "admin_in2rp"
-});
-
-connection.connect((err) => {
-	if(err) {
-		console.error('Error while connecting to MySQL database: ' + err.stack);
-		status = STATUS.ERROR;
-		return;
-	}
-	status = STATUS.SUCCESS;
-	console.log('MySQL connection established');
-
-	if(typeof connection_callback === 'function')
-		connection_callback();
-});
-
-fivem_connection.connect((err) => {
-	if(err) {
-		console.error('Error while connecting to MySQL fivem database: ' + err.stack);
-		fivem_status = STATUS.ERROR;
-		return;
-	}
-	fivem_status = STATUS.SUCCESS;
-	console.log('MySQL connection established (fivem)');
-
-	if(typeof connection_callback === 'function')
-		connection_callback();
-});
-
-const Utils = {
+const UtilsDB = {
 	maxLengths: {
 		'ic_historia': 			8192,
 		'ic_imie_nazwisko': 	128,
@@ -106,7 +94,7 @@ interface DiscordUserJSON {
 }
 
 const self = {
-	QUESTIONS: Utils.QUESTIONS,
+	QUESTIONS: UtilsDB.QUESTIONS,
 
 	onConnected: function(callback: () => void) {
 		if(status === STATUS.SUCCESS)
@@ -140,8 +128,8 @@ const self = {
 			  	`discord_nick` VARCHAR(128) NOT NULL,\
 			  	`discord_discriminator` INT(6) NOT NULL,\
 			  	`discord_id` VARCHAR(32) NOT NULL," + 
-			  	Object.keys(Utils.QUESTIONS).map(q => {
-			  		return "`" + q + "` " + Utils.QUESTIONS[q] + " NULL, ";
+			  	Object.keys(UtilsDB.QUESTIONS).map(q => {
+			  		return "`" + q + "` " + UtilsDB.QUESTIONS[q] + " NULL, ";
 			  	}).join('') +
 		  		"PRIMARY KEY (`id`),\
 		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
@@ -175,7 +163,7 @@ const self = {
 		}).join(', ');
 		var column_values = answer_keys.map(key => {
 			let val = encodeURIComponent(answers[key]).replace(/'/gi, "\\'")
-				.substr(0, Utils.maxLengths[key] || 8192);
+				.substr(0, UtilsDB.maxLengths[key] || 8192);
 			if(key === 'ic_wiek')
 				return val || 0;
 			return "'" + val + "'";

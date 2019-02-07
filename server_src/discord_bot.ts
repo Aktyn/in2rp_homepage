@@ -1,5 +1,6 @@
 import * as Discord from 'discord.js';
 import LOG from './log';
+import Utils from './utils';
 
 import Hangman from './hangman';
 import todoApp from './discord_todo_app';
@@ -12,16 +13,16 @@ import manageApp from './discord_servermng_app';
 
 var music = require("discord.js-musicbot-addon");
 
-var TOKEN: string | undefined;
-var YOUTUBE_API_KEY: string | undefined;
+var TOKEN = Utils.getArgument('TOKEN');
+var YOUTUBE_API_KEY = Utils.getArgument('YOUTUBE_API_KEY');
 var started = false;
 
-process.argv.forEach((val: string) => {
+/*process.argv.forEach((val: string) => {
 	if(val.startsWith('TOKEN='))
 		TOKEN = val.replace('TOKEN=', '');
 	else if(val.startsWith('YOUTUBE_API_KEY='))
 		YOUTUBE_API_KEY = val.replace('YOUTUBE_API_KEY=', '');
-});
+});*/
 
 if(!TOKEN)
 	throw new Error('You must specify bot TOKEN as argument: TOKEN=SECRET_TOKEN');
@@ -107,20 +108,6 @@ function onLogin() {
 			.sort((a,b) => b.name.localeCompare(a.name))
 	);*/
 
-	/*setTimeout(() => {
-		
-		Database.customQuery("select discord_nick, discord_id from `Whitelist`.`requests` where status='accepted' order by timestamp").then(r => {
-			let ch2 = bot.channels.get('528960010420617216');
-				//ch2.send('wiadomość testowa').catch(console.error);
-			r.forEach((rr: any) => {
-				if(ch2 instanceof Discord.TextChannel)
-					ch2.send(`Podanie użytkownika <@${rr.discord_id}> zostało zaakceptowane.`);
-				console.log(`Podanie użytkownika ${decodeURI(rr.discord_nick)} zostało zaakceptowane.`);
-			});
-			console.log(r.length);
-		});
-	}, 5000);*/
-
 	//clear #bot-komendy channel
 	let ch = bot.channels.get('539421078116761600');
 	if(ch instanceof Discord.TextChannel) {
@@ -134,8 +121,6 @@ function onLogin() {
 			});
 		});
 	}
-
-	
 
 	//let embed = new Discord.RichEmbed().setColor('#26A69A').setTitle(`Zaćmienie za **${1337}** minut`);
 

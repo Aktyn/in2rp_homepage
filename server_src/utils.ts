@@ -1,10 +1,45 @@
 import {spawn} from 'child_process';
 import * as path from 'path';
 import discordAPI, {DiscordUserJSON} from './discord_api';
+var prompt = require('prompt-sync')();
 
-export default {
+var RCON_PASSWORD: string;
+
+const Utils = {
+	/*inputPrompt: function(label: string, error_msg: string) {
+		try {//ask user to type password in console
+			return prompt(label + ': ') || '';
+		}
+		catch(e) {
+			console.error(error_msg);
+			process.exit();
+			return '';
+		}
+	},*/
+	getArgument: function(name: string) {
+		/*process.argv.forEach((val) => {//TODO - make this as function in Utils
+			if(val.startsWith('CLIENT_ID'))
+				CLIENT_ID = val.replace('CLIENT_ID=', '');
+			else if(val.startsWith('SECRET_KEY'))
+				SECRET_KEY = val.replace('SECRET_KEY=', '');
+		});*/
+
+		for(var arg of process.argv) {
+			if(arg.startsWith(name))
+				return arg.replace(name, '').substring(1);
+		}
+
+		try {//ask user to type password in console
+			return prompt(name + ': ') || '';
+		}
+		catch(e) {
+			console.error(`Argument ${name} not found. Closing program.`);
+			process.exit();
+			return '';
+		}
+	},
 	RCON_CMD_BASE: function(port = 30120) {
-		return path.join(__dirname, '..', 'tools', 'rcon') + ` 213.32.7.56 ${port} ameryczkarp `
+		return path.join(__dirname, '..', 'tools', 'rcon') + ` 213.32.7.56 ${port} ${RCON_PASSWORD} `
 	},
 	SERVER_CMDS: {
 		'start': '/home/in2rp/start.sh',
@@ -71,3 +106,7 @@ export default {
 		return (forwards || req.connection.remoteAddress || '').replace(/::ffff:/, '');
 	}
 };
+
+RCON_PASSWORD = Utils.getArgument('RCON');
+
+export default Utils;

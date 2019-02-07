@@ -1,3 +1,4 @@
+import Utils from './utils';
 import fetch from 'node-fetch';
 import Database from './database';
 const btoa = require('btoa');
@@ -5,13 +6,21 @@ import LOG from './log';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import Utils from './utils';
 // import discordBot from './discord_bot';
 
 const HOST = 'in2rp.pl';
 
-var CLIENT_ID: string | null = null;
-var SECRET_KEY: string | null = null;
+var CLIENT_ID: string, SECRET_KEY: string;
+
+setTimeout(() => {
+	CLIENT_ID = Utils.getArgument('CLIENT_ID');
+	SECRET_KEY = Utils.getArgument('SECRET_KEY');
+
+	if(!SECRET_KEY || !SECRET_KEY.length)
+		throw new Error('You must specify bot SECRET_KEY as argument: SECRET_KEY=VALUE');
+	if(!CLIENT_ID || !CLIENT_ID.length)
+		throw new Error('You must specify bot CLIENT_ID as argument: CLIENT_ID=VALUE');
+});
 
 //var admins: string[] = [];//discord account ids
 const admin_list_file_path = path.join(__dirname, '..', 'data', 'admins');
@@ -51,17 +60,12 @@ const ADMINS = {
 
 ADMINS.load();
 
-process.argv.forEach((val) => {
+/*process.argv.forEach((val) => {
 	if(val.startsWith('CLIENT_ID'))
 		CLIENT_ID = val.replace('CLIENT_ID=', '');
 	else if(val.startsWith('SECRET_KEY'))
 		SECRET_KEY = val.replace('SECRET_KEY=', '');
-});
-
-if(!SECRET_KEY)
-	throw new Error('You must specify bot SECRET_KEY as argument: SECRET_KEY=VALUE');
-if(!CLIENT_ID)
-	throw new Error('You must specify bot CLIENT_ID as argument: CLIENT_ID=VALUE');
+});*/
 
 var redirect: string;
 var client_port: number;

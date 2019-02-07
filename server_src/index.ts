@@ -7,6 +7,7 @@ declare global {
 }
 global.PORT = 1234;
 
+import Utils from './utils';
 import * as express from 'express';
 const cacheControl = require('express-cache-controller');
 import * as bodyParser from 'body-parser';
@@ -21,7 +22,6 @@ if(fs.existsSync( path.join(__dirname, '..', 'data') ) === false)
 import LOG from './log';
 
 import Database from './database';
-import Utils from './utils';
 
 //DISCORD
 import discordBot from './discord_bot';
