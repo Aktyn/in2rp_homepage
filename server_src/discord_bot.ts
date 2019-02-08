@@ -149,13 +149,13 @@ function onLogin() {
 
 		if(message.channel instanceof Discord.TextChannel) {//non private message
 			if(!isProperMessage(message.content)) {
-				console.log('removing:', message.content);
+				console.log('removing link:', message.content);
 				message.delete().catch(console.error);
 			}
 
 			if(message.content.indexOf('@everybody') !== -1) {
 				if( message.channel.guild.roles.find(r=>r.name==='@everyone') )
-					message.channel.send('@everyone');
+					message.channel.send('@everyone').then(() => message.delete()).catch(console.log);
 			}
 
 			switch(message.channel.id) {

@@ -225,6 +225,11 @@ const self = {
 			ORDER BY day ASC LIMIT 366;");
 	},
 
+	addWhitelistPlayer: function(steamhex: string) {
+		return this.customQuery(`INSERT IGNORE INTO admin_in2rp.whitelist (identifier) 
+			VALUES ('steam:${steamhex}');`);
+	},
+
 	getWhitelistPlayers: function() {
 		return this.customQuery("SELECT users.id, whitelist.identifier, users.name, users.firstname,\
 			    users.lastname, users.phone_number, CONCAT(users.money, ' + ', users.bank) AS 'money',\

@@ -231,7 +231,7 @@ export default {
 			let admin_user = await Utils.testForAdmin(req, res);
 			if(false === admin_user)
 				return;
-
+			console.log(req.body);
 			if(!req.body.steamid)
 				return res.json({result: 'ERROR'});
 			
@@ -240,11 +240,17 @@ export default {
 			
 
 			//executing wladd_r command on rcon
-			let add_response = await Utils.executeRconCommand(`wladd_r ${steam_hex}`);
-			await Utils.executeRconCommand('wlrefresh_r');
+			//let add_response = await Utils.executeRconCommand(`wladd_r ${steam_hex}`);
+			
+			//TODO - check of existing row before adding
+			let add_response = await Database.addWhitelistPlayer(steam_hex);
+
+			if(process.env.NODE_ENV !== 'dev')
+				await Utils.executeRconCommand('wlrefresh_r');
 
 			LOG('User', admin_user.username, admin_user.id, 'added steamid:', req.body.steamid,
-				'to in2rp whitelist with results:', add_response);
+				'to in2rp whitelist with results:', add_response.affectedRows);
+
 
 			let discord_user = await Database.getDiscordUserFromRequest(req.body.steamid);
 			//console.log(discord_user);
@@ -270,6 +276,11 @@ export default {
 						discordBot.sendPrivateMessage(dis_id, 'Witaj.\nOtrzymałeś(-aś) właśnie rangę Obywatela.\nMożesz teraz rozpocząć grę na naszym serwerze.\nW razie problemów prosimy o kontakt z administracją.');
 					}
 					catch(e) {}
+
+					setTimeout(() => {
+						//try again becouse discord stucks sometimes
+						discordBot.changeUserRole(dis_id, 'Obywatel', false);
+					}, 1000*5);
 				}
 				else
 					discord_result = 'ERRRRROR';
