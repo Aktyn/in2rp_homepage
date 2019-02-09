@@ -119,6 +119,10 @@ $max_w2: 640px;
     padding: 0px;
 }
 
+.whitelist_admin_main .user_wl_focused h1 > .nick {
+	max-width: auto;
+}
+
 .whitelist_admin_main h1 > .age {
 	grid-area: age;
 	// justify-self: right;

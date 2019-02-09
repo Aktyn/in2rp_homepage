@@ -120,6 +120,23 @@ function onLogin() {
 					//msg.delete();
 			});
 		});
+
+		//tests
+		/*let embed = new Discord.RichEmbed().setColor('#26A69A')
+			.setImage('http://in2rp.pl/static/img/favicon.png');
+		ch.send(embed).then(msg => {
+        	let i = 0;
+        	
+        	setInterval(() => {
+        		if(msg instanceof Discord.Message) {
+        			let embed2 = new Discord.RichEmbed().setColor('#26A69A')
+        				.setImage(`http://in2rp.pl/static/img/bg_blur${i++}.jpg`);
+        			msg.edit(embed2).catch(console.error);
+        			if(i===3)
+        				i=0;
+        		}
+        	}, 5000);
+        }).catch(console.error);*/
 	}
 
 	//let embed = new Discord.RichEmbed().setColor('#26A69A').setTitle(`Zaćmienie za **${1337}** minut`);

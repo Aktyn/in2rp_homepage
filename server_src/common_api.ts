@@ -231,7 +231,7 @@ export default {
 			let admin_user = await Utils.testForAdmin(req, res);
 			if(false === admin_user)
 				return;
-			console.log(req.body);
+			
 			if(!req.body.steamid)
 				return res.json({result: 'ERROR'});
 			

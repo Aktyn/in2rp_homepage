@@ -32,14 +32,16 @@ function loadServerInfo() {
 //Eclipse.start(6);
 
 function generateMessage(data: MessageSchema) {
-	if(data.online === false)
-		return 'Serwer offline :dizzy_face:';
+	var embed = new Discord.RichEmbed().setColor('#ff5555');
+	if(data.online === false) {
+		embed.setTitle('Serwer offline :dizzy_face:');
+		return embed; 
+	}
+	//'Serwer offline :dizzy_face:';
 
 	let time_to_premiere = Math.max(0, new Date(2019, 2-1, 15, 18, 0, 0).getTime() - Date.now());
 
-	var embed = new Discord.RichEmbed()
-		.setColor('#ff5555')
-		.addField((process.env.NODE_ENV === 'dev' ? '[dev] ' : '') + 'Gracze online', 
+	embed.addField((process.env.NODE_ENV === 'dev' ? '[dev] ' : '') + 'Gracze online', 
 			`**${data.players_online.length}** / **${ServerInfo.max_players}**\n${data.players_online.join(data.players_online.length < 10 ? '\n' : ', ')}`);
 
 	let et_s = Eclipse.getTimeToEclipse();
