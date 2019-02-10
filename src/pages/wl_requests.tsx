@@ -316,8 +316,8 @@ export default class extends React.Component<any, WlRequestsState> {
 				this.state.current_cat === CATEGORIES.PENDING ? '#42A5F5' : 
 					(this.state.current_cat === CATEGORIES.ACCEPTED ? '#8BC34A' : '#ef5350')
 			)}
-			<div>{this.state.focused.previous_attempts && this.state.focused.previous_attempts > 0 &&
-				`Ilość poprzednich podań: ${this.state.focused.previous_attempts}`}</div>
+			<div>{(this.state.focused.previous_attempts && this.state.focused.previous_attempts > 0) ?
+				`Ilość poprzednich podań: ${this.state.focused.previous_attempts}` : ''}</div>
 			<div className='QandA'>
 				<h4>INFORMACJE OOC</h4>
 				{this.renderBlockOfAnswers(Config.WHITELIST_QUESTIONS.OOC, 'ooc_')}
