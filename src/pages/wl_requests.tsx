@@ -23,8 +23,10 @@ interface WlRequestDataJSON {
 	nick: string;
 	timestamp: string;
 	ic_historia: string;
+	accepted_rules?: boolean;
+	previous_attempts?: number;
 
-	[index: string]: string | number;
+	[index: string]: string | number | boolean | undefined;
 }
 
 interface PlagiarismMatchSchema {
@@ -306,9 +308,6 @@ export default class extends React.Component<any, WlRequestsState> {
 
 		//console.log(this.state.focused);
 
-		//const q_data = Config.WHITELIST_QUESTIONS.OOC;//TODO - separate for both blocks
-		//console.log(this.state.focused);
-
 		return <div className='user_wl_focused'>
 			{this.renderDataHeader(
 				this.state.focused, 
@@ -317,12 +316,16 @@ export default class extends React.Component<any, WlRequestsState> {
 				this.state.current_cat === CATEGORIES.PENDING ? '#42A5F5' : 
 					(this.state.current_cat === CATEGORIES.ACCEPTED ? '#8BC34A' : '#ef5350')
 			)}
+			<div>{this.state.focused.previous_attempts && 
+				`Ilość poprzednich podań: ${this.state.focused.previous_attempts}`}</div>
 			<div className='QandA'>
 				<h4>INFORMACJE OOC</h4>
 				{this.renderBlockOfAnswers(Config.WHITELIST_QUESTIONS.OOC, 'ooc_')}
 				<h4>INFORMACJE IC</h4>
 				{this.renderBlockOfAnswers(Config.WHITELIST_QUESTIONS.IC, 'ic_')}
 			</div>
+			<div>{this.state.focused.accepted_rules === false && 
+				'Indywiduum nie zaakceptowało regulaminu!!!'}</div>
 			<div className='control_buttons'>
 				{this.state.current_cat !== CATEGORIES.ACCEPTED && 
 					<button className='clean accept' 

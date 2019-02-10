@@ -88,17 +88,12 @@ export default {
 			res.json({result: 'SUCCESS', status: 'nothing'});
 	},
 
-	async applicants_request(req: any, res: any) {
-		if(false === await Utils.testForAdmin(req, res))
+	async applicants_request(req: any, response: any) {
+		if(false === await Utils.testForAdmin(req, response))
 			return;
 		
 		if(req.body.requested_status !== 'accepted' && req.body.requested_status !== 'rejected')
 			req.body.requested_status = 'pending';
-
-		var select_res = await Database.getRequests(req.body.requested_status);
-
-		//console.log(select_res);
-		// console.log(req.body);
 
 		interface WL_APP_DATA_SCHEMA {
 			id: number;
@@ -106,19 +101,45 @@ export default {
 			nick: string;
 			discriminator: number;
 			data_ur: string;
+			accepted_rules?: boolean;
+			previous_attempts?: number;
 
 			[index: string]: any;
 		}
 
+		var select_res: WL_APP_DATA_SCHEMA[] = await Database.getRequests(req.body.requested_status);
+
 		var data: WL_APP_DATA_SCHEMA[] = [];
 
-		select_res.forEach((res: WL_APP_DATA_SCHEMA) => {
+		for(var res of select_res) {
+			var has_rules_accepted, total_attempts;
+			if(req.body.requested_status === 'pending' && res.discord_id) {
+				//check discord user roles
+				try {
+					let d_user = await discordBot.getClient().fetchUser(res.discord_id);
+					let member = await discordBot.getGuild().fetchMember(d_user);
+					has_rules_accepted = !!member.roles.find(r => r.name==='Użytkownik');
+				}
+				catch(e) {
+					console.error(e);
+				}
+
+				//count previous attempts
+				let total_user_request = await Database.customQuery(`SELECT COUNT(id) AS 'count' 
+					FROM Whitelist.requests WHERE discord_id = '${res.discord_id}';`);
+				if(total_user_request.length > 0)
+					total_attempts = total_user_request[0].count;
+				//console.log(total_attempts);
+			}
+
 			var wl_app_data: WL_APP_DATA_SCHEMA = {
 				id: res.id,
 				timestamp: res.timestamp,
 				nick: res.discord_nick,
 				discriminator: res.discord_discriminator,
 				data_ur: res.data_ur,
+				accepted_rules: has_rules_accepted,
+				previous_attempts: total_attempts-1
 			};
 
 			Object.keys(Database.QUESTIONS).map(qn => {
@@ -126,9 +147,9 @@ export default {
 			});
 
 			data.push(wl_app_data);
-		});
+		}
 
-		res.json({result: 'SUCCESS', data: data});
+		response.json({result: 'SUCCESS', data: data});
 	},
 
 	async update_request(req: any, res: any) {
