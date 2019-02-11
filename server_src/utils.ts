@@ -61,7 +61,7 @@ const Utils = {
 			setTimeout(() => {
 				expired = true;
 				reject('Command timeout');
-			}, 1000*60*5);//timeout after 1 minute
+			}, 1000*60);//timeout after 1 minute
 
 			try {
 				let args = cmd.split(' ');
