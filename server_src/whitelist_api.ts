@@ -175,22 +175,22 @@ export default {
 		setTimeout(async () => {//asynchronosly deal with discord bot sending message to user
 			if(false === response)
 				return;
-			var target_discord_user = await Database.getUserDiscordID(req.body.id);
+			var target_user = await Database.getUserDiscordID(req.body.id);
 
 			var new_status;
 			if(req.body.requested_status === 'accepted') {
-				new_status = `zaakceptowane. Zapraszamy na rozmowę, w której sprawdzimy twoją znajomość regulaminu. <#528681859882811421>`;
+				new_status = `zaakceptowane. Zapraszamy na rozmowę, w której sprawdzimy twoją znajomość regulaminu.`;// <#528681859882811421>
 			}
 			else if(req.body.requested_status === 'rejected')
 				new_status = 'odrzucone.';
 			else
 				return;
 
-			if(target_discord_user.length > 0) {
+			if(target_user.length > 0) {
 				try {
-					let user_id = target_discord_user[0].discord_id;
+					let user_id = target_user[0].discord_id;
 					LOG('User', response.username, response.id, 'changed whitelist request status to',
-						req.body.requested_status, 'for user', target_discord_user[0].discord_nick, user_id);
+						req.body.requested_status, 'for user', target_user[0].discord_nick, user_id);
 					discordBot.sendPrivateMessage(user_id,
 						`Witaj. Twoje podanie o whiteliste zostało właśnie ${new_status}`);
 
@@ -199,11 +199,12 @@ export default {
 
 						//#zaakceptowane-podania
 						discordBot.sendChannelMessage('528960010420617216', //528960010420617216
-							`Podanie użytkownika <@${user_id}> zostało zaakceptowane.`);
+							`@${target_user[0].discord_nick}#${target_user[0].discord_discriminator}`);
+							//`Podanie użytkownika <@${user_id}> zostało zaakceptowane.`);
 					}
 				}
 				catch(e) {
-					console.log('Cannot send private message to', target_discord_user[0].discord_id);
+					console.log('Cannot send private message to', target_user[0].discord_id);
 				}
 			}
 		});

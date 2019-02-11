@@ -198,7 +198,7 @@ const self = {
 	},
 
 	getUserDiscordID: function(id: number) {
-		return this.customQuery("SELECT discord_id, discord_nick FROM requests WHERE id=" + id + ";");
+		return this.customQuery("SELECT discord_id, discord_nick, discord_discriminator FROM requests WHERE id=" + id + ";");
 	},
 
 	storeVisit: function(ip: string, user_agent: string | null, user?: string) {
