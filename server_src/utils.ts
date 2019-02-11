@@ -56,6 +56,13 @@ const Utils = {
 			var stdout = '';
 			var stderr = '';
 
+			var expired = false;
+
+			setTimeout(() => {
+				expired = true;
+				reject('Command timeout');
+			}, 1000*60*5);//timeout after 1 minute
+
 			try {
 				let args = cmd.split(' ');
 				let main_cmd = args.shift() || 'echo';
@@ -63,17 +70,20 @@ const Utils = {
 				command.stdout.on('data', (data: string) => stdout += data);
 				command.stderr.on('data', (data: string) => stderr += data);
 				command.on('close', (code: number) => {
+					if(expired) return;
 				  	if(code === 0)
 				  		resolve(stdout);
 				  	else
 				  		reject(stderr);
 				});
 				command.on('error', (err: any) => {
-				  	reject(err);
+					if(!expired)
+				  		reject(err);
 				});
 			}
 			catch(e) {
-				reject(e);
+				if(!expired)
+					reject(e);
 			}
 		});
 	},
