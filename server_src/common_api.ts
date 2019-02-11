@@ -266,8 +266,8 @@ export default {
 
 				//add discord user role
 
-				if(discordBot.changeUserRole(dis_id, 'Obywatel', false) &&
-					discordBot.changeUserRole(dis_id, 'Rozmowa kwalifikacyjna', true) )
+				if( (await discordBot.changeUserRoleAsync(dis_id, 'Obywatel')) &&
+					(await discordBot.changeUserRole(dis_id, 'Rozmowa kwalifikacyjna', true)) )
 				{
 					discord_result = 
 						`${discord_user[0].discord_nick}#${discord_user[0].discord_discriminator}`;
@@ -279,8 +279,8 @@ export default {
 
 					setTimeout(() => {
 						//try again becouse discord stucks sometimes
-						discordBot.changeUserRole(dis_id, 'Obywatel', false);
-					}, 1000*5);
+						discordBot.changeUserRoleAsync(dis_id, 'Obywatel');
+					}, 1000*15);
 				}
 				else
 					discord_result = 'ERRRRROR';

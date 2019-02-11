@@ -122,7 +122,7 @@ function onLogin() {
 					//msg.delete();
 			});
 		});
-		
+
 		//tests
 		/*let embed = new Discord.RichEmbed().setColor('#26A69A')
 			.setImage('http://in2rp.pl/static/img/favicon.png');
@@ -327,6 +327,7 @@ export default {
 		return undefined;
 	},
 
+	//deprecated
 	changeUserRole: function(user_id: string, role_name: string, remove_role = false) {
 		if(!started || !guild)
 			return false;
@@ -336,6 +337,31 @@ export default {
 				throw new Error("Cannot find member with id: " + user_id);
 			guild.roles.some(rl => {
 				if(rl.name === role_name && member) {
+					if(remove_role === true && member.roles.some(rl => rl.name === role_name))
+						member.removeRoles([rl]).catch(console.error);
+					if(remove_role === false && !member.roles.some(rl => rl.name === role_name))
+						member.addRoles([rl]).catch(console.error);
+					return true;
+				}
+				return false;
+			});
+			return true;
+		}
+		catch(e) {
+			console.log('Cannot set user role:', e);
+			return false;
+		}
+	},
+
+	changeUserRoleAsync: async function(user_id: string, role_name: string, remove_role = false) {
+		if(!started || !guild)
+			return false;
+		try {
+			let user = await guild.client.fetchUser(user_id);
+			let member = await guild.fetchMember(user);
+
+			guild.roles.some(rl => {
+				if(rl.name === role_name) {
 					if(remove_role === true && member.roles.some(rl => rl.name === role_name))
 						member.removeRoles([rl]).catch(console.error);
 					if(remove_role === false && !member.roles.some(rl => rl.name === role_name))
