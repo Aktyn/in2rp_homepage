@@ -27,6 +27,10 @@ import Database from './database';
 import discordBot from './discord_bot';
 discordBot.start();
 
+/*setTimeout(() => {
+	discordBot.changeUserRole('204639827193364492', 'Obywatel', true);
+}, 5000);*/
+
 // console.log('ENV:', process.env.NODE_ENV);
 
 var allowCrossDomain = function(req: any, res: any, next: any) {
