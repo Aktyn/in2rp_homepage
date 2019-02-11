@@ -27,7 +27,7 @@ function generateMessage(data: MessageSchema) {
 			return `${i+1}: ${tu|0}%`;
 		}).join('\n'))
 		.addField('Zużycie RAM (GB)', 
-			`${(mem_u/mem_t)*100|0}% (${(mem_u/1000).toFixed(1)}/${(mem_t/1000).toFixed(1)})`)
+			`${(mem_u/mem_t)*100|0}% (${(mem_u/1024).toFixed(1)}/${(mem_t/1024).toFixed(1)})`)
 		.addField('Obciążenie sieci', 
 			`Download: ${data.downloadMb} Mb/s\nUpload: ${data.uploadMb} Mb/s`)
 		.addField('Ostatnia aktualizacja', new Date().toLocaleTimeString('en-US', {hour12: false}))
@@ -38,8 +38,13 @@ function generateMessage(data: MessageSchema) {
 async function startRefreshing(msg: Discord.Message) {
 	 
 	let proc_info = await os.proc.totalProcesses();
-	let mem_info = await os.mem.info();
+	//let mem_info = await os.mem.info();
 	let net_info = await os.netstat.inOut();
+
+	let mem_info = {
+		free: _os.freemem(), 
+		total: _os.totalmem()
+	};
 
 	var cpus = _os.cpus();
 
@@ -53,8 +58,8 @@ async function startRefreshing(msg: Discord.Message) {
 	var data: MessageSchema = {
 		process_count: proc_info,
 		thread_usage: threads,
-		used_memory: mem_info.usedMemMb,
-		total_memory: mem_info.totalMemMb,
+		used_memory: (mem_info.total - mem_info.free)/1024/1024,//mem_info.usedMemMb,
+		total_memory: mem_info.total/1024/1024,//mem_info.totalMemMb,
 		downloadMb: net_info.total.inputMb,
 		uploadMb: net_info.total.outputMb
 	};
