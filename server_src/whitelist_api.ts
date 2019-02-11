@@ -199,7 +199,7 @@ export default {
 
 						//#zaakceptowane-podania
 						discordBot.sendChannelMessage('528960010420617216', //528960010420617216
-							`@${target_user[0].discord_nick}#${target_user[0].discord_discriminator}`);
+							`<@${user_id}>`);
 							//`Podanie użytkownika <@${user_id}> zostało zaakceptowane.`);
 					}
 				}

@@ -122,7 +122,7 @@ function onLogin() {
 					//msg.delete();
 			});
 		});
-
+		
 		//tests
 		/*let embed = new Discord.RichEmbed().setColor('#26A69A')
 			.setImage('http://in2rp.pl/static/img/favicon.png');
