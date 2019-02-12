@@ -32,21 +32,41 @@ var bot = new Discord.Client();
 var guild: Discord.Guild | null = null;
 
 // console.log(YOUTUBE_API_KEY, music);
-music.start(bot, {
-	youtubeKey: YOUTUBE_API_KEY,
-	anyoneCanSkip: true,
-	logging: false,
-	defVolume: 20,
-	messageNewSong: false,
-	requesterName: false,
-	ownerOverMember: true,
-  	ownerID: '204639827193364492',
-  	botAdmins: ['204639827193364492'],
-  	channelWhitelist: ['539421078116761600']//bot-komendy
-});
+if(process.env.NODE_ENV !== 'dev') {
+	music.start(bot, {
+		youtubeKey: YOUTUBE_API_KEY,
+		anyoneCanSkip: true,
+		anyoneCanLeave: true,
+		logging: false,
+		defVolume: 20,
+		messageNewSong: false,
+		requesterName: false,
+		ownerOverMember: true,
+	  	ownerID: '204639827193364492',
+	  	botAdmins: ['204639827193364492'],
+	  	channelWhitelist: ['539421078116761600']//bot-komendy
+	});
+}
 
 bot.on('messageReactionAdd', rulesApp.onReactionAdded);
 bot.on('messageReactionRemove', rulesApp.onReactionRemoved);
+
+bot.on('guildMemberAdd', member => {
+	if(process.env.NODE_ENV === 'dev')
+		return;
+	let new_member_id = member.id;
+
+	setTimeout(() => {
+		if(!guild)
+			return;
+		guild.fetchMember(new_member_id).then(m => {
+			if(m.roles.some(r => r.name === 'Użytkownik'))
+				return;
+			m.user.send('Witaj.\nPięć minut temu moje czujniki wykryły, że jesteś nowym użytkownikiem na naszym serwerze IN2RP.\nNiestety do tej pory nie zaakceptowałeś regulaminu, więc większości kanałów jest dla ciebie niedostępna.\nMożesz to w każdej chwili zmienić klikając :white_check_mark: pod regulaminem na kanale: <#528678812507045898>.');
+		}).catch(()=>{});//ignore errors
+		
+	}, 1000*60*5);
+});
 
 interface GameSchema {
 	id: string;
@@ -148,7 +168,7 @@ function onLogin() {
 
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		statusApp.init(bot);
-	//if(process.env.NODE_ENV !== 'dev')
+	if(process.env.NODE_ENV !== 'dev')
 		usageApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);

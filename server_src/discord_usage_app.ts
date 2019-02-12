@@ -5,7 +5,7 @@ import {spawnSync} from 'child_process';
 
 const id = '544241564071755777';//channel id
 
-const MAX_INTERVAL = 30;
+const MAX_INTERVAL = 600;
 const MIN_INTERVAL = 1;
 var INTERVAL = 60;//default value
 

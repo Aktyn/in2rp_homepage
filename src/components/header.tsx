@@ -10,6 +10,14 @@ import './../styles/header.scss';
 
 import Discord from './discord_session';
 
+const MENU_LINKS = [
+	{name: 'STRONA GŁÓWNA', href: '/', icon: require(`../img/home.svg`)},
+	{name: 'FORUM', href: '/forum', icon: require(`../img/forum_icon.png`)},
+	{name: 'WHITELISTA', href: '/wl', icon: require(`../img/whitelist_icon.png`)},
+	{name: 'REGULAMIN', href: '/rules', icon: require(`../img/rules_icon.png`)},
+	{name: 'GALERIA', href: '/gallery', icon: require(`../img/gallery_icon.svg`)}
+];
+
 interface HeaderProps extends RouteComponentProps {
 	type: string;//small, large
 }
@@ -22,6 +30,7 @@ interface ServerData {
 interface HeaderState {
 	server_data?: ServerData;
 	list_open: boolean;
+	menu_open: boolean;
 }
 
 const MAX_LIST_ITEMS = 7;
@@ -40,8 +49,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
 	state: HeaderState = {
 		server_data: undefined,
-		list_open: false
+		list_open: false,
+		menu_open: true//tmp
 	}
+
+	private saved_online_players_count = 0;
 
 	private blobs: JSX.Element[] = [];
 
@@ -67,10 +79,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 		this.updateOnlinePlayersInfos();
 	}
 
-	/*componentDidUpdate(prevProps: any) {
-		//@ts-ignore
-		console.log(this.props.location);//routed
-	}*/
+	componentDidUpdate(prevProps: any) {
+		if(this.state.list_open && this.state.server_data && 
+			this.state.server_data.players_online.length !== this.saved_online_players_count) 
+		{
+			this.updatePlayersList();
+		}
+
+		if (this.props.location !== prevProps.location)
+			this.setState({menu_open: false});//close menu on location change
+	}
 
 	updateOnlinePlayersInfos() {
 		Utils.postRequest(
@@ -96,7 +114,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 		});
 	}
 
-	switchList() {
+	updatePlayersList() {
 		if(this.players_list && this.actual_players_list && this.state.server_data) {
 			let h = 25*(this.state.server_data.players_online.length);
 			this.players_list.style.height = !this.state.list_open ? 
@@ -104,9 +122,19 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 			
 			this.actual_players_list.style.height = `${Math.min(h, 25*MAX_LIST_ITEMS)}px`
 		}
+	}
+
+	switchList() {
+		this.updatePlayersList();
 
 		this.setState({
 			list_open: !this.state.list_open
+		});
+	}
+
+	switchMenu() {
+		this.setState({
+			menu_open: !this.state.menu_open
 		});
 	}
 
@@ -134,7 +162,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 		</div>;
 	}
 
-	render() {
+	render() {//removed - <Link to='/' className='homepage_icon' aria-label='homepage link' />
 		return <React.Fragment>
 			<h1 className={`${this.props.type} main_header_container`} data-bgid={Header.BG_ID}>
 				<div className='header_fill'>
@@ -143,19 +171,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 					}
 				</div>
 				<div className='header_fill header_gradient'>
-					<div className='header_links'>
-						<a href='/forum' className={
-							`forum ${this.props.location.pathname==='/forum' ? 'current' : ''}`
-						}></a>
-						<a target="_blank" href={Config.discord_invitation_link} rel="noreferrer"
-							className='discord'></a>
-						<Link to='/wl' className={
-							`whitelist ${this.props.location.pathname==='/wl' ? 'current' : ''}`
-						}></Link>
-						<Link to='/rules' className={
-							`rules ${this.props.location.pathname==='/rules' ? 'current' : ''}`
-						}></Link>
-					</div>
 					<div className='header_text'>{Config.short_description}</div>
 					<Link aria-label='homepage link logo' to='/' className='logo'></Link>
 					<div className='line1'></div>
@@ -163,7 +178,33 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 				</div>
 			</h1>
 			<div className='header_separator'>
-				<Link to='/' className='homepage_icon' aria-label='homepage link' />
+				<div className='menu_slider'>
+					<div className={`switcher ${this.state.menu_open?'open':''}`} 
+						onClick={this.switchMenu.bind(this)}>
+						<div className='menu_icon'>
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+					</div>
+					<div className={`slide_menu_content ${this.state.menu_open?'open':''}`}>
+						<div className='menu_links'>{MENU_LINKS.map((link, i) => {
+							var curr = '';
+							//console.log(this.props.location.pathname);
+							if( (link.href === '/' && this.props.location.pathname === '/') ||
+							(link.href!=='/' && this.props.location.pathname.startsWith(link.href)) ) 
+							{
+								curr = 'current';
+							}
+							return <Link className={curr} to={link.href} key={i} data-icon={link.icon}>
+								<img src={link.icon} />
+								{link.name}
+							</Link>
+						})}</div>
+						<div className='cutter'></div>
+					</div>
+				</div>
 				<div className='players'>
 					{this.state.server_data && this.renderOnlinePlayersInfos(this.state.server_data)}
 				</div>

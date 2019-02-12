@@ -108,11 +108,11 @@ export default class extends React.Component<CountdownProps, CountdownState> {
 	}
 
 	componentWillUnmount() {
+		window.removeEventListener('mousemove', this.onMouseMoved.bind(this));
 		if(this.update_interval)
 			clearInterval(this.update_interval);
 
 		this.running = false;
-		window.removeEventListener('mousemove', this.onMouseMoved.bind(this));
 	}
 
 	onMouseMoved(e: MouseEvent) {
@@ -165,48 +165,64 @@ export default class extends React.Component<CountdownProps, CountdownState> {
 		}
 
 		return <div className={`perspectiveHandler ${Utils.IS_V8 ? 'is_v8' : ''}`}>
-			<div className='countdown_main'>
-				<div>
-					{this.state.rem_t.days > 0 && <>
-						{this.renderBlock(this.state.rem_t.days)}
-						<div className='space_separator'></div>
-						<div className='space_separator'></div>
-						<div className='space_separator'></div>
-					</>}
-					{(this.state.rem_t.days > 0 || this.state.rem_t.hours > 0) && <>
-						{this.renderBlock(this.state.rem_t.hours)}
-						<div className='time_separator'></div>
-					</>}
-					{(this.state.rem_t.days > 0 || this.state.rem_t.hours > 0 || 
-						this.state.rem_t.minutes > 0) && 
-					<>
-						{this.renderBlock(this.state.rem_t.minutes)}
-						<div className='time_separator'></div>
-					</>}
-					{this.renderBlock(this.state.rem_t.seconds)}
+			{
+				(this.state.rem_t.days === 0 && (
+						(	this.state.rem_t.hours===13 &&
+							this.state.rem_t.minutes===37	) 
+						|| 
+						(	this.state.rem_t.hours===0 &&
+							this.state.rem_t.minutes===13 &&
+							this.state.rem_t.seconds===37	)
+					) 
+				) ? <div style={{
+					fontWeight: 'normal',
+					fontSize: '50px',
+					textShadow: '0px 0px 2px #00BCD4'
+				}}>LEET</div> 
+				: 
+				<div className='countdown_main'>
+					<div>
+						{this.state.rem_t.days > 0 && <>
+							{this.renderBlock(this.state.rem_t.days)}
+							<div className='space_separator'></div>
+							<div className='space_separator'></div>
+							<div className='space_separator'></div>
+						</>}
+						{(this.state.rem_t.days > 0 || this.state.rem_t.hours > 0) && <>
+							{this.renderBlock(this.state.rem_t.hours)}
+							<div className='time_separator'></div>
+						</>}
+						{(this.state.rem_t.days > 0 || this.state.rem_t.hours > 0 || 
+							this.state.rem_t.minutes > 0) && 
+						<>
+							{this.renderBlock(this.state.rem_t.minutes)}
+							<div className='time_separator'></div>
+						</>}
+						{this.renderBlock(this.state.rem_t.seconds)}
+					</div>
+					<div style={{display: 'block'}}>
+						{this.state.rem_t.days > 0 && <>
+							<label className='block_width'>
+								{this.state.rem_t.days === 1 ? 'DZIEŃ' : 'DNI'}
+							</label>
+							<div className='space_separator'></div>
+							<div className='space_separator'></div>
+							<div className='space_separator'></div>
+						</>}
+						{(this.state.rem_t.days > 0 || this.state.rem_t.hours > 0) && <>
+							<label className='block_width'>GODZIN</label>
+							<div className='space_separator'></div>
+						</>}
+						{(this.state.rem_t.days > 0 || this.state.rem_t.hours > 0 || 
+							this.state.rem_t.minutes > 0) && 
+						<>
+							<label className='block_width'>MINUT</label>
+							<div className='space_separator'></div>
+						</>}
+						<label className='block_width'>SEKUND</label>
+					</div>
 				</div>
-				<div style={{display: 'block'}}>
-					{this.state.rem_t.days > 0 && <>
-						<label className='block_width'>
-							{this.state.rem_t.days === 1 ? 'DZIEŃ' : 'DNI'}
-						</label>
-						<div className='space_separator'></div>
-						<div className='space_separator'></div>
-						<div className='space_separator'></div>
-					</>}
-					{(this.state.rem_t.days > 0 || this.state.rem_t.hours > 0) && <>
-						<label className='block_width'>GODZIN</label>
-						<div className='space_separator'></div>
-					</>}
-					{(this.state.rem_t.days > 0 || this.state.rem_t.hours > 0 || 
-						this.state.rem_t.minutes > 0) && 
-					<>
-						<label className='block_width'>MINUT</label>
-						<div className='space_separator'></div>
-					</>}
-					<label className='block_width'>SEKUND</label>
-				</div>
-			</div>
+			}
 		</div>;
 	}
 }
