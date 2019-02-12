@@ -50,7 +50,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 	state: HeaderState = {
 		server_data: undefined,
 		list_open: false,
-		menu_open: true//tmp
+		menu_open: false
 	}
 
 	private saved_online_players_count = 0;
