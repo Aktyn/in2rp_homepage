@@ -53,7 +53,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 		menu_open: false
 	}
 
-	private saved_online_players_count = 0;
+	//private saved_online_players_count = 10;
 
 	private blobs: JSX.Element[] = [];
 
@@ -80,11 +80,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 	}
 
 	componentDidUpdate(prevProps: any) {
-		if(this.state.list_open && this.state.server_data && 
+		/*if(this.state.list_open && this.state.server_data && 
 			this.state.server_data.players_online.length !== this.saved_online_players_count) 
 		{
+			this.saved_online_players_count = this.state.server_data.players_online.length;
 			this.updatePlayersList();
-		}
+		}*/
 
 		if (this.props.location !== prevProps.location)
 			this.setState({menu_open: false});//close menu on location change

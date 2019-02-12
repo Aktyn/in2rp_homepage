@@ -166,7 +166,7 @@ function onLogin() {
 	guild = bot.guilds.find(g => g.id === '492333108679409674');//IN2RP guild id
 	//let role = guild.roles.find(r => r.name === "Użytkownik");
 
-	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		statusApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')
 		usageApp.init(bot);
