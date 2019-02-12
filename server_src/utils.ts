@@ -6,24 +6,7 @@ var prompt = require('prompt-sync')();
 var RCON_PASSWORD: string;
 
 const Utils = {
-	/*inputPrompt: function(label: string, error_msg: string) {
-		try {//ask user to type password in console
-			return prompt(label + ': ') || '';
-		}
-		catch(e) {
-			console.error(error_msg);
-			process.exit();
-			return '';
-		}
-	},*/
 	getArgument: function(name: string) {
-		/*process.argv.forEach((val) => {//TODO - make this as function in Utils
-			if(val.startsWith('CLIENT_ID'))
-				CLIENT_ID = val.replace('CLIENT_ID=', '');
-			else if(val.startsWith('SECRET_KEY'))
-				SECRET_KEY = val.replace('SECRET_KEY=', '');
-		});*/
-
 		for(var arg of process.argv) {
 			if(arg.startsWith(name))
 				return arg.replace(name, '').substring(1);

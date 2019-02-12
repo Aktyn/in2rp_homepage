@@ -1,10 +1,12 @@
 import * as Discord from 'discord.js';
 const os = require('node-os-utils');
 import * as _os from 'os';
+import {spawnSync} from 'child_process';
 
 const id = '544241564071755777';//channel id
 
-//var MainMessage: Discord.Message | null = null;
+const MAX_INTERVAL = 5000;
+const MIN_INTERVAL = 100;
 
 interface MessageSchema {
 	process_count: number;
@@ -12,6 +14,8 @@ interface MessageSchema {
 
 	used_memory: number;
 	total_memory: number;
+	used_swap: number;
+	total_swap: number;
 
 	downloadMb: number;
 	uploadMb: number;
@@ -20,14 +24,19 @@ interface MessageSchema {
 function generateMessage(data: MessageSchema) {
 	let mem_t = data.total_memory;
 	let mem_u = data.used_memory;
+	let swap_t = data.total_swap;
+	let swap_u = data.used_swap;
+
+	let ram_used = `${(mem_u/mem_t)*100|0}% (${(mem_u).toFixed(2)}/${(mem_t).toFixed(2)})`;
+	let swap_used = `${(swap_u/swap_t)*100|0}% (${(swap_u).toFixed(2)}/${(swap_t).toFixed(2)})`;
 
 	var embed = new Discord.RichEmbed().setColor('#4FC3F7')//4FC3F7 - cyan
 		.addField('Ilość procesów', data.process_count)
 		.addField('Obciążenie rdzeni', data.thread_usage.map((tu, i) => {
 			return `${i+1}: ${tu|0}%`;
 		}).join('\n'))
-		.addField('Zużycie RAM (GB)', 
-			`${(mem_u/mem_t)*100|0}% (${(mem_u/1000).toFixed(1)}/${(mem_t/1000).toFixed(1)})`)
+		.addField('Zużycie pamięci (GB)', 
+			`RAM: ${ram_used}\nSWAP: ${swap_used}`)
 		.addField('Obciążenie sieci', 
 			`Download: ${data.downloadMb} Mb/s\nUpload: ${data.uploadMb} Mb/s`)
 		.addField('Ostatnia aktualizacja', new Date().toLocaleTimeString('en-US', {hour12: false}))
@@ -36,10 +45,31 @@ function generateMessage(data: MessageSchema) {
 }
 
 async function startRefreshing(msg: Discord.Message) {
-	 
 	let proc_info = await os.proc.totalProcesses();
-	let mem_info = await os.mem.info();
+	let mem_info: {used: number, total: number};// = await os.mem.info();
+	let swap_info: {used: number, total: number};
 	let net_info = await os.netstat.inOut();
+
+	let free_info: string[];
+	try {
+		free_info = spawnSync(`free | tail -n -2 | awk '{print $2, $3}'`, 
+			{shell: true, encoding: 'ascii'}).output.filter(x => x && x.length>0).toString().split('\n');
+		
+		mem_info = {
+			total: ( parseInt(free_info[0].split(' ')[0]) / 1024 / 1024 ),
+			used: ( parseInt(free_info[0].split(' ')[1]) / 1024 / 1024 )
+		};
+
+		swap_info = {
+			total: ( parseInt(free_info[1].split(' ')[0]) / 1024 / 1024 ),
+			used: ( parseInt(free_info[1].split(' ')[1]) / 1024 / 1024 )
+		};
+	}
+	catch(e) { 
+		console.error(e);
+		msg.edit(e);
+		return;
+	}
 
 	var cpus = _os.cpus();
 
@@ -53,8 +83,10 @@ async function startRefreshing(msg: Discord.Message) {
 	var data: MessageSchema = {
 		process_count: proc_info,
 		thread_usage: threads,
-		used_memory: mem_info.usedMemMb,
-		total_memory: mem_info.totalMemMb,
+		used_memory: mem_info.used,
+		total_memory: mem_info.total,
+		used_swap: swap_info.used,
+		total_swap: swap_info.total,
 		downloadMb: net_info.total.inputMb,
 		uploadMb: net_info.total.outputMb
 	};
@@ -73,8 +105,22 @@ function clearChannel(channel: Discord.TextChannel) {
 	});
 }
 
+function printHelp(message: Discord.Message) {
+	message.channel.send(
+		`\`!interval [liczba z przedziału (${MIN_INTERVAL}, ${MAX_INTERVAL})]\` - ustawia częstotliwość odświeżeń`)
+	.then(m => {
+		//delete help message after a minute
+		setTimeout(() => {
+			if(m instanceof Discord.Message)
+				m.delete();
+		}, 1000*60);
+	}).catch(console.error);
+}
+
 var StatusApp = {
 	CHANNEL_ID: id,
+
+	INTERVAL: 1000,
 
 	init: async (bot: Discord.Client) => {
 		var msg: Discord.Message | Discord.Message[] | undefined;
@@ -102,10 +148,29 @@ var StatusApp = {
 		}
 	},
 
-	handleMessage: async (message: Discord.Message, bot: Discord.Client) => {
-		message.delete().catch(console.log);
+	handleMessage: async function(message: Discord.Message, bot: Discord.Client) {
+		let args = message.content.substring(1).split(' ');
+	    let cmd = (args.shift() || '').replace(/^dev_/i, '');
 
-		//TODO - allow to change interval
+	    switch(cmd) {
+	    	default: 
+	    		printHelp(message);
+	    		break;
+	    	case 'interval': {
+	    		try {
+	    			this.INTERVAL = Math.min(MAX_INTERVAL, Math.max(MIN_INTERVAL, parseInt(args[0])));
+	    		}
+	    		catch(e) {}
+	    		message.channel.send(`Interval zmieniony na ${this.INTERVAL} milisekund`).then(m => {
+					setTimeout(() => {
+						if(m instanceof Discord.Message)
+							m.delete();
+					}, 1000*5);//delete after 5 seconds
+				}).catch(console.error);
+	    	}	break;
+	    }
+
+		message.delete().catch(console.log);
 	}
 };
 
