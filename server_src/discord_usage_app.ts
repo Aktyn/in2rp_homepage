@@ -5,8 +5,11 @@ import {spawnSync} from 'child_process';
 
 const id = '544241564071755777';//channel id
 
-const MAX_INTERVAL = 5000;
-const MIN_INTERVAL = 100;
+const MAX_INTERVAL = 30;
+const MIN_INTERVAL = 1;
+var INTERVAL = 60;//default value
+
+var current_timeout: number | null = null;
 
 interface MessageSchema {
 	process_count: number;
@@ -40,7 +43,7 @@ function generateMessage(data: MessageSchema) {
 		.addField('Obciążenie sieci', 
 			`Download: ${data.downloadMb} Mb/s\nUpload: ${data.uploadMb} Mb/s`)
 		.addField('Ostatnia aktualizacja', new Date().toLocaleTimeString('en-US', {hour12: false}))
-		.setFooter('made in china');
+		.setFooter(`Odświeżanie co ${INTERVAL}s`);
 	return embed;
 }
 
@@ -93,7 +96,7 @@ async function startRefreshing(msg: Discord.Message) {
 
 	msg.edit(generateMessage(data));
 
-	setTimeout(startRefreshing, 1000*60, msg);
+	current_timeout = setTimeout(startRefreshing, 1000*INTERVAL, msg);
 }
 
 function clearChannel(channel: Discord.TextChannel) {
@@ -107,22 +110,20 @@ function clearChannel(channel: Discord.TextChannel) {
 
 function printHelp(message: Discord.Message) {
 	message.channel.send(
-		`\`!interval [liczba z przedziału (${MIN_INTERVAL}, ${MAX_INTERVAL})]\` - ustawia częstotliwość odświeżeń`)
+		`\`!interval [liczba]\` - ustawia częstotliwość odświeżeń w sekundach (min: ${MIN_INTERVAL}, max: ${MAX_INTERVAL})`)
 	.then(m => {
-		//delete help message after a minute
+		//delete help message after 30 seconds
 		setTimeout(() => {
 			if(m instanceof Discord.Message)
 				m.delete();
-		}, 1000*60);
-	}).catch(console.error);
+		}, 1000*30);
+	}).catch(() => {});//ignore errors
 }
 
 var StatusApp = {
 	CHANNEL_ID: id,
 
-	INTERVAL: 1000,
-
-	init: async (bot: Discord.Client) => {
+	init: async (bot: Discord.Client, prevent_channel_clear = false) => {
 		var msg: Discord.Message | Discord.Message[] | undefined;
 		
 		var target = bot.channels.get(id);
@@ -130,14 +131,24 @@ var StatusApp = {
 			console.error('Error while fetching user/channel (usage app)');
 			return;
 		}
+
 		var messages = await (<Discord.TextChannel>target).fetchMessages();
 		var msg_arr = messages.array();
-		if(msg_arr.length === 1 && msg_arr[0].author.bot)
-			msg = msg_arr[0];
+
+		if(prevent_channel_clear === false) {
+			if(msg_arr.length === 1 && msg_arr[0].author.bot)
+				msg = msg_arr[0];
+			else {
+				if(msg_arr.length > 1)
+					await clearChannel(target);
+				msg = await target.send('Ładowanko...');
+			}
+		}
 		else {
-			if(msg_arr.length > 1)
-				await clearChannel(target);
-			msg = await target.send('Ładowanko...');
+			if(msg_arr.length > 0)
+				msg = msg_arr[msg_arr.length-1];
+			else
+				msg = await target.send('Ładowanko...');
 		}
 
 		if(msg instanceof Discord.Message)
@@ -158,19 +169,24 @@ var StatusApp = {
 	    		break;
 	    	case 'interval': {
 	    		try {
-	    			this.INTERVAL = Math.min(MAX_INTERVAL, Math.max(MIN_INTERVAL, parseInt(args[0])));
+	    			INTERVAL = Math.min(MAX_INTERVAL, Math.max(MIN_INTERVAL, parseInt(args[0])));
 	    		}
 	    		catch(e) {}
-	    		message.channel.send(`Interval zmieniony na ${this.INTERVAL} milisekund`).then(m => {
+	    		if(current_timeout) {
+	    			clearTimeout(current_timeout);
+	    			current_timeout = null;
+	    		}
+	    		message.channel.send(`Interval zmieniony na ${INTERVAL} sekund`).then(m => {
 					setTimeout(() => {
 						if(m instanceof Discord.Message)
 							m.delete();
 					}, 1000*5);//delete after 5 seconds
-				}).catch(console.error);
+				}).catch(() => {});//ignore errors
+				this.init(bot, true);
 	    	}	break;
 	    }
 
-		message.delete().catch(console.log);
+		message.delete().catch(()=>{});
 	}
 };
 
