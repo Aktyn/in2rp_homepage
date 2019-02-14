@@ -230,6 +230,11 @@ const self = {
 			VALUES ('steam:${steamhex}');`);
 	},
 
+	removeWhitelistPlayer: function(steamhex: string) {
+		return this.customQuery(`DELETE FROM admin_in2rp.whitelist 
+			WHERE identifier = 'steam:${steamhex}'`);
+	},
+
 	getWhitelistPlayers: function() {
 		return this.customQuery("SELECT users.id, whitelist.identifier, users.name, users.firstname,\
 			    users.lastname, users.phone_number, CONCAT(users.money, ' + ', users.bank) AS 'money',\

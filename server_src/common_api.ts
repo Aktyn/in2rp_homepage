@@ -238,23 +238,21 @@ export default {
 			//@ts-ignore
 			let steam_hex = BigInt(req.body.steamid).toString(16);
 			
-
-			//executing wladd_r command on rcon
-			//let add_response = await Utils.executeRconCommand(`wladd_r ${steam_hex}`);
+			let already_in_db = (await Database.customQuery(`SELECT * from admin_in2rp.whitelist 
+				WHERE identifier = 'steam:${steam_hex}'`)).length > 0;
 			
-			//TODO - check of existing row before adding
-			let add_response = await Database.addWhitelistPlayer(steam_hex);
+			let db_added = false;
+			if(!already_in_db)
+				db_added = (await Database.addWhitelistPlayer(steam_hex)).affectedRows > 0;
+			//console.log(add_response);
 
 			if(process.env.NODE_ENV !== 'dev')
 				await Utils.executeRconCommand('wlrefresh_r');
 
 			LOG('User', admin_user.username, admin_user.id, 'added steamid:', req.body.steamid,
-				'to in2rp whitelist with results:', add_response.affectedRows);
-
+				'to in2rp whitelist with results:', db_added ? 'true' : 'false');
 
 			let discord_user = await Database.getDiscordUserFromRequest(req.body.steamid);
-			//console.log(discord_user);
-
 			let discord_result: string | undefined = undefined;
 
 			if(discord_user.length > 0) {
@@ -265,7 +263,6 @@ export default {
 					'giving him a role');
 
 				//add discord user role
-
 				if( (await discordBot.changeUserRoleAsync(dis_id, 'Obywatel')) &&
 					(await discordBot.changeUserRole(dis_id, 'Rozmowa kwalifikacyjna', true)) )
 				{
@@ -273,20 +270,26 @@ export default {
 						`${discord_user[0].discord_nick}#${discord_user[0].discord_discriminator}`;
 
 					try {
-						discordBot.sendPrivateMessage(dis_id, 'Witaj.\nOtrzymałeś(-aś) właśnie rangę Obywatela.\nMożesz teraz rozpocząć grę na naszym serwerze.\nW razie problemów prosimy o kontakt z administracją.');
+						if(!already_in_db) {
+							discordBot.sendPrivateMessage(dis_id, 'Witaj.\nOtrzymałeś(-aś) właśnie rangę Obywatela.\nMożesz teraz rozpocząć grę na naszym serwerze.\nW razie problemów prosimy o kontakt z administracją.');
+						}
 					}
 					catch(e) {}
 
 					setTimeout(() => {
 						//try again becouse discord stucks sometimes
 						discordBot.changeUserRoleAsync(dis_id, 'Obywatel');
-					}, 1000*15);
+					}, 1000*5);
 				}
 				else
-					discord_result = 'ERRRRROR';
+					discord_result = 'ERROR';
 			}
 
-			return res.json({result: 'SUCCESS', discord_result: discord_result});
+			return res.json({
+				result: 'SUCCESS', 
+				discord_result: discord_result,
+				db_result: already_in_db ? 'ALREADY_IN_DABASE' : (db_added ? 'SUCCES' : 'ERROR')
+			});
 		}
 		catch(e) {//ignore
 			res.json({result: 'ERROR'});
@@ -306,18 +309,24 @@ export default {
 
 			let discord_user = await Database.getDiscordUserFromRequest(steamid);
 			if(discord_user.length > 0) {
+				let d_id = discord_user[0].discord_id;
 				LOG('found discord user with steamid:', steamid, 
-					`(${discord_user[0].discord_nick}, ${discord_user[0].discord_id})`, 
+					`(${discord_user[0].discord_nick}, ${d_id})`, 
 					'removing a role');
-				if(false === discordBot.changeUserRole(discord_user[0].discord_id, 'Obywatel', true))
+				if(	!(await discordBot.changeUserRoleAsync(d_id, 'Obywatel', 	true)) || 
+					!(await discordBot.changeUserRoleAsync(d_id, 'Obywatelka', 	true)) )
+				{
 					LOG('Cannot remove user role with steamid:', steamid);
+				}
 			}
 
-			let remove_response = await Utils.executeRconCommand(`wlremove_r ${req.body.steamhex}`);
-			await Utils.executeRconCommand('wlrefresh_r');
+			//let remove_response = await Utils.executeRconCommand(`wlremove_r ${req.body.steamhex}`);
+			let remove_response = await Database.removeWhitelistPlayer(req.body.steamhex);
+			if(process.env.NODE_ENV !== 'dev')
+				await Utils.executeRconCommand('wlrefresh_r');
 
 			LOG('User', admin_user.username, admin_user.id, 'removed steamhex:', req.body.steamhex,
-				'from in2rp whitelist with results:', remove_response);
+				'from in2rp whitelist with results:', remove_response.affectedRows);
 
 			return res.json({result: 'SUCCESS'});
 		}

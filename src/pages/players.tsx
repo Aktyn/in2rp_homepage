@@ -55,7 +55,8 @@ interface PlayersState {
 	converter_visible: boolean;
 	converter_state: ConverterState;
 
-	adding_result: any;
+	discord_result: any;
+	db_result?: string;
 }
 
 export default class extends React.Component<any, PlayersState> {
@@ -72,7 +73,8 @@ export default class extends React.Component<any, PlayersState> {
 		converter_visible: false,
 		converter_state: ConverterState.DEC_TO_HEX,
 
-		adding_result: undefined
+		discord_result: undefined,
+		db_result: undefined
 	}
 
 	constructor(props: any) {
@@ -83,7 +85,8 @@ export default class extends React.Component<any, PlayersState> {
 		this.setState({
 			error: err_msg, 
 			loading: false,
-			adding_result: undefined
+			discord_result: undefined,
+			db_result: undefined
 		});
 	}
 
@@ -139,13 +142,13 @@ export default class extends React.Component<any, PlayersState> {
 		if(cookie_token === null)
 			return this.onError('Wygląda na to, że nie jesteś zalogowany');
 
-		this.setState({adding_result: <Loader color='#f44336' />});
+		this.setState({discord_result: <Loader color='#f44336' />});
 
 		Utils.postRequest(
 			'add_whitelist_player', 
 			{token: cookie_token, steamid: id}
 		).then(res => res.json()).then(res => {
-			//console.log(res);
+			console.log(res);
 			if(res['result'] !== 'SUCCESS') {
 				let error_msg;
 				switch(res['result']) {
@@ -160,11 +163,18 @@ export default class extends React.Component<any, PlayersState> {
 				let result_msg = (d_res => {
 					switch(d_res) {
 						case undefined: return 'Nie znaleziono użytkownika na discordzie';
-						case 'ERRRRROR': return 'Nie udało się zmienić roli użytkownika na discordzie';
+						case 'ERROR': return 'Nie udało się zmienić roli użytkownika na discordzie';
 						default: return d_res + ' otrzymał rangę Obywatel';
 					}
 				})(res['discord_result']);
-				this.setState({adding_result: result_msg});
+				let db_result_msg = (db_res => {
+					switch(db_res) {
+						case 'ALREADY_IN_DABASE': return 'steamhex był już w bazie';
+						case 'ERROR': return 'Nie udało się dodać steamhex do bazy danych';
+						default: return 'steamhex dodany do bazy danych';
+					}
+				})(res['db_result']);
+				this.setState({discord_result: result_msg, db_result: db_result_msg});
 				this.refresh();
 			}
 		}).catch(e => {
@@ -306,7 +316,10 @@ export default class extends React.Component<any, PlayersState> {
 					if(this.steamid_input)
 						this.addSteamID(this.steamid_input.value);
 				}}>Dodaj do whitelisty </button>
-				<div className='result_info'>{this.state.adding_result}</div>
+				<div className='result_info'>
+					{this.state.discord_result}<br/>
+					{this.state.db_result}
+				</div>
 			</div>
 			<hr style={{marginBottom: '15px'}} />
 			<div>

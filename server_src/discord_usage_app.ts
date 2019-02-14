@@ -1,5 +1,5 @@
 import * as Discord from 'discord.js';
-const os = require('node-os-utils');
+//const os = require('node-os-utils'); //removed due to security vulnerability
 import * as _os from 'os';
 import {spawnSync} from 'child_process';
 
@@ -8,6 +8,8 @@ const id = '544241564071755777';//channel id
 const MAX_INTERVAL = 600;
 const MIN_INTERVAL = 1;
 var INTERVAL = 60;//default value
+
+const SHELL_OPTIONS = {shell: true, encoding: 'ascii'};
 
 var current_timeout: number | null = null;
 
@@ -20,8 +22,8 @@ interface MessageSchema {
 	used_swap: number;
 	total_swap: number;
 
-	downloadMb: number;
-	uploadMb: number;
+	//downloadMb: number;
+	//uploadMb: number;
 }
 
 function generateMessage(data: MessageSchema) {
@@ -40,23 +42,33 @@ function generateMessage(data: MessageSchema) {
 		}).join('\n'))
 		.addField('Zużycie pamięci (GB)', 
 			`RAM: ${ram_used}\nSWAP: ${swap_used}`)
-		.addField('Obciążenie sieci', 
-			`Download: ${data.downloadMb} Mb/s\nUpload: ${data.uploadMb} Mb/s`)
+		//.addField('Obciążenie sieci', 
+		//	`Download: ${data.downloadMb} Mb/s\nUpload: ${data.uploadMb} Mb/s`)
 		.addField('Ostatnia aktualizacja', new Date().toLocaleTimeString('en-US', {hour12: false}))
 		.setFooter(`Odświeżanie co ${INTERVAL}s`);
 	return embed;
 }
 
 async function startRefreshing(msg: Discord.Message) {
-	let proc_info = await os.proc.totalProcesses();
+	//let proc_info = await os.proc.totalProcesses();
+	let proc_info = 0;
+	try {
+		proc_info = parseInt(
+			spawnSync(`top -bn1 | awk 'NR > 7 && $8 ~ /R|S|D|T/ { print $12 }' | wc -l`, SHELL_OPTIONS).output.toString().replace(/[^\d]*/gi, '') 
+		);
+	}
+	catch(e) {
+		console.error(e);
+	}
+
 	let mem_info: {used: number, total: number};// = await os.mem.info();
 	let swap_info: {used: number, total: number};
-	let net_info = await os.netstat.inOut();
+	//let net_info = await os.netstat.inOut();
 
 	let free_info: string[];
 	try {
-		free_info = spawnSync(`free | tail -n -2 | awk '{print $2, $3}'`, 
-			{shell: true, encoding: 'ascii'}).output.filter(x => x && x.length>0).toString().split('\n');
+		free_info = spawnSync(`free | tail -n -2 | awk '{print $2, $3}'`, SHELL_OPTIONS).output
+			.filter(x => x && x.length>0).toString().split('\n');
 		
 		mem_info = {
 			total: ( parseInt(free_info[0].split(' ')[0]) / 1024 / 1024 ),
@@ -90,8 +102,8 @@ async function startRefreshing(msg: Discord.Message) {
 		total_memory: mem_info.total,
 		used_swap: swap_info.used,
 		total_swap: swap_info.total,
-		downloadMb: net_info.total.inputMb,
-		uploadMb: net_info.total.outputMb
+		//downloadMb: net_info.total.inputMb,
+		//uploadMb: net_info.total.outputMb
 	};
 
 	msg.edit(generateMessage(data));

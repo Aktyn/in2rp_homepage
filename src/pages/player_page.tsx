@@ -116,7 +116,7 @@ export default class extends React.Component<any, PlayerPageState> {
 			'remove_whitelist_player', 
 			{token: cookie_token, steamhex: data.identifier.replace(/^steam:/i, '')}
 		).then(res => res.json()).then((res: {result: string}) => {
-			//console.log(res);
+			// console.log(res);
 			if(res['result'] !== 'SUCCESS') {
 				let error_msg;
 				switch(res['result']) {
