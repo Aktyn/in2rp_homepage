@@ -4,8 +4,8 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 
-		align-items: center;
-	    justify-content: space-around;
+		align-items: baseline;
+	    justify-content: space-evenly;
 
 		& > * {//single player block
 			width: 250px;

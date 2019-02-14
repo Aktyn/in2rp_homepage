@@ -1,6 +1,6 @@
 import discordAPI from './discord_api';
 import discordBot from './discord_bot';
-import statusApp from './discord_status_app';
+import { SERVERS_DATA } from './discord_status_app';
 import Database from './database';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -185,7 +185,7 @@ export default {
 
 	get_online_players: async function(req: any, res: any) {
 		try {
-			return res.json({result: 'SUCCESS', data: statusApp.getStatus()});
+			return res.json({result: 'SUCCESS', data: SERVERS_DATA.main.getData()});
 		}
 		catch(e) {//ignore
 			res.json({result: 'ERROR'});

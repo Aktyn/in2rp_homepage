@@ -295,3 +295,26 @@ button.small_button:hover, a.small_button:hover, .small_button:hover {
 	padding: 20px 0px;
 	display: block;
 }
+
+.rolling_ball {
+	$size: 100px;
+	$PI: 3.14159265359;
+
+	height: $size;
+	animation: roll 10s cubic-bezier(.5,-0.44,.5,1.44) infinite;
+
+	@keyframes roll {
+		0% {
+			transform: translateX(0px) rotate(0deg);
+		}
+		25% {
+			transform: translateX($size*$PI) rotate(360deg);
+		}
+		75% {
+			transform: translateX(-$size*$PI) rotate(-360deg);
+		}
+		100% {
+			transform: translateX(0px) rotate(0deg);
+		}
+	}
+}

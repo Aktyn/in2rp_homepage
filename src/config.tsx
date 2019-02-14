@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 export enum QuestionType {
 	DATE,
@@ -39,7 +40,7 @@ const CONFIG = {
 
 	short_info: <span>
 		Planowana data startu: 15.02.2019 18:00.<br/>
-		Zapraszamy na discord po więcej informacji.
+		<div className='news'>NOWOŚĆ!!! <Link to='/gallery'>GALERIA SCREENÓW</Link></div>
 	</span>,
 
 	contacs: <React.Fragment>

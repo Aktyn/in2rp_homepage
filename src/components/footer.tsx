@@ -121,9 +121,9 @@ export default class extends React.Component<any, FooterState> {
 				</div>
 				<div>
 					{this.state.revealed ? 
-						<a target='_blank' href='https://github.com/Aktyn' style={{
-							color: '#71c1bb'
-						}} className='fader_in'>GitHub autora strony</a> : 
+						<a target='_blank' href='https://github.com/Aktyn' rel="noreferrer" 
+							style={{color: '#71c1bb'}} className='fader_in'>GitHub autora strony</a> 
+						:
 						<label className='fader_in'>
 							<Link to='/snake'>Copyright &copy;</Link> 2018 - Aktyn 
 							<img src={aktyn_logo} /> - All rights reserved

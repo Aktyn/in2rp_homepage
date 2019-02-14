@@ -233,9 +233,16 @@ export default class extends React.Component<any, WlRequestsState> {
 			}
 		})();
 
+		let nick = Utils.deepUriDecode(data['nick']) + '#' + data['discriminator'];
+		const max_len = 17;
+		if(!this.state.focused && nick.length > max_len)
+			nick = nick.substr(0, max_len-3) + '...';
+
 		return <h1 style={{borderColor: h1_border_color}}>
 			<span className='creation_date'>{creation_date}</span>
-			<span className='nick'>{Utils.deepUriDecode(data['nick']) + '#' + data['discriminator']}</span>
+			<span className='nick'>
+				{nick}
+			</span>
 			<span className='age'>
 				{isNaN(age) ? 'Błędny wiek' : `${age} lat${(age > 21 && (age%10 > 1))?'a':''}` }
 			</span>

@@ -8,7 +8,7 @@ const LINKS = [
 	{name: 'Logi', 			route: 'logs_mng'},
 	{name: 'Adminostwo', 	route: 'admins_mng'},
 	{name: 'Statystyki', 	route: 'statistics'},
-	{name: 'Galeria', 		route: 'gallery'},
+	//{name: 'Galeria', 		route: 'gallery'},
 ];
 
 interface AdminMenuState {

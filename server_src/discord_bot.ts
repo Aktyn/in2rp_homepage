@@ -4,7 +4,7 @@ import Utils from './utils';
 
 import Hangman from './hangman';
 import todoApp from './discord_todo_app';
-import statusApp from './discord_status_app';
+import StatusApp, { SERVERS_DATA } from './discord_status_app';
 import usageApp from './discord_usage_app';
 import rulesApp from './discord_rules_app';
 import manageApp from './discord_servermng_app';
@@ -161,14 +161,21 @@ function onLogin() {
         }).catch(console.error);*/
 	}
 
-	//let embed = new Discord.RichEmbed().setColor('#26A69A').setTitle(`Zaćmienie za **${1337}** minut`);
-
 	guild = bot.guilds.find(g => g.id === '492333108679409674');//IN2RP guild id
-	//let role = guild.roles.find(r => r.name === "Użytkownik");
+	
+	/*guild.members.filter(m=>!m.roles.some(r=>r.name==='Użytkownik')).forEach(m => {
+		//if(m.user.username === 'Aktyn') {
+			console.log(m.user.username);
+			m.send('Witaj.\nZauważyliśmy że jesteś członkiem naszego serwerza od dłuższego czasu i nadal nie zaakceptowałeś/aś regulaminu, więc większość kanałów jest dla ciebie niewidoczna.\nMożesz to w każdej chwili zmienić klikając :white_check_mark: pod regulaminem na kanale: <#528678812507045898>.\nPozdrawiamy, Administracja IN2RP')
+		//}
+	});*/
 
+	let stat0 = new StatusApp(bot, '528694912162594827', SERVERS_DATA.main);
+	stat0.hookEclipse();
+	let stat1 = new StatusApp(bot, '545244244101693441', SERVERS_DATA.main);
+	let stat2 = new StatusApp(bot, '545244292575133706', SERVERS_DATA.dev);
+	
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
-		statusApp.init(bot);
-	if(process.env.NODE_ENV !== 'dev')
 		usageApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);
@@ -205,12 +212,21 @@ function onLogin() {
 					if(process.env.NODE_ENV !== 'dev')
 						return todoApp.handleMessage(message);
 					break;
-				case statusApp.CHANNEL_ID: 	
+				/*case statusApp.CHANNEL_ID: 	
 					if(process.env.NODE_ENV !== 'dev')
 						return statusApp.handleMessage(message, bot);
+					break;*/
+				case stat0.channel_id:
+					return stat0.handleMessage(message);
+					break;
+				case stat1.channel_id:
+					return stat1.handleMessage(message);
+					break;
+				case stat2.channel_id:
+					return stat2.handleMessage(message);
 					break;
 				case usageApp.CHANNEL_ID: 	
-					//if(process.env.NODE_ENV !== 'dev')
+					if(process.env.NODE_ENV !== 'dev')
 						return usageApp.handleMessage(message, bot);
 					break;
 				case manageApp.CHANNEL_ID:
@@ -256,10 +272,6 @@ function onLogin() {
 		        		answerToMsg(message.author, 'Fajnie się grało. Może jeszcze będzie okazja.');
 		        	removeGame(message.author.id);
 		        	break;
-		   	}
-
-		   	if(process.env.NODE_ENV === 'dev') {
-		   		statusApp.handleMessage(message, bot);
 		   	}
 	    }
 	    else {//regular message

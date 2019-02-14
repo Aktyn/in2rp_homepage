@@ -148,7 +148,7 @@ export default class extends React.Component<any, PlayersState> {
 			'add_whitelist_player', 
 			{token: cookie_token, steamid: id}
 		).then(res => res.json()).then(res => {
-			console.log(res);
+			//console.log(res);
 			if(res['result'] !== 'SUCCESS') {
 				let error_msg;
 				switch(res['result']) {
@@ -244,20 +244,23 @@ export default class extends React.Component<any, PlayersState> {
 				<tr>
 					<td>Hex:</td><td>{data.identifier.replace(/steam:/i, '')}</td>
 				</tr>
-				<tr>
+				{data.job && <tr>
 					<td>Job:</td><td>{data.job || '---'}</td>
-				</tr>
-				<tr>
-					<td>Telefon:</td><td>{data.phone_number || '---'}</td>
-				</tr>
-				<tr>
-					<td>Kasa:</td><td>{data.money || '---'}</td>
-				</tr>
+				</tr>}
 			</tbody></table>
 			<Link aria-label='player more' className='clean small_button' to={`/players/${data.id}`}>
 				OPCJE
 			</Link>
 		</div>;
+
+		/*
+		<tr>
+			<td>Telefon:</td><td>{data.phone_number || '---'}</td>
+		</tr>
+		<tr>
+			<td>Kasa:</td><td>{data.money || '---'}</td>
+		</tr>
+		*/
 	}
 
 	renderPlayersList(datas: PlayerData[]) {

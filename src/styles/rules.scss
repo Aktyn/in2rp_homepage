@@ -1,7 +1,48 @@
 .rules_main {
 	text-align: left;
-}
 
-.rules_main ol, .rules_main li {
-	font-weight: bold;
+	& h1 {
+		text-align: center;
+		font-weight: bold;
+		font-size: 18px;
+		// height: 25px;
+		// line-height: 25px;
+
+		display: grid;
+		grid-template-columns: auto fit-content(100%) auto;
+		align-items: center;
+    	justify-items: center;
+
+		&::before, &::after {
+			content: " ";
+			display: block;
+			height: 1px;
+			width: 95%;
+			background-color: #78909C;
+		}
+
+		&::before {
+			justify-self: left;
+		}
+		&::after {
+			justify-self: right;
+		}
+	}
+
+	& li {
+	    text-align: justify;
+	}
+
+	& > ul {
+		list-style-type: disc;
+		padding: 0px 20px;
+
+		& > li {//only first level
+			padding: 3px 0px;
+		}
+
+		& ul {
+			list-style-type: circle;
+		}
+	}
 }

@@ -3,105 +3,117 @@ import fetch from 'node-fetch';
 import LOG from './log';
 import Eclipse from './eclipse';
 
-const server_ip = '213.32.7.56:30120';//TODO - try localhost
-const id = '528694912162594827';//channel id
+//every minute if server is online, otherwise every 5 minutes
+const REFRESH_ONLINE_SERVER_INFO_DELAY = 1000*60;
+const REFRESH_OFFLINE_SERVER_INFO_DELAY = 1000*60*5;
 
-var target_channel: Discord.TextChannel | undefined;
-var MainMessage: Discord.Message | null = null;
-var refreshing_active = true;
-var refresher_id = 0;
+const PREMIERE_TIMESTAMP = new Date(2019, 2-1, 15, 18, 0, 0).getTime();
 
-var ServerInfo = {
-	max_players: 0
-}
-
-interface MessageSchema {
+interface ServerDataSchema {
 	online: boolean;
 	players_online: string[];
 }
 
-var current_status: MessageSchema = {online: false, players_online: []};
+class ServerData {
+	private data: ServerDataSchema = {
+		online: false, 
+		players_online: []
+	};
 
-function loadServerInfo() {
-	return fetch(`http://${server_ip}/info.json`).then((response) => response.json()).then(res => {
-		//console.log(res);
-		ServerInfo.max_players = Number( res.vars.sv_maxClients );
-	}).catch(e => console.error('Cannot fetch server info data'));
+	private max_players = 0;
+	private ip: string;
+
+	private hooked_messages: Discord.Message[] = [];
+
+	constructor(_ip: string) {
+		this.ip = _ip;
+
+		fetch(`http://${this.ip}/info.json`).then((response) => response.json()).then(res => {
+			this.max_players = Number( res.vars.sv_maxClients );
+		}).catch(e => console.error('Cannot fetch server info data'));
+
+		this.refresh();//start refreshing loop
+	}
+
+	private async refresh() {
+		//fetching data
+		try {
+			var jsondata = await fetch(`http://${this.ip}/players.json`)
+				.then((response) => response.json());
+
+			this.data = {
+				online: true,
+				players_online: jsondata.map((player: any) => player.name)
+			};
+		}
+		catch(e) {
+			console.error('Cannot fetch server player\'s data');
+			this.data = {online: false, players_online: []};
+		}
+		
+		//updating discord message
+		for(var msg of this.hooked_messages)
+			await msg.edit( this.generateMessage() );
+
+		setTimeout(() => this.refresh(), this.data.online ?
+			REFRESH_ONLINE_SERVER_INFO_DELAY : REFRESH_OFFLINE_SERVER_INFO_DELAY);
+	}
+
+	private generateMessage() {
+		var embed = new Discord.RichEmbed().setColor('#ff5555');
+		if(this.data.online === false) {
+			embed.setTitle('Serwer offline :dizzy_face:');
+			return embed; 
+		}
+
+		let time_to_premiere = Math.max(0, PREMIERE_TIMESTAMP - Date.now());
+
+		embed.addField((process.env.NODE_ENV === 'dev' ? '[dev] ' : '') + 'Gracze online', 
+			`**${this.data.players_online.length}** / **${this.max_players}**\n${this.data.players_online.join(this.data.players_online.length < 10 ? '\n' : ', ')}`);
+
+		let et_s = Eclipse.getTimeToEclipse();
+		if(et_s > 0) {
+			let mm = (et_s/60)|0;
+			let ss = et_s - mm*60;
+			embed.addField('Czas do zaćmienia',
+				(et_s >= 60 ? `${mm} ${formatMinutes2(mm)} i ` : '') + `${ss} ${formatSeconds2(ss)}`);
+		}
+
+		if(time_to_premiere > 0) {
+			let d = (time_to_premiere / 86400000) | 0; 
+				time_to_premiere -= d*86400000;//1000*60*60*24 = 86400000
+			let h = (time_to_premiere / 3600000) | 0; 
+				time_to_premiere -= h*3600000;//3600000 = 1000*60*60
+			let m = (time_to_premiere / 60000) | 0; 
+
+			let time_str = '';
+			if(d > 0)
+				time_str = `${d} dni ${h} godzin ${m} minut`;
+			else if(h > 0)
+				time_str = `${h} godzin ${m} minut`;
+			else if(m > 0)
+				time_str = `${m} minut`;
+			embed.addField('Do premiery serwera pozostało:', time_str);
+		}
+		embed.addField('Ostatnia aktualizacja', new Date().toLocaleTimeString('en-US', {hour12: false}))
+			.setFooter(`IP serwera: ${this.ip}`);
+		return embed;
+	}
+
+	hookMessage(msg: Discord.Message) {
+		this.hooked_messages.push(msg);
+		msg.edit( this.generateMessage() );
+	}
+
+	getData() {
+		return this.data;
+	}
 }
 
-//Eclipse.start(6);
-
-function generateMessage(data: MessageSchema) {
-	var embed = new Discord.RichEmbed().setColor('#ff5555');
-	if(data.online === false) {
-		embed.setTitle('Serwer offline :dizzy_face:');
-		return embed; 
-	}
-	//'Serwer offline :dizzy_face:';
-
-	let time_to_premiere = Math.max(0, new Date(2019, 2-1, 15, 18, 0, 0).getTime() - Date.now());
-
-	embed.addField((process.env.NODE_ENV === 'dev' ? '[dev] ' : '') + 'Gracze online', 
-			`**${data.players_online.length}** / **${ServerInfo.max_players}**\n${data.players_online.join(data.players_online.length < 10 ? '\n' : ', ')}`);
-
-	let et_s = Eclipse.getTimeToEclipse();
-	if(et_s > 0) {
-		let mm = (et_s/60)|0;
-		let ss = et_s - mm*60;
-		embed.addField('Czas do zaćmienia', //TODO - format words: minut, sekund according to time
-			(et_s >= 60 ? `${mm} ${formatMinutes2(mm)} i ` : '') + `${ss} ${formatSeconds2(ss)}`);
-	}
-
-	if(time_to_premiere > 0) {
-		let d = (time_to_premiere / 86400000) | 0; 
-			time_to_premiere -= d*86400000;//1000*60*60*24 = 86400000
-		let h = (time_to_premiere / 3600000) | 0; 
-			time_to_premiere -= h*3600000;//3600000 = 1000*60*60
-		let m = (time_to_premiere / 60000) | 0; 
-
-		let time_str = '';
-		if(d > 0)
-			time_str = `${d} dni ${h} godzin ${m} minut`;
-		else if(h > 0)
-			time_str = `${h} godzin ${m} minut`;
-		else if(m > 0)
-			time_str = `${m} minut`;
-		embed.addField('Do premiery serwera pozostało:', time_str);
-	}
-	embed.addField('Ostatnia aktualizacja', new Date().toLocaleTimeString('en-US', {hour12: false}))
-		.setFooter(`IP serwera: ${server_ip}`);
-	return embed;
-}
-
-async function startRefreshing(current_id: number) {
-	//fetching data
-	var data: MessageSchema;
-	try {
-		var jsondata = await fetch(`http://${server_ip}/players.json`)
-			.then((response) => response.json());
-		//console.log(jsondata.map((player: any) => player.name));
-
-		data = <MessageSchema>{
-			online: true,
-			players_online: jsondata.map((player: any) => player.name)
-		};
-	}
-	catch(e) {
-		console.error('Cannot fetch server player\'s data');
-		data = <MessageSchema>{online: false, players_online: []};
-	}
-	current_status = data;
-	//console.log(current_status);
-	
-	//updating discord message
-	if(current_id !== refresher_id)
-		console.log('Current refreshing process with id:', current_id, 'expired');
-	else if(MainMessage) {
-		await MainMessage.edit(generateMessage(data));
-		if(refreshing_active)//every minute if server is online, otherwise every 5 minutes
-			setTimeout(() => startRefreshing(current_id), data.online ? 1000 * 60 : 1000 * 60 * 5);
-	}
-}
+export const SERVERS_DATA = {
+	main: new ServerData('213.32.7.56:30120'),
+	dev: new ServerData('213.32.7.56:30121')
+};
 
 function formatMinutes(value: number) {
 	if(value === 1)
@@ -130,39 +142,8 @@ function formatSeconds2(value: number) {
 		return 'sekund';
 }
 
-function hookEclipse() {
-	Eclipse.addListener((time) => {
-		if(!target_channel)
-			return;
-		let embed = new Discord.RichEmbed().setColor('#26A69A')
-			.setTitle(time === 0 ? 
-				'Restart serwera' : 
-				`Zaćmienie za **${time}** ${formatMinutes(time)}`);
-		target_channel.send(embed).then(notif_msg => {
-			setTimeout(() => {
-				try {
-					if(notif_msg instanceof Discord.Message)
-						notif_msg.delete();
-				}
-				catch(e) {}
-			}, 1000*60*3);//delete message after 3 minutes
-		}).catch(console.error)
-		
-		//console.log(time);
-	}, 'status_app_hook');
-}
-
-function printHelp(message: Discord.Message, is_spam = false) {
-	let help = (is_spam ? 'Nie spamić mnie tu\n' : '') + '`Dostępne komendy:\n!restart`';
-	if(process.env.NODE_ENV === 'dev')
-		message.author.send('[dev mode] ' + help);
-	else
-		message.channel.send(help);
-}
-
 function clearChannel(channel: Discord.TextChannel) {
 	return channel.fetchMessages().then(messages => {
-		// channel.bulkDelete(messages);
 		messages.forEach(m => m.delete());
 	}).catch(err => {
 		console.log('Error while deleting channel messages');
@@ -170,15 +151,24 @@ function clearChannel(channel: Discord.TextChannel) {
 	});
 }
 
-var StatusApp = {
-	CHANNEL_ID: id,
+export default class StatusApp {
+	readonly channel_id: string;
+	private target_channel: Discord.TextChannel | null = null;
+	//private main_message: Discord.Message | null = null;
+	private server_data: ServerData;
 
-	getStatus: () => current_status,
+	constructor(bot: Discord.Client, _channel_id: string, _server_data: ServerData) {
+		this.channel_id = _channel_id;
+		this.server_data = _server_data;
 
-	init: async (bot: Discord.Client) => {
+		this.init(bot);
+		//hookEclipse();
+	}
+
+	async init(bot: Discord.Client) {
 		var msg: Discord.Message | Discord.Message[] | undefined;
 		
-		var target = bot.channels.get(id);
+		var target = bot.channels.get(this.channel_id);
 		if(!target || !(target instanceof Discord.TextChannel)) {
 			console.error('Error while fetching user/channel (status app)');
 			return;
@@ -193,38 +183,44 @@ var StatusApp = {
 			msg = await target.send('Ładowanko...');
 		}
 		if(target instanceof Discord.TextChannel)
-			target_channel = target;
-		if(msg instanceof Discord.Message)
-			MainMessage = msg;
+			this.target_channel = target;
+		if(msg instanceof Discord.Message) {
+			//this.main_message = msg;
+			this.server_data.hookMessage(msg);
+		}
 		else {
 			console.error('Error while creating message (status app)');
 			return;
 		}
 
-		await loadServerInfo();
-		startRefreshing(++refresher_id);
-		hookEclipse();
-	},
-	handleMessage: async (message: Discord.Message, bot: Discord.Client) => {
-		if(!message.content.startsWith('!'))
-			return printHelp(message, true);
-
-		let args = message.content.substring(1).split(' ');
-	    let cmd = (args.shift() || '').replace(/^dev_/i, '');
-
-	    switch(cmd) {
-	    	default:
-	    		printHelp(message);
-	    		break;
-		   	case 'restart':
-		   		LOG(message.author.username, 'used status app command:', message.content);
-		   		if(message.channel instanceof Discord.TextChannel)
-		   			clearChannel(message.channel);
-		   		MainMessage = null;
-		   		StatusApp.init(bot);
-		   		break;
-		}
+		//await loadServerInfo();
+		//startRefreshing(++refresher_id);
 	}
-};
 
-export default StatusApp;
+	handleMessage(message: Discord.Message) {
+		message.delete().catch(()=>{});//ignore error
+	}
+
+	hookEclipse() {
+		Eclipse.addListener((time) => {
+			if(!this.target_channel)
+				return;
+			if(time === 0)
+				LOG('Eclipse: server restart');
+			let embed = new Discord.RichEmbed().setColor('#26A69A')
+				.setTitle(time === 0 ? 'Restart serwera' : 
+					`Zaćmienie za **${time}** ${formatMinutes(time)}`);
+			this.target_channel.send(embed).then(notif_msg => {
+				setTimeout(() => {
+					try {
+						if(notif_msg instanceof Discord.Message)
+							notif_msg.delete();
+					}
+					catch(e) {}
+				}, 1000*60*3);//delete message after 3 minutes
+			}).catch(console.error)
+			
+			//console.log(time);
+		}, 'status_app_hook');
+	}
+}

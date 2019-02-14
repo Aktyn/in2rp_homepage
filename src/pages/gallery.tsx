@@ -23,7 +23,7 @@ const img_sources: any[] = importAll(require.context('./../img/gallery', false, 
 //@ts-ignore
 img_sources = Object.keys(img_sources).map(key => img_sources[key]);
 
-console.log(img_sources);
+//console.log(img_sources);
 
 export default class extends React.Component<any, any> {
 	constructor(props: any) {

@@ -148,95 +148,7 @@ $blob_size: 10px;
 		height: 100%;
 		//width: $header-large*2;
 	}
-
-	/*& .header_links {
-		grid-area: links;
-		display: block;
-		
-		height: auto;//$header-small;
-		line-height: 0px;
-		max-width: $header-small;
-		max-height: $header-small;
-		// background-color: red;
-		justify-self: stretch;
-		text-align: left;
-
-		& a, & button {
-			display: block;
-			height: $header-small/4;
-			width: $header-small/4;
-			margin: 0px;
-			// margin: 5px 0px 0px 5px;
-			background-color: transparent;
-			position: relative;
-
-			transform: translate(-($header-small/4 + 1), 0px);
-
-			cursor: auto;
-			&:not(.current) {
-				cursor: pointer;
-			}
-
-			transition: transform 0.4s cubic-bezier(.87,-.41,.19,1.44);
-
-			@for $i from 1 through 4 {
-				&:nth-child(# {$i}) {
-					transition-delay: # {$i*100}ms;
-				}
-			}
-
-			&::before {
-				content: " ";
-				display: block;
-				position: absolute;
-				left: 0px;
-				top: 0px;
-				background-color: #0004;
-				
-				height: 100%;
-				width: 0%;
-				transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
-			}
-
-			&::after {
-				content: " ";
-				display: block;
-				background-repeat: no-repeat;
-				background-position: 50% 50%;
-				background-size: contain;
-				width: 100%;
-				height: 100%;
-				position: absolute;
-				left: 0px;
-				top: 0px;
-
-				opacity: 0.3;
-				transition: opacity 0.3s ease-in-out;
-			}
-
-			&:not(.current):hover::before {
-				width: 100%;
-			}
-
-			&:not(.current):hover::after {
-				opacity: 1;
-			}
-
-			&.current::before {
-				width: 2px;
-				background-color: #fff4;
-			}
-
-			&.current::after {
-				opacity: 0.6;
-			}
-		}
-	}*/
 }
-
-/*.main_header_container.small .header_links a, .main_header_container.small .header_links button {
-	transform: translate(0px, 0px);
-}*/
 
 @keyframes hr_showup {
 	0% {
@@ -357,6 +269,20 @@ h1.main_header_container.large {
 	@media screen and (max-width: $max_w1) {
 		z-index: 50;
 	}
+
+	& .news {
+		// color: #e57373;
+		font-weight: bold;
+
+		& a {
+			font-weight: bold;
+			color: #4DB6AC;
+
+			&:hover {
+				color: #B2DFDB;
+			}
+		}
+	}
 }
 
 .header_separator > .discord_widget_main {
@@ -453,7 +379,7 @@ h1.main_header_container.large {
 				height: $link_height;
 				line-height: $link_height;
 				font-weight: bold;
-				font-size: 14px;
+				font-size: 12px;
 				// color: #94aEbA;
 				color: #fff;
 
@@ -491,7 +417,7 @@ h1.main_header_container.large {
 			}
 
 			& > *:not(:last-child) {
-				border-bottom: 1px solid #fff3;
+				border-bottom: 1px solid #37474F;
 			}
 		}
 
