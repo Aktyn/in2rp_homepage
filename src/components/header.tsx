@@ -198,10 +198,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 							{
 								curr = 'current';
 							}
-							return <Link className={curr} to={link.href} key={i} data-icon={link.icon}>
+							if(link.name === 'FORUM') {
+								return <a href={link.href} key={i}>
+									<img src={link.icon}/>{link.name}
+								</a>;
+							}
+							return <Link className={curr} to={link.href} key={i}>
 								<img src={link.icon} />
 								{link.name}
-							</Link>
+							</Link>;
 						})}</div>
 						<div className='cutter'></div>
 					</div>
