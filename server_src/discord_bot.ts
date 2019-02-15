@@ -173,7 +173,9 @@ function onLogin() {
 	let stat0 = new StatusApp(bot, '528694912162594827', SERVERS_DATA.main);
 	stat0.hookEclipse();
 	let stat1 = new StatusApp(bot, '545244244101693441', SERVERS_DATA.main);
+
 	let stat2 = new StatusApp(bot, '545244292575133706', SERVERS_DATA.dev);
+	let stat3 = new StatusApp(bot, '546019816050524161', SERVERS_DATA.dev);
 	
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		usageApp.init(bot);
@@ -224,6 +226,9 @@ function onLogin() {
 					break;
 				case stat2.channel_id:
 					return stat2.handleMessage(message);
+					break;
+				case stat3.channel_id:
+					return stat3.handleMessage(message);
 					break;
 				case usageApp.CHANNEL_ID: 	
 					if(process.env.NODE_ENV !== 'dev')
