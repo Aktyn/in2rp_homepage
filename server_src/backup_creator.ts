@@ -26,9 +26,6 @@ catch(e) {
 }
 
 async function databaseBackup() {
-	/*let time = new Date().toLocaleString('en-US', {hour12: false}).replace(/[^\d]/gi, '-')
-		.replace(/(^|-)(\d-)/g, '0$2');
-	console.log(time);*/
 	let dt = new Date();
 	let time = `${toFixed(dt.getFullYear())}-${toFixed(dt.getMonth()+1)}-${toFixed(dt.getDate())}`;
 	time += `_${toFixed(dt.getHours())}-${toFixed(dt.getMinutes())}`;
@@ -39,7 +36,7 @@ async function databaseBackup() {
 
 	const admin_sql = path.join(backups_path_time, 'admin_in2rp.sql');
 	const wl_sql = path.join(backups_path_time, 'Whitelist.sql');
-	const mongodb_out = path.join(backups_path_time, 'mongodb_dump');
+	const mongodb_out = path.join(backups_path_time);
 
 	try {
 		if(fs.existsSync(admin_sql))
@@ -61,6 +58,6 @@ async function databaseBackup() {
 	}
 }
 
-databaseBackup();//temporary
+//databaseBackup();//temporary
 
 setInterval(databaseBackup, 1000*60*60 * 3);//backup database every 3 hours
