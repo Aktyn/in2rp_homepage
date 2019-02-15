@@ -80,11 +80,11 @@ class ServerData {
 		}
 
 		if(time_to_premiere > 0) {
-			let d = (time_to_premiere / 86400000) | 0; 
+			let d = (time_to_premiere / 86400000) | 0;
 				time_to_premiere -= d*86400000;//1000*60*60*24 = 86400000
-			let h = (time_to_premiere / 3600000) | 0; 
+			let h = (time_to_premiere / 3600000) | 0;
 				time_to_premiere -= h*3600000;//3600000 = 1000*60*60
-			let m = (time_to_premiere / 60000) | 0; 
+			let m = (time_to_premiere / 60000) | 0;
 
 			let time_str = '';
 			if(d > 0)
@@ -111,8 +111,9 @@ class ServerData {
 }
 
 export const SERVERS_DATA = {
-	main: new ServerData('213.32.7.56:30120'),
-	dev: new ServerData('213.32.7.56:30121')
+	isl1: new ServerData('213.32.7.56:30120'),
+	isl2: new ServerData('213.32.7.56:30121'),
+	dev: new ServerData('213.32.7.56:30122')
 };
 
 function formatMinutes(value: number) {
