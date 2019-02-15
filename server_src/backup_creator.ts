@@ -63,4 +63,4 @@ async function databaseBackup() {
 
 databaseBackup();//temporary
 
-setInterval(databaseBackup, 1000*60 * 3);//backup database every 3 hours
+setInterval(databaseBackup, 1000*60*60 * 3);//backup database every 3 hours
