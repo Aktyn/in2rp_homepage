@@ -185,7 +185,7 @@ export default {
 
 	get_online_players: async function(req: any, res: any) {
 		try {
-			return res.json({result: 'SUCCESS', data: SERVERS_DATA.main.getData()});
+			return res.json({result: 'SUCCESS', data: SERVERS_DATA.isl1.getData()});
 		}
 		catch(e) {//ignore
 			res.json({result: 'ERROR'});
