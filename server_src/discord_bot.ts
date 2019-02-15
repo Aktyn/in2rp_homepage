@@ -189,11 +189,11 @@ function onLogin() {
 
 	let stat_dev = new StatusApp(bot, '546022679610785792', SERVERS_DATA.dev);
 	
-	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		usageApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);
-	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		manageApp.init(bot);
 
 	bot.on('message', (message) => {
@@ -249,9 +249,10 @@ function onLogin() {
 					if(process.env.NODE_ENV !== 'dev')
 						return usageApp.handleMessage(message, bot);
 					break;
-				case manageApp.CHANNEL_ID:
-				case manageApp.CHANNEL_ID2:	
-					if(process.env.NODE_ENV !== 'dev')
+				case manageApp.ISLANDS.isl1.channel_id:
+				case manageApp.ISLANDS.isl2.channel_id:
+				case manageApp.ISLANDS.isl3.channel_id:
+					//if(process.env.NODE_ENV !== 'dev')
 						return manageApp.handleMessage(message, bot);
 					break;
 			}

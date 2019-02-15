@@ -34,6 +34,11 @@ const Utils = {
 		'stop': '/home/in2rp/stop2.sh',
 		'restart': '/home/in2rp/restart2.sh'
 	},
+	SERVER_CMDS3: {
+		'start': '/home/in2rp/start3.sh',
+		'stop': '/home/in2rp/stop3.sh',
+		'restart': '/home/in2rp/restart3.sh'
+	},
 	executeCommand: function(cmd: string): Promise<string> {
 		return new Promise((resolve, reject) => {
 			var stdout = '';
