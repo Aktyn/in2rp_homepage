@@ -7,9 +7,13 @@ const id = '544241564071755777';//channel id
 
 const MAX_INTERVAL = 600;
 const MIN_INTERVAL = 1;
-var INTERVAL = 60;//default value
+var INTERVAL = 30;//default value
 
 const SHELL_OPTIONS = {shell: true, encoding: 'ascii'};
+
+let threads_data: number[] = new Array(_os.cpus().length).fill(0);
+let prev_total: number[] = new Array(_os.cpus().length).fill(0);
+let prev_idle: number[] = new Array(_os.cpus().length).fill(0);
 
 var current_timeout: number | null = null;
 
@@ -88,16 +92,26 @@ async function startRefreshing(msg: Discord.Message) {
 
 	var cpus = _os.cpus();
 
-	let threads: number[] = [];
+	
+	let ii=0;
 	for(var cpu of cpus) {
-		let total = cpu.times.user + cpu.times.nice + cpu.times.sys + cpu.times.irq + cpu.times.idle;
-		// console.log(`${ii++}: ${(1 - cpu.times.idle/total)*100|0}%`);
-		threads.push((1 - cpu.times.idle/total)*100);
+		let idle = cpu.times.idle;
+		let total = cpu.times.user + cpu.times.nice + cpu.times.sys + cpu.times.irq + idle;
+
+		let idle_diff = idle - prev_idle[ii];
+		if(idle_diff > 0) {
+			let total_diff = total - prev_total[ii];
+			threads_data[ii] = (1 - idle_diff/total_diff) * 100;
+		}
+
+		prev_total[ii] = total;
+		prev_idle[ii] = idle;
+		ii++;
 	}
 
 	var data: MessageSchema = {
 		process_count: proc_info,
-		thread_usage: threads,
+		thread_usage: threads_data,
 		used_memory: mem_info.used,
 		total_memory: mem_info.total,
 		used_swap: swap_info.used,

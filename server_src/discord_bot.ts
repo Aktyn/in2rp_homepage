@@ -87,7 +87,8 @@ const good_links = [
 	new RegExp('https?:\/\/in2rp.(pl|com)', 'i'),
 	new RegExp('https?:\/\/discord.gg/4aa6F7Q', 'i'),
 	new RegExp('https?:\/\/(www\.)?youtube.com', 'i'),
-	new RegExp('https?:\/\/youtu.be', 'i')
+	new RegExp('https?:\/\/youtu.be', 'i'),
+	new RegExp('https?:\/\/i.imgur.com', 'i')
 ];
 //const forbiddenPatterns = ['http://discord'];
 function isProperMessage(msg: string) {
@@ -122,13 +123,6 @@ function onLogin() {
 	/*bot.on('presenceUpdate', member => {
 		console.log(member.user);
 	});*/
-	
-	//537689969561567233
-	/*console.log(
-		//@ts-ignore
-		bot.channels.map(ch => {return {id: ch.id, name: <string>ch.name}})
-			.sort((a,b) => b.name.localeCompare(a.name))
-	);*/
 
 	//clear #bot-komendy channel
 	let ch = bot.channels.get('539421078116761600');
@@ -195,7 +189,7 @@ function onLogin() {
 
 	let stat_dev = new StatusApp(bot, '546022679610785792', SERVERS_DATA.dev);
 	
-	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		usageApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);
