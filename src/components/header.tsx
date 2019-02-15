@@ -100,20 +100,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 	updateOnlinePlayersInfos() {
 		Utils.postRequest(
 			'get_online_players', {}
-		).then(res => res.json()).then((res: {result: string; data1: ServerData; data2: ServerData}) => 
+		).then(res => res.json()).then((res: {result: string; data: ServerData; data2: ServerData}) => 
 		{
 			//console.log(res);
 			if(res.result === 'SUCCESS') {
 				this.setState({
 					server_data: {
-						online: res.data1.online || res.data2.online,//true,//
-						players_online1: res.data1.players_online,//['Aktyn', 'Peonik', 'Mepik']//
+						online: res.data.online || res.data2.online,//true,//
+						players_online1: res.data.players_online,//['Aktyn', 'Peonik', 'Mepik']//
 						players_online2: res.data2.players_online
 					}
 				});
 
 				//refresh after 5 minutes if server is offline
-				let delay = (res.data1.online || res.data2.online) ? 1 : 5;
+				let delay = (res.data.online || res.data2.online) ? 1 : 5;
 				setTimeout(() => this.updateOnlinePlayersInfos(), 1000*60*delay);//refresh after minute
 			}
 			else

@@ -187,7 +187,7 @@ export default {
 		try {
 			return res.json({
 				result: 'SUCCESS', 
-				data1: SERVERS_DATA.isl1.getData(),
+				data: SERVERS_DATA.isl1.getData(),
 				data2: SERVERS_DATA.isl2.getData()
 			});
 		}
