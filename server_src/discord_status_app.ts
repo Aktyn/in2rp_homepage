@@ -68,8 +68,8 @@ class ServerData {
 
 		let time_to_premiere = Math.max(0, PREMIERE_TIMESTAMP - Date.now());
 
-		embed.addField((process.env.NODE_ENV === 'dev' ? '[dev] ' : '') + 'Gracze online', 
-			`**${this.data.players_online.length}** / **${this.max_players}**\n${this.data.players_online.join(this.data.players_online.length < 10 ? '\n' : ', ')}`);
+		//(process.env.NODE_ENV === 'dev' ? '[dev] ' : '') + 
+		embed.addField('Gracze online', `**${this.data.players_online.length}** / **${this.max_players}**\n${this.data.players_online.join(this.data.players_online.length < 10 ? '\n' : ', ')}`);
 
 		let et_s = Eclipse.getTimeToEclipse();
 		if(et_s > 0) {

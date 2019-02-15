@@ -27,8 +27,14 @@ interface ServerData {
 	players_online: string[];
 }
 
+interface ServerDataState {
+	online: boolean;
+	players_online1: string[];
+	players_online2: string[];
+}
+
 interface HeaderState {
-	server_data?: ServerData;
+	server_data?: ServerDataState;
 	list_open: boolean;
 	menu_open: boolean;
 }
@@ -94,18 +100,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 	updateOnlinePlayersInfos() {
 		Utils.postRequest(
 			'get_online_players', {}
-		).then(res => res.json()).then((res: {result: string; data: ServerData}) => {
+		).then(res => res.json()).then((res: {result: string; data1: ServerData; data2: ServerData}) => 
+		{
 			//console.log(res);
 			if(res.result === 'SUCCESS') {
 				this.setState({
 					server_data: {
-						online: res.data.online,//true,//
-						players_online: res.data.players_online//['Aktyn', 'Peonik', 'Mepik']//
+						online: res.data1.online || res.data2.online,//true,//
+						players_online1: res.data1.players_online,//['Aktyn', 'Peonik', 'Mepik']//
+						players_online2: res.data2.players_online
 					}
 				});
 
 				//refresh after 5 minutes if server is offline
-				let delay = res.data.online ? 1 : 5;
+				let delay = (res.data1.online || res.data2.online) ? 1 : 5;
 				setTimeout(() => this.updateOnlinePlayersInfos(), 1000*60*delay);//refresh after minute
 			}
 			else
@@ -117,7 +125,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
 	updatePlayersList() {
 		if(this.players_list && this.actual_players_list && this.state.server_data) {
-			let h = 25*(this.state.server_data.players_online.length);
+			let total_online = this.state.server_data.players_online1.length + 
+				this.state.server_data.players_online2.length;
+			let offset = this.state.server_data.players_online1.length > 0 ? 1 : 0;
+			offset += this.state.server_data.players_online2.length > 0 ? 1 : 0;
+
+			let h = 25 * (total_online + offset);
 			this.players_list.style.height = !this.state.list_open ? 
 				`${Math.min(24+h, 24+25*MAX_LIST_ITEMS)}px` : '24px';
 			
@@ -139,26 +152,34 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 		});
 	}
 
-	renderOnlinePlayersInfos(data: ServerData) {
+	renderOnlinePlayersInfos(data: ServerDataState) {
+		//TODO - add splayers_online2 list
+		//TODO - turn it into links redirecting to fivem users data
 		if(!data.online)
 			return 'Serwer gry offline';
 
+		let total_online = data.players_online1.length+data.players_online2.length;
+
 		return <div className={
 				`clean slide_list_btn small_button ${this.state.list_open ? 'open' : ''} 
-				${data.players_online.length > 0 ? '' : 'no_players'}`
+				${total_online > 0 ? '' : 'no_players'}`
 			} 
 			onClick={this.switchList.bind(this)}>
 
 			<div className='list_head'>
-				<span>Graczy online: {data.players_online.length}</span>
+				<span>Graczy online: {total_online}</span>
 				<span className='slide_list_icon'></span>
 			</div>
 			
 			<div className='players_list' ref={el => this.players_list = el}>
-				<div ref={el => this.actual_players_list = el}>{
-					data.players_online.map((p, i) => <div key={i}>{Utils.deepUriDecode(p)}</div>)
-					//TODO - turn it into links redirecting to fivem users data
-				}</div>
+				<div ref={el => this.actual_players_list = el}>
+					{data.players_online1.length > 0 && 
+						<span className='separator'>WYSPA 1 ({data.players_online1.length})</span>}
+					{data.players_online1.map((p, i) => <div key={i}>{Utils.deepUriDecode(p)}</div>)}
+					{data.players_online2.length > 0 && 
+						<span className='separator'>WYSPA 2 ({data.players_online2.length})</span>}
+					{data.players_online2.map((p, i) => <div key={i}>{Utils.deepUriDecode(p)}</div>)}
+				</div>
 			</div>
 		</div>;
 	}

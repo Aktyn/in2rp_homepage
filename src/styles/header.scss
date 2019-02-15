@@ -591,6 +591,12 @@ h1.main_header_container.large {
 	    background: #00695C; 
 	}
 
+	& > .players_list > * > .separator {
+		width: 100%;
+		display: block;
+		background: #009688;
+		font-weight: bold;
+	}
 
 	& > .players_list > * > *:not(:last-child) {
 		border-bottom: 1px solid #fff2;

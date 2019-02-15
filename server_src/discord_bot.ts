@@ -9,8 +9,7 @@ import usageApp from './discord_usage_app';
 import rulesApp from './discord_rules_app';
 import manageApp from './discord_servermng_app';
 
-// import Utils from './utils';
-// Utils.executeRconCommand('say POGCZAMP');
+//import Database from './database';
 
 var music = require("discord.js-musicbot-addon");
 
@@ -160,6 +159,22 @@ function onLogin() {
         	}, 5000);
         }).catch(console.error);*/
 	}
+
+	/*(<Discord.TextChannel>bot.channels.get('528960073507143680')).fetchMessages()
+		.then(msgs => msgs.array().map(msg => {return {nick: msg.author.username, id: msg.content}}))
+		.then(msgs => msgs.filter(msg => {
+			return msg.id.replace(/\d/gi, '').length === 0;
+		}))
+		.then(msgs => {
+			msgs.forEach(async (m) => {
+				//@ts-ignore
+
+				let dbres = await Database.customQuery(`select * from admin_in2rp.whitelist where identifier = 'steam:${BigInt(m.id).toString(16)}'`);
+
+				if(dbres.length === 0)
+					console.log(m.nick, m.id);
+			});
+		});*/
 
 	guild = bot.guilds.find(g => g.id === '492333108679409674');//IN2RP guild id
 	
