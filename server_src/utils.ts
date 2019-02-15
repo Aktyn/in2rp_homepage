@@ -49,7 +49,7 @@ const Utils = {
 			try {
 				let args = cmd.split(' ');
 				let main_cmd = args.shift() || 'echo';
-				const command = spawn(main_cmd, args);
+				const command = spawn(main_cmd, args, {shell: true});
 				command.stdout.on('data', (data: string) => stdout += data);
 				command.stderr.on('data', (data: string) => stderr += data);
 				command.on('close', (code: number) => {

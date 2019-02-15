@@ -39,8 +39,9 @@ const CONFIG = {
 	</React.Fragment>,
 
 	short_info: <span>
-		Planowana data startu: 15.02.2019 18:00.<br/>
-		<div className='news'>NOWOŚĆ!!! <Link to='/gallery'>GALERIA SCREENÓW</Link></div>
+		<div className='news' style={{lineHeight: '30px'}}>
+			NOWOŚĆ!!! <Link to='/gallery'>GALERIA SCREENÓW</Link>
+		</div>
 	</span>,
 
 	contacs: <React.Fragment>

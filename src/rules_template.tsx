@@ -1,15 +1,14 @@
 import * as React from 'react';
 
-export default function(props: any) {
+export default function(props: any) {//<li>Rejestrując się, akceptujesz regulamin strony, oraz forum IN2RP.</li>
 	return <React.Fragment>
 		<h1>Postanowienia ogólne</h1>
 		<ul>
 			<li>Serwer jest dla osób, które ukończyły 16 lat.</li>
-			<li>Rejestrując się, akceptujesz regulamin strony, oraz forum IN2RP.PL.</li>
 			<li>Administracja IN2RP może zmienić regulamin w dowolnym momencie, natomiast zmiany wchodzą w życie dopiero po opublikowaniu odpowiedniej adnotacji na serwerze discord.</li>
 			<li>Składając podanie o przyjęcie na serwer, akceptujesz jego regulamin i oświadczasz, że się z nim zapoznałeś, oraz będziesz go przestrzegać.</li>
 			<li>Administracja ma zawsze racje.</li>
-			<li>Addministracja zastrzega sobie prawo do usunięcia gracza z whitelisty bez podania powodu.</li>
+			<li>Administracja zastrzega sobie prawo do usunięcia gracza z whitelisty bez podania powodu.</li>
 		</ul>
 
 		<h1>Zasady</h1>
@@ -31,6 +30,7 @@ export default function(props: any) {
 				    <li>osób, które grają na serwerze minimum 1 miesiąc</li>
 				</ul>
 			</li>
+			<li>Zakaz używania kolorowych liter w nick'ach oraz na chacie OOC.</li>
 		</ul>
 
 		<h1>RolePlay</h1>
@@ -54,6 +54,7 @@ export default function(props: any) {
 			<li>Zakaż wtrącania się w akcję RP innych graczy bez wyraźnego powodu/motywu.</li>
 			<li>Zakaz odgrywania postaci psychicznie chorych, w celu ominięcia regulaminu bez zgody administracji. Nie znaczy to jednak, że nie możesz odgrywać takiej postaci, po prostu będzie ona traktowana tak samo, jak inne.</li>
 			<li>Używanie zewnętrznych programów, w celu modulacji głosu musi być uzgodnione z administracją serwera.</li>
+			<li>Zakaz podejmowania akcji, które w normalnym życiu doprowadziłoby do 100% śmierci ofiary. Np. ucięcie głowy porwanemu, wrzucenie go do kwasu, zakopanie 10 metrów pod ziemią itp. W skrócie zakaz FCK.</li>
 		</ul>
 
 		<h1>Inicjacje</h1>
@@ -64,6 +65,7 @@ export default function(props: any) {
 			<li>Po podniesieniu przez medyka mamy zakaz ponownego dołączania do akcji.</li>
 			<li>Zabronione jest inicjowanie 1v3, 2v5, 3v6 chyba, że niekorzystny stosunek liczby osób jest nadrabiany innymi rzeczami, element zaskoczenia(pułapka), broń długa, ciekawe użycie pojazdów/elementów otoczenia itd. Surowo karane będzie inicjowanie bez żadnego pomysłu RP na tzw. "janka" który spróbuje sam porwać trzech zakładników.</li>
 			<li>Powtórzenie akcji musi zostać zatwierdzone przez obie strony, lub administratora. Jeśli uważasz, że akcja nie została odegrana poprawnie, doprowadź ją do końca, a następnie wejdź na rządowy, w celu wyjaśnienia tej sprawy. (Do wołania użytkowników na rządowy służy chat local OOC i OOC, nie chat głosowy!).</li>
+			<li>Zakaz porywania, strzelania w miejscach nierealistycznych takich jak więzienie, baza wojskowa itd.</li>
 		</ul>
 
 		<h1>NLR czyli Zasada nowego życia</h1>
@@ -73,7 +75,7 @@ export default function(props: any) {
 			<li>Podczas BW, medyka możemy wezwać jedynie z trzeciej osoby.<br/>
 			Przykład: Przechodząc ulicą widziałem rannego mężczyznę! Miał rany, wyglądające na postrzałowe!.</li>
 			<li>Medyk NIE MA obowiązku przyjęcia pustego zgłoszenia. </li>
-			<li>Każdy obywatel zobowiązany jest do ogrywania obrażeń.</li>
+			<li>Każdy obywatel zobowiązany jest do odgrywania obrażeń.</li>
 		</ul>
 
 		<h1>Postać</h1>
@@ -154,6 +156,7 @@ export default function(props: any) {
 			<li>Partner swoim RP powinien dawać przykład innym graczom.</li>
 			<li>Administracja IN2RP nie zwraca uwagi jak Partner prowadzi swojego streama, i jak się na nim zachowuje niemniej jednak Partnerzy podczas wyjaśniania spin, rozmowy z Administracją, korzystania z czatu OOC powinni zachować kulturę i nie dać się ponieść emocją.</li>
 			<li>Partner musi przestrzegać regulaminu, Partner za złamanie regulaminu podlega taką samą karą jak obywatel.</li>
+			<li>Partner musi przestrzegać regulaminu, Partner za złamanie regulaminu podlega takiej samej karze jak obywatel. * Takiej samej karze jak obywatel.</li>
 		</ul>
 
 		<h1>Pojęcia roleplay</h1>

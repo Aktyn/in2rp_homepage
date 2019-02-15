@@ -1,6 +1,6 @@
 {
   "name": "xrp_homepage",
-  "version": "19.02.13",
+  "version": "19.02.15",
   "description": "Homepage project",
   "main": "src/index.tsx",
   "scripts": {
@@ -31,7 +31,6 @@
     "sass-loader": "^7.1.0",
     "serviceworker-webpack-plugin": "^1.0.1",
     "style-loader": "^0.23.1",
-    "ttf-loader": "^1.0.2",
     "typescript": "^3.2.1",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.26.1",

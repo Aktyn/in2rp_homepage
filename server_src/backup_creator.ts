@@ -1,0 +1,66 @@
+import Utils from './utils';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as os from 'os';
+
+var mysql_login = Utils.getArgument('MYSQL_LOGIN');
+var mysql_pass = Utils.getArgument('MYSQL_PASS');
+
+var mongodb_login = Utils.getArgument('MONGODB_LOGIN');
+var mongodb_pass = Utils.getArgument('MONGODB_PASS');
+
+// console.log(mysql_login, mysql_pass, mongodb_login, mongodb_pass);
+
+const backups_path = path.join(os.homedir(), 'backups');
+
+function toFixed(value: number | string) {//giving one digit value returns string with leading 0
+	return value < 10 ? '0' + value : value.toString();
+}
+
+try {
+	if(!fs.existsSync(backups_path))
+		fs.mkdirSync(backups_path);
+}
+catch(e) {
+	console.error(e);
+}
+
+async function databaseBackup() {
+	/*let time = new Date().toLocaleString('en-US', {hour12: false}).replace(/[^\d]/gi, '-')
+		.replace(/(^|-)(\d-)/g, '0$2');
+	console.log(time);*/
+	let dt = new Date();
+	let time = `${toFixed(dt.getFullYear())}-${toFixed(dt.getMonth()+1)}-${toFixed(dt.getDate())}`;
+	time += `_${toFixed(dt.getHours())}-${toFixed(dt.getMinutes())}`;
+
+	const backups_path_time = path.join(os.homedir(), 'backups', time);
+	if(!fs.existsSync(backups_path_time))
+		fs.mkdirSync(backups_path_time);
+
+	const admin_sql = path.join(backups_path_time, 'admin_in2rp.sql');
+	const wl_sql = path.join(backups_path_time, 'Whitelist.sql');
+	const mongodb_out = path.join(backups_path_time, 'mongodb_dump');
+
+	try {
+		if(fs.existsSync(admin_sql))
+			fs.unlinkSync(admin_sql);
+		if(fs.existsSync(wl_sql))
+			fs.unlinkSync(wl_sql);
+
+		await Utils.executeCommand(
+			`mysqldump -u ${mysql_login} -p${mysql_pass} admin_in2rp > ${admin_sql}`)
+				.then(res => console.log(res)).catch(console.error);
+		await Utils.executeCommand(
+			`mysqldump -u ${mysql_login} -p${mysql_pass} Whitelist > ${wl_sql}`)
+				.then(res => console.log(res)).catch(console.error);
+
+		await Utils.executeCommand(`mongodump -u ${mongodb_login} -p "${mongodb_pass}" --db nodebb --authenticationDatabase=$3 --out ${mongodb_out}`);
+	}
+	catch(e) {
+		console.error(e);
+	}
+}
+
+databaseBackup();//temporary
+
+setInterval(databaseBackup, 1000*60 * 3);//backup database every 3 hours

@@ -140,20 +140,6 @@ module.exports = {
 					}
 				]
 			},
-			/*{//TODO - remove ttf-loader from npm packages
-				test: /\.ttf$/,
-				use: [{
-					loader: 'ttf-loader',
-					options: {
-						attrs: ['url'],
-						outputPath: 'static/',
-						useRelativePath: true,
-						// emitFile: true,
-						// name: './font/[hash].[ext]',
-						name: '[name].[ext]'
-					},
-				}]
-			}*/
 		],
 	},
 
@@ -195,7 +181,7 @@ module.exports = {
 				display: 'standalone', // Android display: "browser" or "standalone". `string`
 				orientation: 'any', // Android orientation: "portrait" or "landscape". `string`
 				start_url: '/', // Android start application's URL. `string`
-				version: '1.7', // Your application's version number. `number`
+				version: '1.8', // Your application's version number. `number`
 				logging: false, // Print logs to console? `boolean`
 				icons: {
 					// Platform Options:
@@ -221,8 +207,7 @@ module.exports = {
 			policy: [{
 				userAgent: "*",
 				//allow: "/",
-				disallow: ["/wl_requests", "/players", "/logs_mng", "/admins_mng", "/statistics", 
-					"/snake"],
+				disallow: ["/wl_requests", "/players", "/logs_mng", "/admins_mng", "/statistics"],
 				crawlDelay: 1,//seconds (useful for sites with huge amount of pages)
 			}],
 			host: "https://in2rp.pl"

@@ -8,6 +8,7 @@ declare global {
 global.PORT = 1234;
 
 import Utils from './utils';
+import './backup_creator';
 import * as express from 'express';
 const cacheControl = require('express-cache-controller');
 import * as bodyParser from 'body-parser';

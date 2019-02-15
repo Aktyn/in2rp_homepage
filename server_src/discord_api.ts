@@ -9,6 +9,7 @@ import * as path from 'path';
 // import discordBot from './discord_bot';
 
 const HOST = 'in2rp.pl';
+// const HOST = 'in2rp.com';
 
 var CLIENT_ID: string, SECRET_KEY: string;
 

@@ -85,7 +85,7 @@ function answerToMsg(author: Discord.User, message?: string) {
 }
 
 const good_links = [
-	new RegExp('https?:\/\/in2rp.pl', 'i'), 
+	new RegExp('https?:\/\/in2rp.(pl|com)', 'i'),
 	new RegExp('https?:\/\/discord.gg/4aa6F7Q', 'i'),
 	new RegExp('https?:\/\/(www\.)?youtube.com', 'i')
 ];
