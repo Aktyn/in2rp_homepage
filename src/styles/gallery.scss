@@ -1,0 +1,40 @@
+.screen_uploader {
+	$width: 192px*2;
+	$height: 108px*2;
+
+	width: $width;
+	height: $height;
+
+	text-align: center;
+	line-height: $height;
+
+	margin: auto;
+	color: #fff;
+	font-weight: bold;
+	
+	border: 1px solid #B0BEC5;
+	background-repeat: no-repeat;
+	background-size: contain;
+	
+	background-position: center;
+	background-color: #fff5;
+	
+	margin-bottom: 10px;
+
+	cursor: pointer;
+
+	position: relative;
+
+	&:hover {
+		background-color: #80CBC450;
+	}
+
+	& input {
+		width: $width;
+		height: $height;
+		position: absolute;
+		left: 0px; top: 0px;
+		opacity: 0;
+		cursor: pointer;
+	}
+}

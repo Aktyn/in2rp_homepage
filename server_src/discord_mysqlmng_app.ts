@@ -92,12 +92,13 @@ export default {
 		if(reaction.message.channel.id !== channel_id || user.bot)
 			return;
 
-		if(reaction.emoji.name === '✅' && reaction.message.content.indexOf(CODE_PREFIX) !== -1)
+		if(reaction.emoji.name === '✅' && reaction.message.content.indexOf(CODE_PREFIX) !== -1) {
 			executeMysql(reaction.message, user).catch(console.error);
+			return;
+		}
 
-		//if(reaction.emoji.name !== '✅')
 		setTimeout(() => {
 			reaction.remove().catch(()=>{});//ignore errors
-		}, 1000*10);
+		}, 1000);
 	},
 }

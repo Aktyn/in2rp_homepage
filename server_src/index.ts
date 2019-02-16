@@ -52,6 +52,17 @@ app.use(cacheControl({
 if(process.env.NODE_ENV === 'dev')
 	app.use(allowCrossDomain);
 
+//files uploading support 
+import * as fileUpload from 'express-fileupload';
+
+app.use(fileUpload({
+	limits: { 
+		fileSize: 1 * 1024 * 1024,//1 MB
+		files: 1
+	},
+	abortOnLimit: true
+}));
+
 import discordAPI from './discord_api';
 
 app.get('/discord_login', discordAPI.login_request);
@@ -85,6 +96,8 @@ app.post('/get_whitelist_players', commonAPI.get_whitelist_players);
 app.post('/get_whitelist_player_details', commonAPI.get_whitelist_player_details);
 app.post('/add_whitelist_player', commonAPI.add_whitelist_player);
 app.post('/remove_whitelist_player', commonAPI.remove_whitelist_player);
+
+app.post(`/upload_screenshot_request`, commonAPI.upload_screenshot);
 
 app.post('/record_visit', (req, resp) => {
 	let ip = Utils.extractIP(req);

@@ -57,7 +57,7 @@ const CONFIG = {
 			'imie': 	{type: QuestionType.INPUT, content: 'Imię', maxlen: 64},
 			'data_ur': 	{type: QuestionType.DATE, content: 'Data urodzenia'},
 			'steam_id': {type: QuestionType.NUMBER_INPUT, content: 'SteamID64', maxlen: 64},
-			'o_rp': 	{type: QuestionType.TEXTAREA, content: 'Co wiesz o RP?', maxlen: 512},
+			'o_rp': 	{type: QuestionType.TEXTAREA, content: 'Co wiesz o RP i na jakich serwerach grałeś/aś?', maxlen: 512},
 		} as QuestionsBlockSchema,
 		IC: {
 			'imie_nazwisko': 	{type: QuestionType.INPUT, content: 'Imię i nazwisko', maxlen: 128},

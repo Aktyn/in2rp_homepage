@@ -203,7 +203,7 @@ function onLogin() {
 		rulesApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		manageApp.init(bot);
-	// if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		mysqlApp.init(bot);
 
 	bot.on('message', (message) => {
@@ -237,13 +237,9 @@ function onLogin() {
 						return todoApp.handleMessage(message);
 					break;
 				case mysqlApp.CHANNEL_ID:
-					//if(process.env.NODE_ENV !== 'dev')
+					if(process.env.NODE_ENV !== 'dev')
 						return mysqlApp.handleMessage(message);
 					break;
-				/*case statusApp.CHANNEL_ID: 	
-					if(process.env.NODE_ENV !== 'dev')
-						return statusApp.handleMessage(message, bot);
-					break;*/
 				case stat0.channel_id:
 					return stat0.handleMessage(message);
 					break;
@@ -266,7 +262,7 @@ function onLogin() {
 				case manageApp.ISLANDS.isl1.channel_id:
 				case manageApp.ISLANDS.isl2.channel_id:
 				case manageApp.ISLANDS.isl3.channel_id:
-					//if(process.env.NODE_ENV !== 'dev')
+					if(process.env.NODE_ENV !== 'dev')
 						return manageApp.handleMessage(message, bot);
 					break;
 			}

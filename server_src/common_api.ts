@@ -352,4 +352,36 @@ export default {
 			res.json({result: 'ERROR'});
 		}
 	},
+
+	upload_screenshot: async function(req: any, res: any) {
+		try {
+			//@ts-ignore
+			if(Object.keys(req.files).length === 0 || req.files.screen_file === undefined)
+				return res.status(413).send('No files were uploaded.');
+
+			//@ts-ignore
+			var file = req.files.screen_file;
+			if(file.data.length >= 1024*1024*1) {
+				try { res.status(413).send('File to big'); } catch(e) {}
+				return;
+			}
+
+			let ext = file.mimetype.replace(/^.+\//gi, '');
+			let name = Date.now().toString() + '.' + ext;
+
+			const screenshots_folder = path.join(__dirname, '..', 'data', 'screenshots');
+
+			if(!fs.existsSync(screenshots_folder))
+				fs.mkdirSync(screenshots_folder);
+
+			fs.writeFileSync(path.join(screenshots_folder, name), file.data);
+			
+			LOG('file', file.name, 'uploaded as screenshot');
+
+			res.status(200).send('SUCCESS');
+		}
+		catch(e) {
+			res.status(413).send('ERROR');
+		}
+	}
 };
