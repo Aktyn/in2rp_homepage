@@ -234,7 +234,7 @@ export default class extends React.Component<any, WlRequestsState> {
 		})();
 
 		let nick = Utils.deepUriDecode(data['nick']) + '#' + data['discriminator'];
-		const max_len = 17;
+		const max_len = 15;
 		if(!this.state.focused && nick.length > max_len)
 			nick = nick.substr(0, max_len-3) + '...';
 

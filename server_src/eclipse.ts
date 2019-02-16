@@ -1,12 +1,13 @@
 import Utils from './utils';
 
-var current_timeout: NodeJS.Timeout | null = null;
-var next_eclipse_timestamp = 0;
+var current_timeouts: number[] | undefined[] = new Array(Utils.ISLANDS).fill(undefined);
+var next_eclipse_timestamps: number[] = new Array(Utils.ISLANDS).fill(0);
 
 const periods = [30, 15, 10, 5, 2, 1];
 
 interface PeriodListener {
 	callback: (time: number) => void; 
+	isl_index: number;
 	name: string;
 }
 
@@ -18,51 +19,60 @@ function nextPeriod(time: number) {
 	return i < periods.length ? periods[i] : 0;
 }
 
-function step(time: number, skip = false) {
+function step(time: number, isl_index: number, skip = false) {
 	time = time|0;
-	next_eclipse_timestamp = Date.now() + time*1000*60;
+	next_eclipse_timestamps[isl_index] = Date.now() + time*1000*60;
 
 	if(time === 0) {
-		period_listeners.forEach(p => p.callback(0));
+		period_listeners.forEach(p => {
+			if(p.isl_index === isl_index)
+				p.callback(0);
+		});
 
-		current_timeout = null;
+		current_timeouts[isl_index] = undefined;
 		//TODO - kick every player
-		Utils.executeCommand(Utils.SERVER_CMDS['restart']);
+		//Utils.executeCommand(Utils.SERVER_CMDS['restart']);
+		Utils.executeCommand(Utils.getServerCMDS(isl_index)['restart']);
 		return;
 	}
-	else
-		period_listeners.forEach(p => p.callback(time));
+	else {
+		period_listeners.forEach(p => {
+			if(p.isl_index === isl_index)
+				p.callback(time);
+		});
+	}
 
 	if(skip === false)
-		Utils.executeRconCommand('reboot ' + time);
+		Utils.executeRconCommand('reboot ' + time, isl_index);
 	
 	let next_period = nextPeriod(time);
 
-	current_timeout = setTimeout(() => {
-		step(next_period);
-	}, 1000*60*(time-next_period));
+	current_timeouts[isl_index] = setTimeout(() => {
+		step(next_period, isl_index);
+	}, 1000*60*(time-next_period)) as never;
 }
 
 export default {
-	start: (time: number, skip_first = false) => {//time in minutes
-		if(current_timeout !== null) {
-			console.log('Canceling current timeout');
-			clearTimeout(current_timeout);
+	start: (time: number, isl_index: number, skip_first = false) => {//time in minutes
+		if(current_timeouts[isl_index] !== undefined) {
+			console.log('Canceling current timeout for isl_index: ' + isl_index);
+			clearTimeout(current_timeouts[isl_index]);
 		}
 
-		step(time, skip_first);
+		step(time, isl_index, skip_first);
 	},
+
 	getNextPeriod: nextPeriod,
 	getPeriods: function() {
 		return periods;
 	},
 
-	getTimeToEclipse: () => {//return seconds to next eclipse
-		return Math.round( Math.max(0, next_eclipse_timestamp - Date.now()) / 1000 );
+	getTimeToEclipse: (isl_index: number) => {//return seconds to next eclipse
+		return Math.round( Math.max(0, next_eclipse_timestamps[isl_index] - Date.now()) / 1000 );
 	},
 
-	addListener: function(_callback: (time: number) => void, _name: string) {
-		period_listeners.push({callback: _callback, name: _name});
+	addListener: function(_callback: (time: number) => void, _isl_index: number, _name: string) {
+		period_listeners.push( {callback: _callback, isl_index: _isl_index, name: _name} );
 	},
 
 	removeListener: function(name: string) {

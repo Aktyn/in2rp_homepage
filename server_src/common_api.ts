@@ -250,8 +250,15 @@ export default {
 				db_added = (await Database.addWhitelistPlayer(steam_hex)).affectedRows > 0;
 			//console.log(add_response);
 
-			if(process.env.NODE_ENV !== 'dev')
-				await Utils.executeRconCommand('wlrefresh_r');
+			if(process.env.NODE_ENV !== 'dev') {
+				try {
+					for(let isl_i=0; isl_i<Utils.ISLANDS; isl_i++)
+						await Utils.executeRconCommand('wlrefresh_r', isl_i);
+				}
+				catch(e) {
+					console.error(e);
+				}
+			}
 
 			LOG('User', admin_user.username, admin_user.id, 'added steamid:', req.body.steamid,
 				'to in2rp whitelist with results:', db_added ? 'true' : 'false');
@@ -326,8 +333,15 @@ export default {
 
 			//let remove_response = await Utils.executeRconCommand(`wlremove_r ${req.body.steamhex}`);
 			let remove_response = await Database.removeWhitelistPlayer(req.body.steamhex);
-			if(process.env.NODE_ENV !== 'dev')
-				await Utils.executeRconCommand('wlrefresh_r');
+			if(process.env.NODE_ENV !== 'dev') {
+				try {
+					for(let isl_i=0; isl_i<Utils.ISLANDS; isl_i++)
+						await Utils.executeRconCommand('wlrefresh_r', isl_i);
+				}
+				catch(e) {
+					console.error(e);
+				}
+			}
 
 			LOG('User', admin_user.username, admin_user.id, 'removed steamhex:', req.body.steamhex,
 				'from in2rp whitelist with results:', remove_response.affectedRows);

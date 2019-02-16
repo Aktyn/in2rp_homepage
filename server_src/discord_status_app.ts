@@ -22,11 +22,13 @@ class ServerData {
 
 	private max_players = 0;
 	private ip: string;
+	private isl_index: number;
 
 	private hooked_messages: Discord.Message[] = [];
 
-	constructor(_ip: string) {
+	constructor(_ip: string, _isl_index: number) {
 		this.ip = _ip;
+		this.isl_index = _isl_index;
 
 		fetch(`http://${this.ip}/info.json`).then((response) => response.json()).then(res => {
 			this.max_players = Number( res.vars.sv_maxClients );
@@ -71,7 +73,7 @@ class ServerData {
 		//(process.env.NODE_ENV === 'dev' ? '[dev] ' : '') + 
 		embed.addField('Gracze online', `**${this.data.players_online.length}** / **${this.max_players}**\n${this.data.players_online.join(this.data.players_online.length < 10 ? '\n' : ', ')}`);
 
-		let et_s = Eclipse.getTimeToEclipse();
+		let et_s = Eclipse.getTimeToEclipse(this.isl_index);
 		if(et_s > 0) {
 			let mm = (et_s/60)|0;
 			let ss = et_s - mm*60;
@@ -111,9 +113,9 @@ class ServerData {
 }
 
 export const SERVERS_DATA = {
-	isl1: new ServerData('213.32.7.56:30120'),
-	isl2: new ServerData('213.32.7.56:30121'),
-	dev: new ServerData('213.32.7.56:30122')
+	isl1: new ServerData('213.32.7.56:30120', 0),
+	isl2: new ServerData('213.32.7.56:30121', 1),
+	dev: new ServerData('213.32.7.56:30122', 2)
 };
 
 function formatMinutes(value: number) {
@@ -153,14 +155,20 @@ function clearChannel(channel: Discord.TextChannel) {
 }
 
 export default class StatusApp {
+	private static instances_count = 0;
+
 	readonly channel_id: string;
 	private target_channel: Discord.TextChannel | null = null;
-	//private main_message: Discord.Message | null = null;
 	private server_data: ServerData;
+	private isl_index: number;
 
-	constructor(bot: Discord.Client, _channel_id: string, _server_data: ServerData) {
+	private instance_id = StatusApp.instances_count++;
+
+	constructor(bot: Discord.Client, _channel_id: string, _server_data: ServerData, _isl_index: number)
+	{
 		this.channel_id = _channel_id;
 		this.server_data = _server_data;
+		this.isl_index = _isl_index;
 
 		this.init(bot);
 		//hookEclipse();
@@ -186,16 +194,12 @@ export default class StatusApp {
 		if(target instanceof Discord.TextChannel)
 			this.target_channel = target;
 		if(msg instanceof Discord.Message) {
-			//this.main_message = msg;
 			this.server_data.hookMessage(msg);
 		}
 		else {
 			console.error('Error while creating message (status app)');
 			return;
 		}
-
-		//await loadServerInfo();
-		//startRefreshing(++refresher_id);
 	}
 
 	handleMessage(message: Discord.Message) {
@@ -222,6 +226,12 @@ export default class StatusApp {
 			}).catch(console.error)
 			
 			//console.log(time);
-		}, 'status_app_hook');
+		}, this.isl_index, 'status_app_hook' + this.instance_id);
 	}
 }
+
+/*
+//testing from localhost
+setTimeout(() => {
+	Eclipse.start(4, 2);
+}, 5000);*/

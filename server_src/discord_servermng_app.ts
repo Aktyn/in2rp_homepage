@@ -38,7 +38,7 @@ async function prepareChannel(channel: Discord.TextChannel): Promise<Discord.Mes
 
 class Island {
 	readonly channel_id: string;
-	private index: number;
+	readonly index: number;
 
 	public mainMessage?: Discord.Message;
 
@@ -168,13 +168,14 @@ const ManagerApp = {
 		   		await execCommand(rcon_base + 'reboot ' + X, message, island.mainMessage);
 
 		   		//restarts serwer after X minutes
-		   		if(island === ManagerApp.ISLANDS.isl1)//eclipse only for main server
+		   		/*if(island === ManagerApp.ISLANDS.isl1)//eclipse only for main server
 		   			Eclipse.start(X, true);
 		   		else {//skip 'countdown' for test server
 		   			setTimeout(() => {//restart after X minutes
 		   				Utils.executeCommand(Utils.SERVER_CMDS2['restart'])
 		   			}, 1000*60*X);
-		   		}
+		   		}*/
+		   		Eclipse.start(X, island.index, true);
 		   	}	break;
 		   	case 'rcon': {
 		   		//TODO - test localhost instead of serwer ip in production

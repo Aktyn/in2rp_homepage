@@ -8,6 +8,7 @@ import StatusApp, { SERVERS_DATA } from './discord_status_app';
 import usageApp from './discord_usage_app';
 import rulesApp from './discord_rules_app';
 import manageApp from './discord_servermng_app';
+import mysqlApp from './discord_mysqlmng_app';
 
 //import Database from './database';
 
@@ -47,7 +48,10 @@ if(process.env.NODE_ENV !== 'dev') {
 	});
 }
 
-bot.on('messageReactionAdd', rulesApp.onReactionAdded);
+bot.on('messageReactionAdd', (reaction: Discord.MessageReaction, user: Discord.User) => {
+	mysqlApp.onReactionAdded(reaction, user);
+	rulesApp.onReactionAdded(reaction, user);
+});
 bot.on('messageReactionRemove', rulesApp.onReactionRemoved);
 
 bot.on('guildMemberAdd', member => {
@@ -180,21 +184,27 @@ function onLogin() {
 		//}
 	});*/
 
-	let stat0 = new StatusApp(bot, '528694912162594827', SERVERS_DATA.isl1);
+	let stat0 = new StatusApp(bot, '528694912162594827', SERVERS_DATA.isl1, 0);//public channels
 	stat0.hookEclipse();
-	let stat1 = new StatusApp(bot, '545244244101693441', SERVERS_DATA.isl1);
+	let stat1 = new StatusApp(bot, '545244244101693441', SERVERS_DATA.isl1, 0);
+	//stat1.hookEclipse();
 
-	let stat2 = new StatusApp(bot, '545244292575133706', SERVERS_DATA.isl2);
-	let stat3 = new StatusApp(bot, '546019816050524161', SERVERS_DATA.isl2);
+	let stat2 = new StatusApp(bot, '545244292575133706', SERVERS_DATA.isl2, 1);//public channels
+	stat2.hookEclipse();
+	let stat3 = new StatusApp(bot, '546019816050524161', SERVERS_DATA.isl2, 1);
+	//stat3.hookEclipse();
 
-	let stat_dev = new StatusApp(bot, '546022679610785792', SERVERS_DATA.dev);
+	let stat_dev = new StatusApp(bot, '546022679610785792', SERVERS_DATA.dev, 2);
+	stat_dev.hookEclipse();
 	
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		usageApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);
-	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		manageApp.init(bot);
+	// if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+		mysqlApp.init(bot);
 
 	bot.on('message', (message) => {
 		if(message.channel instanceof Discord.TextChannel && 
@@ -225,6 +235,10 @@ function onLogin() {
 				case todoApp.CHANNEL_ID2:
 					if(process.env.NODE_ENV !== 'dev')
 						return todoApp.handleMessage(message);
+					break;
+				case mysqlApp.CHANNEL_ID:
+					//if(process.env.NODE_ENV !== 'dev')
+						return mysqlApp.handleMessage(message);
 					break;
 				/*case statusApp.CHANNEL_ID: 	
 					if(process.env.NODE_ENV !== 'dev')

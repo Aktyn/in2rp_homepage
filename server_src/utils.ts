@@ -6,6 +6,8 @@ var prompt = require('prompt-sync')();
 var RCON_PASSWORD: string;
 
 const Utils = {
+	ISLANDS: 3,
+
 	getArgument: function(name: string) {
 		for(var arg of process.argv) {
 			if(arg.startsWith(name))
@@ -38,6 +40,14 @@ const Utils = {
 		'start': '/home/in2rp/start3.sh',
 		'stop': '/home/in2rp/stop3.sh',
 		'restart': '/home/in2rp/restart3.sh'
+	},
+	getServerCMDS: function(isl_index: number) {
+		switch (isl_index) {
+			case 0:	return this.SERVER_CMDS;
+			case 1:	return this.SERVER_CMDS2;
+			case 2:	return this.SERVER_CMDS3;
+		}
+		throw new Error('No island with this index');
 	},
 	executeCommand: function(cmd: string): Promise<string> {
 		return new Promise((resolve, reject) => {
@@ -75,8 +85,8 @@ const Utils = {
 			}
 		});
 	},
-	executeRconCommand: function(cmd: string): Promise<string> {
-		return this.executeCommand(this.RCON_CMD_BASE() + cmd);
+	executeRconCommand: function(cmd: string, isl_index: number): Promise<string> {
+		return this.executeCommand( this.RCON_CMD_BASE(30120+isl_index) + cmd );
 	},
 
 	testForAdmin: async function(req: any, res: any): Promise<false | DiscordUserJSON> {
