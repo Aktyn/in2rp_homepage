@@ -353,6 +353,26 @@ export default {
 		}
 	},
 
+	get_stock_exchange: async function(req: any, res: any) {
+		try {
+			var response = await discordAPI.getDiscordUserData(req.body.token);
+			if(response.code === 0) {
+				res.json({ result: response.message });
+				return false;
+			}
+
+			let is_admin = discordAPI.Admins.isAdmin(response.id);
+
+			return res.json({
+				result: 'SUCCESS', 
+				admin: is_admin
+			});
+		}
+		catch(e) {//ignore
+			res.json({result: 'ERROR'});
+		}
+	},
+
 	upload_screenshot: async function(req: any, res: any) {
 		try {
 			//@ts-ignore

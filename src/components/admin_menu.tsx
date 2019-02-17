@@ -5,10 +5,10 @@ import './../styles/admin_menu.scss';
 const LINKS = [
 	{name: 'Podania', 		route: 'wl_requests'},
 	{name: 'Gracze', 		route: 'players'},
-	{name: 'Logi', 			route: 'logs_mng'},
+	{name: 'Giełda', 		route: 'stock_exchange'},
 	{name: 'Adminostwo', 	route: 'admins_mng'},
+	{name: 'Logi', 			route: 'logs_mng'},
 	{name: 'Statystyki', 	route: 'statistics'},
-	//{name: 'Galeria', 		route: 'gallery'},
 ];
 
 interface AdminMenuState {

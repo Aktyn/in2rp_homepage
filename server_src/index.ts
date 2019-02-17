@@ -96,7 +96,7 @@ app.post('/get_whitelist_players', commonAPI.get_whitelist_players);
 app.post('/get_whitelist_player_details', commonAPI.get_whitelist_player_details);
 app.post('/add_whitelist_player', commonAPI.add_whitelist_player);
 app.post('/remove_whitelist_player', commonAPI.remove_whitelist_player);
-
+app.post('/get_stock_exchange', commonAPI.get_stock_exchange);
 app.post(`/upload_screenshot_request`, commonAPI.upload_screenshot);
 
 app.post('/record_visit', (req, resp) => {
