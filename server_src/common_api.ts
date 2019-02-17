@@ -353,26 +353,6 @@ export default {
 		}
 	},
 
-	get_stock_exchange: async function(req: any, res: any) {
-		try {
-			var response = await discordAPI.getDiscordUserData(req.body.token);
-			if(response.code === 0) {
-				res.json({ result: response.message });
-				return false;
-			}
-
-			let is_admin = discordAPI.Admins.isAdmin(response.id);
-
-			return res.json({
-				result: 'SUCCESS', 
-				admin: is_admin
-			});
-		}
-		catch(e) {//ignore
-			res.json({result: 'ERROR'});
-		}
-	},
-
 	upload_screenshot: async function(req: any, res: any) {
 		try {
 			//@ts-ignore
@@ -403,5 +383,87 @@ export default {
 		catch(e) {
 			res.status(413).send('ERROR');
 		}
-	}
+	},
+
+	get_stock_exchange: async function(req: any, res: any) {
+		try {
+			var response = await discordAPI.getDiscordUserData(req.body.token);
+			if(response.code === 0) {
+				res.json({ result: response.message });
+				return false;
+			}
+
+			let is_admin = discordAPI.Admins.isAdmin(response.id);
+
+			let entries = await Database.getStockExchangeEntries();
+
+			return res.json({
+				result: 'SUCCESS', 
+				admin: is_admin,
+				data: entries
+			});
+		}
+		catch(e) {//ignore
+			res.json({result: 'ERROR'});
+		}
+	},
+
+	add_stock_exchange_entry: async function(req: any, res: any) {
+		try {
+			let admin_user = await Utils.testForAdmin(req, res);
+			if(false === admin_user)
+				return;
+
+			//@ts-ignore
+			if(Object.keys(req.files).length === 0)
+				return res.status(413).send('No files were uploaded.');
+
+			//console.log(req.body);
+
+			let keys = Object.keys(req.files);
+			var files: any[] = [];
+
+			for(let key of keys) {
+				var file = req.files[key];
+				if(file.data.length >= 1024*1024*1) {
+					try { res.status(413).send('File to big'); } catch(e) {}
+					return;
+				}
+				files.push(file);
+			}
+
+			const files_folder = path.join(__dirname, '..', 'data', 'uploaded');
+			if(!fs.existsSync(files_folder))
+				fs.mkdirSync(files_folder);
+
+			let file_names: string[] = [];
+			let index = 0;
+			for(let file of files) {
+				let ext = file.mimetype.replace(/^.+\//gi, '');
+				let name = Date.now().toString() + '_' + (index++) + '.' + ext;
+
+				fs.writeFileSync(path.join(files_folder, name), file.data);
+				file_names.push(name);
+			}
+
+			//console.log(file_names);
+
+			let insert_result = await Database.addStockExchange(
+				req.body.mark, req.body.capacity, req.body.model, req.body.price);
+
+			if(insert_result.affectedRows !== 1)
+				res.status(413).send('ERROR');
+
+			for(let f_name of file_names) {
+				await Database.addStockExchangePreview(insert_result.insertId, f_name);
+			}
+			
+			//console.log( insert_result.insertId );
+
+			res.status(200).send('SUCCESS');
+		}
+		catch(e) {
+			res.status(413).send('ERROR');
+		}
+	},
 };

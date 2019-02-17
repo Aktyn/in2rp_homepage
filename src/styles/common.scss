@@ -331,6 +331,8 @@ button.small_button:hover, a.small_button:hover, .small_button:hover {
 
 	margin: auto;
 	color: #fff;
+	text-shadow: 1px 0px 0px #0005, -1px 0px 0px #0005, 0px 1px 0px #0005, 0px -1px 0px #0005, 
+		0px 0px 1px #0005;
 	font-weight: bold;
 	
 	border: 1px solid #B0BEC5;
@@ -357,5 +359,23 @@ button.small_button:hover, a.small_button:hover, .small_button:hover {
 		left: 0px; top: 0px;
 		opacity: 0;
 		cursor: pointer;
+	}
+
+	& .close_btn {//must be after input element in DOM
+		position: absolute;
+		top: 3px;
+		right: 3px;
+		// background-color: ;
+		width: 20px;
+		height: 20px;
+		border-radius: 20px;
+		box-shadow: 0px 1px 4px #0008;
+
+		background: url('./../img/close.svg') #546E7A center no-repeat;
+		background-size: 50%;
+
+		&:hover {
+			background-color: #ef5350;
+		}
 	}
 }

@@ -44,6 +44,8 @@ var allowCrossDomain = function(req: any, res: any, next: any) {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+// app.use(bodyParser.json({limit: '50mb'}));
+// app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(cacheControl({ 
 	noCache: true,//TODO - change to false
 	//maxAge: 60*60*24*7  //uncomment this
@@ -58,7 +60,7 @@ import * as fileUpload from 'express-fileupload';
 app.use(fileUpload({
 	limits: { 
 		fileSize: 1 * 1024 * 1024,//1 MB
-		files: 1
+		files: 10
 	},
 	abortOnLimit: true
 }));
@@ -98,6 +100,7 @@ app.post('/add_whitelist_player', commonAPI.add_whitelist_player);
 app.post('/remove_whitelist_player', commonAPI.remove_whitelist_player);
 app.post('/get_stock_exchange', commonAPI.get_stock_exchange);
 app.post(`/upload_screenshot_request`, commonAPI.upload_screenshot);
+app.post('/add_stock_exchange_entry', commonAPI.add_stock_exchange_entry);
 
 app.post('/record_visit', (req, resp) => {
 	let ip = Utils.extractIP(req);
@@ -107,6 +110,7 @@ app.post('/record_visit', (req, resp) => {
 
 const dir = path.join(__dirname, '..', 'dist');
 app.use(express.static(dir));
+app.use( '/uploaded', express.static(path.join(dir, '..', 'data', 'uploaded')) );
 
 const index_html = fs.readFileSync(dir + '/index.html', 'utf8');
 app.get('/main.js', express.static(path.join(__dirname, '..', 'dist', 'main.js')));

@@ -5,7 +5,7 @@ import Config from './../config';
 // import path from 'path';
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
-import './../styles/gallery.scss';
+// import './../styles/gallery.scss';
 
 //@ts-ignore
 // import homeIcon from '../img/gallery/1.png';

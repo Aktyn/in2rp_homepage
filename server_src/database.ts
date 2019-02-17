@@ -121,7 +121,7 @@ const self = {
 
 	init: async function() {
 		await this.customQuery(//table for whitelist requests
-			"CREATE TABLE IF NOT EXISTS `requests` (\
+			"CREATE TABLE IF NOT EXISTS `Whitelist`.`requests` (\
 			  	`id` INT(16) NOT NULL AUTO_INCREMENT,\
 			  	`status` VARCHAR(16) NOT NULL DEFAULT 'pending',\
 			  	`timestamp` VARCHAR(16) NOT NULL,\
@@ -135,7 +135,7 @@ const self = {
 		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
 	  	);
 	  	await this.customQuery(//table for whitelist requests
-			"CREATE TABLE IF NOT EXISTS `visits` (\
+			"CREATE TABLE IF NOT EXISTS `Whitelist`.`visits` (\
 			  	`id` INT(16) NOT NULL AUTO_INCREMENT,\
 			  	`timestamp` VARCHAR(16) NOT NULL,\
 			  	`user` VARCHAR(32),\
@@ -145,12 +145,30 @@ const self = {
 		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
 	  	);
 	  	await this.customQuery(//table for user agents
-			"CREATE TABLE IF NOT EXISTS `user_agents` (\
+			"CREATE TABLE IF NOT EXISTS `Whitelist`.`user_agents` (\
 			  	`id` INT(16) NOT NULL AUTO_INCREMENT,\
 			  	`agent` VARCHAR(200),\
 			  	PRIMARY KEY (`id`),\
 		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC),\
 		  		UNIQUE INDEX `agent_UNIQUE` (`agent` ASC));"
+	  	);
+	  	await this.customQuery(
+	  		"CREATE TABLE IF NOT EXISTS `Whitelist`.`stock_exchange` (\
+				`id` INT(16) NOT NULL AUTO_INCREMENT,\
+				`timestamp` VARCHAR(16) NOT NULL,\
+				`mark` VARCHAR(32) NULL DEFAULT NULL,\
+				`capacity` INT(2) NULL DEFAULT NULL,\
+				`model` VARCHAR(32) NULL DEFAULT NULL,\
+				`price` VARCHAR(32) NULL DEFAULT NULL,\
+				PRIMARY KEY (`id`),\
+		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
+	  	);
+	  	await this.customQuery(
+	  		"CREATE TABLE IF NOT EXISTS `Whitelist`.`stock_exchange_previews` (\
+				`stock_id` INT(16) NOT NULL,\
+				`file_name` VARCHAR(64) NOT NULL,\
+				UNIQUE INDEX `file_name_UNIQUE` (`file_name` ASC),\
+				PRIMARY KEY (`file_name`));"
 	  	);
 	},
 
@@ -277,6 +295,28 @@ const self = {
 	getDiscordUserFromRequest: function(steamid: string): Promise<DiscordUserJSON[]> {
 		return this.customQuery(`SELECT discord_nick, discord_discriminator, discord_id FROM Whitelist.requests where ooc_steam_id = '${steamid}' LIMIT 1;`);
 	},
+
+	getStockExchangeEntries: function() {
+		return this.customQuery("SELECT \
+			    stock_exchange.*,\
+			    GROUP_CONCAT(file_name SEPARATOR ';') AS 'files'\
+			FROM\
+			    Whitelist.stock_exchange\
+			        LEFT JOIN\
+			    Whitelist.stock_exchange_previews ON \
+			    	stock_exchange.id = stock_exchange_previews.stock_id\
+			GROUP BY id;")
+	},
+
+	addStockExchange: function(mark: string, capacity: number, model: string, price: string) 
+	{
+		return this.customQuery(`INSERT INTO Whitelist.stock_exchange (timestamp, mark, capacity, model, price)
+			VALUES ('${Date.now()}', '${mark}', ${capacity}, '${model}', '${price}');`);
+	},
+
+	addStockExchangePreview: function(stock_id: number, file_name: string) {
+		return this.customQuery(`INSERT IGNORE INTO Whitelist.stock_exchange_previews (stock_id, file_name) VALUES (${stock_id}, '${file_name}');`);
+	}
 };
 
 export default self;

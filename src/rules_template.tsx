@@ -155,8 +155,7 @@ export default function(props: any) {//<li>Rejestrując się, akceptujesz regula
 			<li>Partner serwera dostaje dostęp do specjalnego kanału aby mieć szybszy kontakt z administracją.</li>
 			<li>Partner swoim RP powinien dawać przykład innym graczom.</li>
 			<li>Administracja IN2RP nie zwraca uwagi jak Partner prowadzi swojego streama, i jak się na nim zachowuje niemniej jednak Partnerzy podczas wyjaśniania spin, rozmowy z Administracją, korzystania z czatu OOC powinni zachować kulturę i nie dać się ponieść emocją.</li>
-			<li>Partner musi przestrzegać regulaminu, Partner za złamanie regulaminu podlega taką samą karą jak obywatel.</li>
-			<li>Partner musi przestrzegać regulaminu, Partner za złamanie regulaminu podlega takiej samej karze jak obywatel. * Takiej samej karze jak obywatel.</li>
+			<li>Partner musi przestrzegać regulaminu, Partner za złamanie regulaminu podlega takiej samej karze jak obywatel.</li>
 		</ul>
 
 		<h1>Pojęcia roleplay</h1>
