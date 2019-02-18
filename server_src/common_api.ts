@@ -6,8 +6,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 import LOG from './log';
 import Utils from './utils';
+import CacheManager from './cache';
 
 const LOGS_PATH = path.join(__dirname, '..', 'logs');
+
+const admins_cache_name = 'admins_page';
+const whitelist_players_cache_name = 'whitelist_players';
 
 interface UserJSON {
 	id: string;
@@ -71,6 +75,10 @@ export default {
 			if(false === await Utils.testForAdmin(req, res))
 				return;
 
+			let cache = CacheManager.getCache(admins_cache_name);
+			if(cache)
+				return res.json(cache.data);
+
 			var admins = discordAPI.Admins.getAdmins().map(user_id => {
 				var user = discordBot.getDiscordUser(user_id);
 
@@ -90,7 +98,9 @@ export default {
 					}
 				}).filter(user => admins.find(a => a.id === user.id) === undefined);
 
-			res.json({result: 'SUCCESS', admins: admins, candidats: candidats});
+			let result = {result: 'SUCCESS', admins: admins, candidats: candidats};
+			CacheManager.createCache(admins_cache_name, 1000*60*60*24, result);
+			res.json(result);
 		}
 		catch(e) {
 			console.error(e);
@@ -110,6 +120,7 @@ export default {
 			let new_admins = discordAPI.Admins.getAdmins().filter(id => id !== req.body.id);
 			discordAPI.Admins.setAdmins(new_admins);
 
+			CacheManager.deleteCache(admins_cache_name);
 			res.json({result: 'SUCCESS'});
 		}
 		catch(e) {
@@ -128,6 +139,7 @@ export default {
 			new_admins.push(req.body.id);
 			discordAPI.Admins.setAdmins(new_admins);
 
+			CacheManager.deleteCache(admins_cache_name);
 			res.json({result: 'SUCCESS'});
 		}
 		catch(e) {
@@ -201,10 +213,17 @@ export default {
 			if(false === await Utils.testForAdmin(req, res))
 				return;
 
+			let cache = CacheManager.getCache(whitelist_players_cache_name);
+			if(cache)
+				return res.json(cache.data);
+
 			let data = await Database.getWhitelistPlayers();
 			let discord_users = await Database.getDiscordUserWithAcceptedRequestsWithoutServerAccess();
 			//console.log(discord_users);
-			return res.json({result: 'SUCCESS', players_data: data, discord_users_data: discord_users});
+
+			let result = {result: 'SUCCESS', players_data: data, discord_users_data: discord_users};
+			CacheManager.createCache(whitelist_players_cache_name, 1000*60*60*1, result);
+			return res.json(result);
 		}
 		catch(e) {//ignore
 			res.json({result: 'ERROR'});
@@ -296,6 +315,8 @@ export default {
 					discord_result = 'ERROR';
 			}
 
+			CacheManager.deleteCache(whitelist_players_cache_name);
+
 			return res.json({
 				result: 'SUCCESS', 
 				discord_result: discord_result,
@@ -346,6 +367,7 @@ export default {
 			LOG('User', admin_user.username, admin_user.id, 'removed steamhex:', req.body.steamhex,
 				'from in2rp whitelist with results:', remove_response.affectedRows);
 
+			CacheManager.deleteCache(whitelist_players_cache_name);
 			return res.json({result: 'SUCCESS'});
 		}
 		catch(e) {//ignore

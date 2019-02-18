@@ -227,7 +227,8 @@ function onLogin() {
 
 			if(message.content.indexOf('@everybody') !== -1) {
 				if( message.channel.guild.roles.find(r=>r.name==='@everyone') )
-					message.channel.send('@everyone').then(() => message.delete()).catch(console.log);
+					message.channel.send('Everybody pomarańcze');
+						//.then(() => message.delete()).catch(console.log);
 			}
 
 			switch(message.channel.id) {

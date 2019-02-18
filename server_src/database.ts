@@ -285,10 +285,12 @@ const self = {
 			WHERE
 			    status = 'accepted'
 			        AND CONVERT(CONCAT('steam:',
-			            LOWER(HEX(CAST(ooc_steam_id AS UNSIGNED)))) USING utf8) NOT IN (SELECT 
+			            LOWER(HEX(CAST(ooc_steam_id AS UNSIGNED)))) USING utf8) NOT IN 
+			      	(SELECT 
 			            CONVERT(identifier USING utf8)
 			        FROM
 			            admin_in2rp.whitelist)
+			       	AND ((UNIX_TIMESTAMP()*1000 - \`timestamp\`)/86400000) < 28
 			ORDER BY timestamp DESC;`)
 	},
 

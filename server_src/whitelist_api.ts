@@ -3,6 +3,9 @@ import discordBot from './discord_bot';
 import Database from './database';
 import LOG from './log';
 import Utils from './utils';
+import CacheManager from './cache';
+
+const whitelist_pending_data_cache_name = 'whitelist_data';
 
 interface RequestSchema {
 	timestamp: string;
@@ -92,8 +95,13 @@ export default {
 		if(false === await Utils.testForAdmin(req, response))
 			return;
 		
-		if(req.body.requested_status !== 'accepted' && req.body.requested_status !== 'rejected')
+		if(req.body.requested_status !== 'accepted' && req.body.requested_status !== 'rejected') {
+			let cache = CacheManager.getCache(whitelist_pending_data_cache_name);
+			if(cache)
+				return response.json(cache.data);
+
 			req.body.requested_status = 'pending';
+		}
 
 		interface WL_APP_DATA_SCHEMA {
 			id: number;
@@ -149,7 +157,12 @@ export default {
 			data.push(wl_app_data);
 		}
 
-		response.json({result: 'SUCCESS', data: data});
+		let response_data = {result: 'SUCCESS', data: data};
+
+		if(req.body.requested_status === 'pending')
+			CacheManager.createCache(whitelist_pending_data_cache_name, 1000*60*60*24, response_data);
+
+		response.json(response_data);
 	},
 
 	async update_request(req: any, res: any) {
@@ -169,6 +182,8 @@ export default {
 		// console.log(update_res);
 		if(update_res.affectedRows < 1)
 			return res.json({ result: 'DATABASE_ERROR' });
+
+		CacheManager.deleteCache(whitelist_pending_data_cache_name);
 
 		res.json({result: 'SUCCESS'});
 

@@ -325,6 +325,7 @@ button.small_button:hover, a.small_button:hover, .small_button:hover {
 
 	width: $width;
 	height: $height;
+	max-width: 100%;
 
 	text-align: center;
 	line-height: $height;

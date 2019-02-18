@@ -169,7 +169,7 @@ export default class extends React.Component<any, StockExchangeState> {
 			<div className='input_grid'>
 				<label>Marka:</label><div>{focused.mark}</div>
 				<label>Model:</label><div>{focused.model}</div>
-				<label>Cena:</label><div>${focused.price}</div>
+				<label>Cena:</label><div>{parseFloat(focused.price).toLocaleString('pl-PL')} PLN</div>
 				<label>Ilość osób:</label><div>{focused.capacity}</div>
 			</div>
 			<div>{preview_srcs.map((_src, i) => {
@@ -194,7 +194,7 @@ export default class extends React.Component<any, StockExchangeState> {
 				backgroundImage: `url('${Config.api_server_url}/uploaded/${preview_src}')`
 			}}></div>
 			<div className='model'>{entry.model}</div>
-			<div className='price'>${entry.price}</div>
+			<div className='price'>{parseFloat(entry.price).toLocaleString('pl-PL')} PLN</div>
 		</div>;
 	}
 

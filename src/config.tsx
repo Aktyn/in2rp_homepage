@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 
 export enum QuestionType {
 	DATE,
@@ -32,21 +32,22 @@ const CONFIG = {
 		<h4>Zapraszamy do wspólnej gry</h4>
 		<h4>Oferujemy:</h4>
 		<ul>
-			<li>Profesjonalną administracje </li>
+			<li>Profesjonalną administrację</li>
 			<li>Dopracowany serwer</li>
 			<li>Dużo dobrej zabawy</li>
 		</ul>
 	</React.Fragment>,
 
-	short_info: <span>
-		<div className='news' style={{lineHeight: '30px'}}>
-			NOWOŚĆ!!! <Link to='/gallery'>GALERIA SCREENÓW</Link>
-		</div>
-	</span>,
+	/*
+	<div className='news' style={{lineHeight: '30px'}}>
+		NOWOŚĆ!!! <Link to='/gallery'>GALERIA SCREENÓW</Link>
+	</div>
+	*/
+	short_info: <span></span>,
 
 	contacs: <React.Fragment>
 		<h4>Pytania odnośnie serwera możesz kierować do administracji na <a target="_blank" href={discord_invitation_link}>discordzie</a>.</h4>
-		<h4>Pytania odnośnie strony:</h4>
+		<h4>Pytania odnośnie strony lub bota na discord:</h4>
 		<div>
 			<span className='discord_user'>Aktyn#9473</span>
 		</div>
