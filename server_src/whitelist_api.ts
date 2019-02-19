@@ -239,11 +239,17 @@ export default {
 
 			let user_words_arrays = [
 				decodeURIComponent(user_request[0]['ic_historia']).split(' '),
-				//decodeURIComponent(user_request[0]['ic_plan_na_postac']).split(' '),
-				//decodeURIComponent(user_request[0]['ic_kreatywna_akcja']).split(' ')
+				decodeURIComponent(user_request[0]['ic_plan_na_postac']).split(' '),
+				decodeURIComponent(user_request[0]['ic_kreatywna_akcja']).split(' ')
 			];
 
-			var matches: {id: number, nick: string, percent: number, history: string}[] = [];
+			var matches: {
+				id: number;
+				nick: string;
+				percent: number;
+				text_type: number;
+				text: string;
+			}[] = [];
 
 			for(var request of accepted_request) {
 				if(request['id'] === user_request[0]['id'])//skip same request
@@ -251,11 +257,11 @@ export default {
 
 				var req_words_arrays = [//must be same order as user_words_arrays
 					decodeURIComponent(request['ic_historia']).split(' '),
-					//decodeURIComponent(request['ic_plan_na_postac']).split(' '),
-					//decodeURIComponent(request['ic_kreatywna_akcja']).split(' ')
+					decodeURIComponent(request['ic_plan_na_postac']).split(' '),
+					decodeURIComponent(request['ic_kreatywna_akcja']).split(' ')
 				];
 
-				var m_percent = 0;
+				//var m_percent = 0;
 
 				for(var i=0; i<user_words_arrays.length; i++) {
 					var user_words = user_words_arrays[i];
@@ -267,16 +273,17 @@ export default {
 						if(req_words.indexOf(word) !== -1)
 							score++;
 					}
-					m_percent = Math.max(m_percent, score / user_words.length);
-				}
-
-				if(m_percent > 0.5) {//threshold
-					matches.push({
-						id: request['id'], 
-						nick: request['discord_nick'], 
-						percent: m_percent,
-						history: req_words_arrays[0].join(' ')
-					});
+					// m_percent = Math.max(m_percent, score / user_words.length);
+					let m_percent = score / user_words.length;
+					if(m_percent > 0.5) {//threshold
+						matches.push({
+							id: request['id'], 
+							nick: request['discord_nick'], 
+							percent: m_percent,
+							text_type: i,
+							text: req_words.join(' ')//req_words_arrays[0].join(' ')
+						});
+					}
 				}
 			}
 

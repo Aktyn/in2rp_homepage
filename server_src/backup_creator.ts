@@ -26,6 +26,8 @@ catch(e) {
 }
 
 async function databaseBackup() {
+	//TODO - invoke game backup before those backups if hour is between 0 and 3
+
 	let dt = new Date();
 	let time = `${toFixed(dt.getFullYear())}-${toFixed(dt.getMonth()+1)}-${toFixed(dt.getDate())}`;
 	time += `_${toFixed(dt.getHours())}-${toFixed(dt.getMinutes())}`;

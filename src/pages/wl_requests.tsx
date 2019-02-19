@@ -23,6 +23,8 @@ interface WlRequestDataJSON {
 	nick: string;
 	timestamp: string;
 	ic_historia: string;
+	ic_plan_na_postac: string;
+	ic_kreatywna_akcja: string;
 	accepted_rules?: boolean;
 	previous_attempts?: number;
 
@@ -33,7 +35,8 @@ interface PlagiarismMatchSchema {
 	id: number;
 	nick: string;
 	percent: number;
-	history: string;
+	text_type: 0 | 1 | 2;
+	text: string;
 }
 
 interface WlRequestsState {
@@ -287,11 +290,16 @@ export default class extends React.Component<any, WlRequestsState> {
 		if(data.length === 0)
 			return 'Nie znaleziono plagiatów';
 
-		let focused_history_words = Utils.deepUriDecode(this.state.focused.ic_historia).split(' ');
+		//let focused_history_words = Utils.deepUriDecode(this.state.focused.ic_historia).split(' ');
+		let focused_texts = [
+			Utils.deepUriDecode(this.state.focused.ic_historia),
+			Utils.deepUriDecode(this.state.focused.ic_plan_na_postac),
+			Utils.deepUriDecode(this.state.focused.ic_kreatywna_akcja)
+		];
 		
 		return <div>{data.map((match, i) => {
-			var history_words = match.history.split(' ').map((word, i) => {
-				if(focused_history_words.indexOf(word) === -1)
+			var history_words = match.text.split(' ').map((word, i) => {
+				if(focused_texts[match.text_type].indexOf(word) === -1)
 					return word + ' ';
 				if(word.length < 4)
 					return <span key={i}>{word} </span>;
