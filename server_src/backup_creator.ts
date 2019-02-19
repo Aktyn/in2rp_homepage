@@ -56,8 +56,8 @@ async function databaseBackup() {
 				.then(res => console.log(res)).catch(console.error);
 		console.log('\tWhitelist backed up [mysql]');
 
-		let tmp = await Utils.executeCommand(`mongodump -u ${mongodb_login} -p "${mongodb_pass}" --db nodebb --authenticationDatabase=${mongodb_login} --out ${mongodb_out}`);
-		console.log('\tforum backed up [mongodb]', tmp);
+		await Utils.executeCommand(`mongodump -u ${mongodb_login} -p "${mongodb_pass}" --db nodebb --authenticationDatabase=${mongodb_login} --out ${mongodb_out}`);
+		console.log('\tforum backed up [mongodb]');
 		console.log('\tbackup successful');
 	}
 	catch(e) {
@@ -65,6 +65,6 @@ async function databaseBackup() {
 	}
 }
 
-databaseBackup();//temporary
+//databaseBackup();//temporary
 
 setInterval(databaseBackup, 1000*60*60 * 3);//backup database every 3 hours

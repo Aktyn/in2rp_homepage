@@ -45,9 +45,10 @@ export default {
 			
 			//console.log(insert_res);
 			if(insert_res.affectedRows > 0) {
+				CacheManager.deleteCache(whitelist_pending_data_cache_name);
 				res.json({result: 'SUCCESS'});
-				let msg = `<@${response.id}> zlożył podanie o whiteliste.`;
-				LOG(`${response.username} zlożył podanie o whiteliste.`);//not tested
+				let msg = `<@${response.id}>`;// złożył podanie o whiteliste.`;
+				LOG(`${response.username} złożył podanie o whiteliste.`);//not tested
 				try {
 					if(process.env.NODE_ENV !== 'dev') {
 						discordBot.sendChannelMessage('528987808438812683', msg).catch((e: Error) => {
