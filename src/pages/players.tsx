@@ -46,10 +46,15 @@ interface DiscordUserData {
 	ooc_steam_id: string;
 }
 
+enum STATUS {
+	PENDING, SUCCESS, ERROR
+}
+
 interface PlayersState {
 	loading: boolean;
 	error?: string;
-	players_data?: PlayerData[];
+	players_data: PlayerData[];
+	lone_hex: string[];
 	discord_users_candidats?: DiscordUserData[],
 
 	converter_visible: boolean;
@@ -57,6 +62,9 @@ interface PlayersState {
 
 	discord_result: any;
 	db_result?: string;
+
+	hex_remove_target?: string;
+	hex_remove_status?: STATUS;
 }
 
 export default class extends React.Component<any, PlayersState> {
@@ -64,17 +72,23 @@ export default class extends React.Component<any, PlayersState> {
 	private converter_input: HTMLInputElement | null = null;
 	private converter_result: HTMLDivElement | null = null;
 
+	private cancel_timeout: number | null = null;
+
 	state: PlayersState = {
 		loading: true,
 		error: undefined,
-		players_data: undefined,
+		players_data: [],
+		lone_hex: [],
 		discord_users_candidats: undefined,
 
 		converter_visible: false,
 		converter_state: ConverterState.DEC_TO_HEX,
 
 		discord_result: undefined,
-		db_result: undefined
+		db_result: undefined,
+
+		hex_remove_target: undefined,
+		hex_remove_status: undefined
 	}
 
 	constructor(props: any) {
@@ -92,6 +106,11 @@ export default class extends React.Component<any, PlayersState> {
 
 	componentDidMount() {
 		this.refresh();
+	}
+
+	componentWillUnmount() {
+		if(this.cancel_timeout)
+			clearTimeout(this.cancel_timeout);
 	}
 
 	refresh() {
@@ -121,10 +140,21 @@ export default class extends React.Component<any, PlayersState> {
 				this.setState({error: error_msg || 'Nieznany błąd', loading: false});
 			}
 			else {
+				let p_data: PlayerData[] = [];
+				let l_hex: string[] = [];
+
+				for(var dt of res['players_data']) {
+					if(dt.id)
+						p_data.push(dt);
+					else
+						l_hex.push(dt.identifier);
+				}
+
 				this.setState({
 					error: undefined, 
 					loading: false, 
-					players_data: res['players_data'],
+					players_data: p_data,
+					lone_hex: l_hex,
 					discord_users_candidats: res['discord_users_data']
 				});
 			}
@@ -183,6 +213,48 @@ export default class extends React.Component<any, PlayersState> {
 		});
 	}
 
+	tryRemoveHex(hex: string) {
+		if(this.state.hex_remove_status === STATUS.PENDING)
+			return;
+
+		if(this.state.hex_remove_target !== hex) {
+			this.setState({
+				hex_remove_target: hex, 
+				hex_remove_status: undefined
+			});
+			if(this.cancel_timeout)
+				clearTimeout(this.cancel_timeout);
+			this.cancel_timeout = setTimeout(() => {
+				this.setState({hex_remove_target: undefined});
+				this.cancel_timeout = null;
+			}, 5000) as never;
+
+			return;
+		}
+
+		//trying to remove from database
+		this.setState({hex_remove_status: STATUS.PENDING});
+
+		var cookie_token = Cookies.getCookie('discord_token');
+		if(cookie_token === null)
+			return this.onError('Wygląda na to, że nie jesteś zalogowany');
+
+		Utils.postRequest(
+			'remove_whitelist_player', 
+			{token: cookie_token, steamhex: hex.replace(/^steam:/i, '')}
+		).then(res => res.json()).then((res: {result: string}) => {
+			if(res['result'] !== 'SUCCESS')
+				this.setState({hex_remove_status: STATUS.ERROR});
+			else {
+				this.setState({hex_remove_status: STATUS.SUCCESS});
+				this.refresh();
+			}
+		}).catch(e => {
+			return this.onError('Niewłaściwa odpowiedź serwera');
+			console.error(e);
+		});
+	}
+
 	search(str: string) {
 		if(!this.state.players_data)
 			return;
@@ -216,8 +288,6 @@ export default class extends React.Component<any, PlayersState> {
 			}
 
 			match_scores[i] = score;
-
-			//console.log('name:', player.name, 'score:', score);
 		});
 
 		this.setState({
@@ -227,12 +297,14 @@ export default class extends React.Component<any, PlayersState> {
 				//@ts-ignore
 				let b_i: number = this.state.players_data.indexOf(b);
 				return match_scores[b_i] - match_scores[a_i];
-				//(a.name || '').localeCompare(b.name || '');
 			})
 		});
 	}
 
 	renderPlayerInfoBlock(data: PlayerData, index: number) {
+		//if(!data.id)
+		//	return undefined;
+
 		return <div key={index}>
 			<h2>
 				<div className='steam_nick'>{data.name || '---'}</div>
@@ -261,6 +333,25 @@ export default class extends React.Component<any, PlayersState> {
 			<td>Kasa:</td><td>{data.money || '---'}</td>
 		</tr>
 		*/
+	}
+
+	renderLoneHexes(lone_hex: string, index: number) {
+		if(this.state.hex_remove_target === lone_hex && 
+			this.state.hex_remove_status !== undefined) 
+		{
+			return <React.Fragment key={index}><span>{
+				this.state.hex_remove_status === STATUS.PENDING ? 'USUWANIE' : (
+					this.state.hex_remove_status === STATUS.SUCCESS ? 'USUNIĘTO :)' : 'BŁAD :('
+				)
+			}</span><span></span></React.Fragment>;
+		}
+
+		return <React.Fragment key={index}>
+			<span>{lone_hex.replace(/^steam:/i, '')}</span>
+			<button className='clean small_button' onClick={()=>this.tryRemoveHex(lone_hex)}>
+				{this.state.hex_remove_target !== lone_hex ? 'USUŃ' : 'NA PEWNO?'}
+			</button>
+		</React.Fragment>;
 	}
 
 	renderPlayersList(datas: PlayerData[]) {
@@ -346,6 +437,13 @@ export default class extends React.Component<any, PlayersState> {
 				}} />
 			</div>
 			<div className='players_list'>{datas.map(this.renderPlayerInfoBlock)}</div>
+			<hr/>
+			<div>
+				<h4>Hexy bez przypisanej postaci w grze</h4>
+				<div className='lone_hexes'>
+					{this.state.lone_hex.map(this.renderLoneHexes.bind(this))}
+				</div>
+			</div>
 		</>;
 	}
 

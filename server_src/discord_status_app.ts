@@ -32,7 +32,8 @@ class ServerData {
 
 		fetch(`http://${this.ip}/info.json`).then((response) => response.json()).then(res => {
 			this.max_players = Number( res.vars.sv_maxClients );
-		}).catch(e => console.error('Cannot fetch server info data'));
+		}).catch(()=>{});//ignore errors
+		//.catch(e => console.error('Cannot fetch server info data'));
 
 		this.refresh();//start refreshing loop
 	}

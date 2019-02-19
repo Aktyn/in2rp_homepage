@@ -232,4 +232,22 @@
 			text-align: right;
 		}
 	}
+
+	.lone_hexes {
+		display: inline-grid;
+		grid-template-columns: auto fit-content(100%);
+   		align-items: center;
+	    justify-content: left;
+	    text-align: left;
+	    grid-column-gap: 10px;
+	    grid-row-gap: 5px;
+
+	    max-height: 500px;
+	    padding: 0px 10px;
+	    overflow-y: auto;
+
+	    & button {
+	    	background-color: #b71c1c;
+	    }
+	}
 }

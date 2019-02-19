@@ -131,12 +131,6 @@ export default class extends React.Component<any, PlayerPageState> {
 				this.setState({error: error_msg || 'Nieznany błąd', loading: false});
 			}
 			else {
-				/*this.setState({
-					error: undefined, 
-					loading: false, 
-					remove_confirm: false,
-					remove_result: 'Done'
-				});*/
 				const { history: { push } } = this.props;
 				push('/players');//redirecting back to players page
 			}
