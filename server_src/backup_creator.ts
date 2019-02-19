@@ -56,7 +56,7 @@ async function databaseBackup() {
 				.then(res => console.log(res)).catch(console.error);
 		console.log('\tWhitelist backed up [mysql]');
 
-		let tmp = await Utils.executeCommand(`mongodump -u ${mongodb_login} -p "${mongodb_pass}" --db nodebb --authenticationDatabase=$3 --out ${mongodb_out}`);
+		let tmp = await Utils.executeCommand(`mongodump -u ${mongodb_login} -p "${mongodb_pass}" --db nodebb --authenticationDatabase=${mongodb_login} --out ${mongodb_out}`);
 		console.log('\tforum backed up [mongodb]', tmp);
 		console.log('\tbackup successful');
 	}
