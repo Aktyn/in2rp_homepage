@@ -3,6 +3,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 
+const BACKUPS_DELAY = 3;
+
 var mysql_login = Utils.getArgument('MYSQL_LOGIN');
 var mysql_pass = Utils.getArgument('MYSQL_PASS');
 
@@ -26,11 +28,10 @@ catch(e) {
 }
 
 async function databaseBackup() {
-	//TODO - invoke game backup before those backups if hour is between 0 and 3
-
 	let dt = new Date();
+	let hh = dt.getHours();
 	let time = `${toFixed(dt.getFullYear())}-${toFixed(dt.getMonth()+1)}-${toFixed(dt.getDate())}`;
-	time += `_${toFixed(dt.getHours())}-${toFixed(dt.getMinutes())}`;
+	time += `_${toFixed(hh)}-${toFixed(dt.getMinutes())}`;
 
 	const backups_path_time = path.join(os.homedir(), 'backups', time);
 	if(!fs.existsSync(backups_path_time))
@@ -39,6 +40,17 @@ async function databaseBackup() {
 	const admin_sql = path.join(backups_path_time, 'admin_in2rp.sql');
 	const wl_sql = path.join(backups_path_time, 'Whitelist.sql');
 	const mongodb_out = path.join(backups_path_time);
+
+	if(hh >= 4 && hh < 4+BACKUPS_DELAY) {
+		try {
+			console.log('Making game backup');
+			let res = await Utils.executeCommand(path.join(os.homedir(), 'game_backup.sh'));
+			console.log('\t', res);
+		}
+		catch(e) {
+			console.error(e);
+		}
+	}
 
 	try {
 		console.log('Starting backup');
@@ -65,6 +77,6 @@ async function databaseBackup() {
 	}
 }
 
-//databaseBackup();//temporary
+//databaseBackup();//testing
 
-setInterval(databaseBackup, 1000*60*60 * 3);//backup database every 3 hours
+setInterval(databaseBackup, 1000*60*60 * BACKUPS_DELAY);//backup database every BACKUPS_DELAY hours

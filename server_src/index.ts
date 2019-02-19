@@ -7,8 +7,10 @@ declare global {
 }
 global.PORT = 1234;
 
-console.log( 'Start time:', 
-	new Date().toLocaleString('pl-PL').replace(/([-\ :])(\d)([-\ :])/gi, '$10$2$3') );
+console.log(
+	'Start time:', 
+	new Date().toLocaleTimeString('en-US', {hour12: false}).replace(/([-\ :])(\d)([-\ :])/gi, '$10$2$3')
+);
 
 import Utils from './utils';
 import './backup_creator';
