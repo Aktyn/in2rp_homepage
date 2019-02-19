@@ -41,6 +41,7 @@ async function databaseBackup() {
 	const mongodb_out = path.join(backups_path_time);
 
 	try {
+		console.log('Starting backup');
 		if(fs.existsSync(admin_sql))
 			fs.unlinkSync(admin_sql);
 		if(fs.existsSync(wl_sql))
@@ -49,17 +50,21 @@ async function databaseBackup() {
 		await Utils.executeCommand(
 			`mysqldump -u ${mysql_login} -p${mysql_pass} admin_in2rp > ${admin_sql}`)
 				.then(res => console.log(res)).catch(console.error);
+		console.log('\tadmin_in2rp backed up [mysql]');
 		await Utils.executeCommand(
 			`mysqldump -u ${mysql_login} -p${mysql_pass} Whitelist > ${wl_sql}`)
 				.then(res => console.log(res)).catch(console.error);
+		console.log('\tWhitelist backed up [mysql]');
 
-		await Utils.executeCommand(`mongodump -u ${mongodb_login} -p "${mongodb_pass}" --db nodebb --authenticationDatabase=$3 --out ${mongodb_out}`);
+		let tmp = await Utils.executeCommand(`mongodump -u ${mongodb_login} -p "${mongodb_pass}" --db nodebb --authenticationDatabase=$3 --out ${mongodb_out}`);
+		console.log('\tforum backed up [mongodb]', tmp);
+		console.log('\tbackup successful');
 	}
 	catch(e) {
 		console.error(e);
 	}
 }
 
-//databaseBackup();//temporary
+databaseBackup();//temporary
 
 setInterval(databaseBackup, 1000*60*60 * 3);//backup database every 3 hours
