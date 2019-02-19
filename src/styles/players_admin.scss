@@ -8,8 +8,12 @@
 	    justify-content: space-evenly;
 
 		& > * {//single player block
+			display: grid;
+			grid-template-rows: fit-content(100%) auto fit-content(100%);
+			align-items: center;
+			justify-items: center;
 			width: 250px;
-			// min-height: 165px;
+			height: 165px;
 			// padding: 5px;
 			margin-bottom: 20px;
 			box-shadow: 0px 2px 10px #000a;
@@ -18,13 +22,16 @@
 			overflow: hidden;
 
 			// text-align: left;
-			background-color: #4DB6AC;
-			border: 1px solid #009688;
+			// background-color: #4DB6AC;
+			background-color: #546E7A;
+			border: 1px solid #37474F;
 			color: #fff;
 			text-shadow: 0px 1px 1px #0003;
 
 			& > h2 {
-				background-color: #009688;
+				// background-color: #009688;
+				width: 100%;
+				background-color: #37474F;
 				color: #fff;
 				margin: 0px;
 				font-size: inherit;

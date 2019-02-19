@@ -4,8 +4,11 @@ import Content from './../components/content';
 import Loader from './../components/loader';
 import Cookies from './../utils/cookies';
 import Utils from './../utils/utils';
+import Pager from './../components/pages_controller';
 
 import './../styles/players_admin.scss';
+
+const BLOCK_PER_PAGE = 16;
 
 function hexToDec(s: string) {
     var i, j, digits = [0], carry;
@@ -54,6 +57,7 @@ interface PlayersState {
 	loading: boolean;
 	error?: string;
 	players_data: PlayerData[];
+	players_page: number;
 	lone_hex: string[];
 	discord_users_candidats?: DiscordUserData[],
 
@@ -78,6 +82,7 @@ export default class extends React.Component<any, PlayersState> {
 		loading: true,
 		error: undefined,
 		players_data: [],
+		players_page: 0,
 		lone_hex: [],
 		discord_users_candidats: undefined,
 
@@ -297,13 +302,15 @@ export default class extends React.Component<any, PlayersState> {
 				//@ts-ignore
 				let b_i: number = this.state.players_data.indexOf(b);
 				return match_scores[b_i] - match_scores[a_i];
-			})
+			}),
+			players_page: 0
 		});
 	}
 
 	renderPlayerInfoBlock(data: PlayerData, index: number) {
-		//if(!data.id)
-		//	return undefined;
+		let page = this.state.players_page;
+		if(index < page*BLOCK_PER_PAGE || index >= (page+1)*BLOCK_PER_PAGE)
+			return undefined;
 
 		return <div key={index}>
 			<h2>
@@ -436,7 +443,9 @@ export default class extends React.Component<any, PlayersState> {
 					this.search(el.nativeEvent.target.value.toLowerCase());
 				}} />
 			</div>
-			<div className='players_list'>{datas.map(this.renderPlayerInfoBlock)}</div>
+			<div className='players_list'>{datas.map(this.renderPlayerInfoBlock.bind(this))}</div>
+			<Pager items={this.state.players_data.length} page_capacity={BLOCK_PER_PAGE} 
+				page={this.state.players_page} onChange={pi => this.setState({players_page: pi})} />
 			<hr/>
 			<div>
 				<h4>Hexy bez przypisanej postaci w grze</h4>

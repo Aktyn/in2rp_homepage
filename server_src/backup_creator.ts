@@ -44,7 +44,7 @@ async function databaseBackup() {
 	if(hh >= 4 && hh < 4+BACKUPS_DELAY) {
 		try {
 			console.log('Making game backup');
-			let res = await Utils.executeCommand(path.join(os.homedir(), 'game_backup.sh'));
+			let res = await Utils.executeCommand(path.join(os.homedir(), 'skrypty', 'game_backup.sh'));
 			console.log('\t', res);
 		}
 		catch(e) {
