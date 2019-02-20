@@ -12,7 +12,7 @@ export default {
 			mode: process.env.NODE_ENV === 'development' ? 'cors' : 'same-origin',
 			headers: {"Content-Type": "application/json; charset=utf-8"},
 			body: data
-		})
+		});
 	},
 
 	IS_MOBILE: (function() {

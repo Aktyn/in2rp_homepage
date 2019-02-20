@@ -106,6 +106,7 @@ app.post('/remove_whitelist_player', commonAPI.remove_whitelist_player);
 app.post('/get_stock_exchange', commonAPI.get_stock_exchange);
 app.post(`/upload_screenshot_request`, commonAPI.upload_screenshot);
 app.post('/add_stock_exchange_entry', commonAPI.add_stock_exchange_entry);
+app.post('/delete_stock_exchange_entry', commonAPI.delete_stock_exchange_entry);
 
 app.post('/record_visit', (req, resp) => {
 	let ip = Utils.extractIP(req);

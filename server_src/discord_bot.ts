@@ -162,6 +162,14 @@ function onLogin() {
 	}
 
 	guild = bot.guilds.find(g => g.id === '492333108679409674');//IN2RP guild id
+
+	/*let msg = '';
+	guild.roles.find(r => r.name === 'Rozmowa kwalifikacyjna').members.forEach(m => {
+		if(m.user.presence.status === 'online')
+			msg += `<@${m.id}>\n`;
+	});
+
+	(bot.channels.get('528687303347142677') as Discord.TextChannel).send('Kandydaci gotowi do przepytania:\n' + msg);*/
 	
 	/*guild.members.filter(m=>!m.roles.some(r=>r.name==='Użytkownik')).forEach(m => {
 		//if(m.user.username === 'Aktyn') {

@@ -488,4 +488,25 @@ export default {
 			res.status(413).send('ERROR');
 		}
 	},
+
+	delete_stock_exchange_entry: async function(req: any, res: any) {
+		try {
+			let admin_user = await Utils.testForAdmin(req, res);
+			if(false === admin_user)
+				return;
+
+			//let insert_result = await Database.addStockExchange(
+			//	req.body.mark, req.body.capacity, req.body.model, req.body.price);
+
+			await Database.deleteStockExchange(req.body.id);
+			await Database.deleteStockExchangePreview(req.body.id);
+			
+			//console.log( insert_result.insertId );
+
+			res.json({result: 'SUCCESS'});
+		}
+		catch(e) {
+			res.json({result: 'ERROR'});
+		}
+	},
 };

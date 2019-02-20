@@ -310,15 +310,24 @@ const self = {
 			GROUP BY id;")
 	},
 
-	addStockExchange: function(mark: string, capacity: number, model: string, price: string) 
-	{
+	addStockExchange: function(mark: string, capacity: number, model: string, price: string) {
 		return this.customQuery(`INSERT INTO Whitelist.stock_exchange (timestamp, mark, capacity, model, price)
 			VALUES ('${Date.now()}', '${mark}', ${capacity}, '${model}', '${price}');`);
 	},
 
 	addStockExchangePreview: function(stock_id: number, file_name: string) {
 		return this.customQuery(`INSERT IGNORE INTO Whitelist.stock_exchange_previews (stock_id, file_name) VALUES (${stock_id}, '${file_name}');`);
-	}
+	},
+
+	deleteStockExchange: function(id: number) {
+		return this.customQuery(`DELETE FROM Whitelist.stock_exchange 
+			WHERE id = ${id};`);
+	},
+
+	deleteStockExchangePreview: function(id: number) {
+		return this.customQuery(`DELETE FROM Whitelist.stock_exchange_previews 
+			WHERE stock_id = ${id};`);
+	},
 };
 
 export default self;

@@ -89,15 +89,17 @@
 
 		/*compact entry*/
 		& .entry {
+			animation: fade_in 0.5s ease-out;
 			display: inline-grid;
-			grid-template-areas: "model price" "preview preview" "mark capacity";
+			grid-template-areas: "model price" "preview preview" "mark capacity" "options options";
 			align-items: center;
 			
 			margin: 15px 0px;
 
 			color: #fff;
 			background-color: #546E7A;
-			box-shadow: 0px 3px 10px #0009;
+			box-shadow: 0px 2px 7px #000a;
+			border: 1px solid #37474F;
 			border-radius: 10px;
 			overflow: hidden;
 
@@ -140,15 +142,41 @@
 
 			& .preview {
 				grid-area: preview;
-				width: 192px*1.5;
-				height: 108px*1.5;
+
+				min-width: 192px;
+				min-height: 108px;
+			   	line-height: 108px;
+
+				&, & > img {
+					max-width: 192px*1.5;
+					max-height: 108px*1.5;
+				}
+				& > img {
+					margin: auto;
+					width: auto;
+					height: auto;
+				}
 
 				background-size: contain;
 				background-position: center;
 				background-repeat: no-repeat;
 			}
 
+			& .options {
+				grid-area: options;
+				position: relative;
+				z-index: 3;
+
+				& > button, & > a {
+					display: inline-block;
+				    background-color: #fff;
+				    color: #455a64;
+				    margin: 10px 0px;
+				}
+			}
+
 			position: relative;
+			z-index: 2;
 			cursor: pointer;
 
 			&:hover::after {
@@ -180,6 +208,7 @@
 	}
 
 	& .focused_container {
+		animation: fade_in 0.5s ease-out;
 		& button {
 			background-color: #b71c1c;
 			margin: 10px 0px;

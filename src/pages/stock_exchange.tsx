@@ -35,8 +35,11 @@ interface StockExchangeState {
 	permissions: PERMISSIONS;
 	adding_menu: boolean;
 	sending_status: STATUS;
+	deleting_status: STATUS;
 	data: SchemaJSON[];
 	focused: SchemaJSON | null;
+
+	delete_target_id?: number;
 
 	previews: ({url: string | ArrayBuffer | null; file: File} | null)[];
 }
@@ -48,8 +51,10 @@ export default class extends React.Component<any, StockExchangeState> {
 		permissions: PERMISSIONS.USER,
 		adding_menu: false,
 		sending_status: STATUS.UNKNOWN,
+		deleting_status: STATUS.UNKNOWN,
 		data: [],
 		focused: null,
+		delete_target_id: undefined,
 
 		previews: [null]//determines number of possible screenshots
 	};
@@ -58,6 +63,8 @@ export default class extends React.Component<any, StockExchangeState> {
 	private capacity: HTMLInputElement | null = null;
 	private model: HTMLInputElement | null = null;
 	private price: HTMLInputElement | null = null;
+
+	private cancel_timeout: number | null = null;
 
 	constructor(props: any) {
 		super(props);
@@ -119,7 +126,7 @@ export default class extends React.Component<any, StockExchangeState> {
         			setTimeout(() => {
         				this.setState({adding_menu: false, sending_status: STATUS.UNKNOWN});
         				this.refresh();
-        			}, 5000);
+        			}, 3000);
         		}
         	}
 		};
@@ -141,6 +148,33 @@ export default class extends React.Component<any, StockExchangeState> {
       	//@ts-ignore
       	//formdata.append('prevfile', this.state.previews[0].file, this.state.previews[0].file.name);
 		xhr.send(formdata);//file
+	}
+
+	deleteEntry(_id: number) {
+		var cookie_token = Cookies.getCookie('discord_token');
+		if(cookie_token === null)
+			return this.onError('Wygląda na to, że nie jesteś zalogowany');
+
+		this.setState({deleting_status: STATUS.SENDING});
+
+		if(this.cancel_timeout !== null)
+			clearTimeout(this.cancel_timeout);
+
+		Utils.postRequest(
+			'delete_stock_exchange_entry', {token: cookie_token, id: _id}
+		).then(res => res.json()).then((res: {result: string, admin: boolean, data: SchemaJSON[]}) => {
+			//console.log(res);
+
+			if(res['result'] !== 'SUCCESS')
+				this.setState({deleting_status: STATUS.ERROR});
+			else {
+				this.setState({deleting_status: STATUS.SUCCESS});
+				this.refresh();
+			}
+		}).catch(e => {
+			this.setState({deleting_status: STATUS.ERROR});
+			console.error(e);
+		});
 	}
 
 	uploadScreenshot(event: React.ChangeEvent<HTMLInputElement>, index: number) {
@@ -186,15 +220,34 @@ export default class extends React.Component<any, StockExchangeState> {
 
 	renderEntry(entry: SchemaJSON, index: number) {
 		var preview_src = (entry.files||'').split(';')[0];
-		//console.log(preview_src);
+		//console.log(entry.id);
 		return <div className='entry' key={index} onClick={() => this.setState({focused: entry})}>
 			<div className='mark'>{entry.mark}</div>
 			<div className='capacity'>{entry.capacity}</div>
-			<div className='preview' style={{
-				backgroundImage: `url('${Config.api_server_url}/uploaded/${preview_src}')`
-			}}></div>
+			<div className='preview'>
+				<img src={`${Config.api_server_url}/uploaded/${preview_src}`} />
+			</div>
 			<div className='model'>{entry.model}</div>
 			<div className='price'>{parseFloat(entry.price).toLocaleString('pl-PL')} PLN</div>
+			{this.state.permissions === PERMISSIONS.ADMIN && <div className='options'>
+				<button className='clean small_button' onClick={e => {
+					if(this.state.deleting_status === STATUS.SENDING)
+						return;
+					if(this.state.delete_target_id === entry.id)
+						this.deleteEntry(entry.id);
+					else {
+						this.setState({delete_target_id: entry.id, deleting_status: STATUS.UNKNOWN});
+						if(this.cancel_timeout !== null)
+							clearTimeout(this.cancel_timeout);
+						this.cancel_timeout = setTimeout(() => {
+							this.setState({delete_target_id: undefined});
+						}, 5000) as never;
+					}
+					e.stopPropagation();
+				}}>{this.state.delete_target_id !== entry.id ? 'USUŃ' : (
+					this.state.deleting_status === STATUS.ERROR ? 'Błąd' : 'DEFINITYWNIE?'
+				)}</button>
+			</div>}
 		</div>;
 	}
 
