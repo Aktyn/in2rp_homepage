@@ -50,7 +50,7 @@ class ServerData {
 			};
 		}
 		catch(e) {
-			console.error('Cannot fetch server player\'s data');
+			//console.error('Cannot fetch server player\'s data');
 			this.data = {online: false, players_online: []};
 		}
 		
