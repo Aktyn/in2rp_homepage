@@ -88,11 +88,13 @@ function answerToMsg(author: Discord.User, message?: string) {
 }
 
 const good_links = [
-	new RegExp('https?:\/\/in2rp.(pl|com)', 'i'),
-	new RegExp('https?:\/\/discord.gg/4aa6F7Q', 'i'),
-	new RegExp('https?:\/\/(www\.)?youtube.com', 'i'),
-	new RegExp('https?:\/\/youtu.be', 'i'),
-	new RegExp('https?:\/\/i.imgur.com', 'i')
+	new RegExp('https?:\/\/in2rp\.(pl|com)', 'i'),
+	new RegExp('https?:\/\/discord\.gg/4aa6F7Q', 'i'),
+	new RegExp('https?:\/\/(www\.)?youtube\.com', 'i'),
+	new RegExp('https?:\/\/youtu\.be', 'i'),
+	new RegExp('https?:\/\/plays\.tv', 'i'),
+	new RegExp('https?:\/\/twitch\.tv', 'i'),
+	new RegExp('https?:\/\/i\.imgur\.com', 'i')
 ];
 //const forbiddenPatterns = ['http://discord'];
 function isProperMessage(msg: string) {
