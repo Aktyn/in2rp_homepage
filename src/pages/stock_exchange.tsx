@@ -262,7 +262,10 @@ export default class extends React.Component<any, StockExchangeState> {
 			<div>
 				<Link className='clean small_button' to='/stock_exchange' style={{
 					marginBottom: '15px', display: 'inline-block'
-				}} onClick={()=>this.setState({edit_result: STATUS.UNKNOWN})}>Wróć</Link>
+				}} onClick={()=>this.setState({
+					edit_result: STATUS.UNKNOWN,
+					edit_status: EDIT_STATUS.DISABLED
+				})}>Wróć</Link>
 			</div>
 			{this.state.edit_status === EDIT_STATUS.DISABLED ?
 				<article className='input_grid'>
@@ -313,7 +316,10 @@ export default class extends React.Component<any, StockExchangeState> {
 			})}</div>
 			<div>
 				<Link className='clean small_button' to='/stock_exchange' 
-					onClick={()=>this.setState({edit_result: STATUS.UNKNOWN})}>Wróć</Link>
+					onClick={()=>this.setState({
+						edit_result: STATUS.UNKNOWN, 
+						edit_status: EDIT_STATUS.DISABLED
+					})}>Wróć</Link>
 			</div>
 		</div>;
 	}
