@@ -509,4 +509,22 @@ export default {
 			res.json({result: 'ERROR'});
 		}
 	},
+
+	edit_stock_exchange_entry: async function(req: any, res: any) {
+		try {
+			let admin_user = await Utils.testForAdmin(req, res);
+			if(false === admin_user)
+				return;
+
+			let update_result = await Database.editStockExchangePreview(req.body.id, 
+				req.body.mark, req.body.capacity, req.body.model, req.body.price);
+			if(update_result.affectedRows < 1)
+				return res.json({result: 'ERROR'});
+
+			res.json({result: 'SUCCESS'});
+		}
+		catch(e) {
+			res.json({result: 'ERROR'});
+		}
+	},
 };

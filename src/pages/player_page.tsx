@@ -131,8 +131,9 @@ export default class extends React.Component<any, PlayerPageState> {
 				this.setState({error: error_msg || 'Nieznany błąd', loading: false});
 			}
 			else {
-				const { history: { push } } = this.props;
-				push('/players');//redirecting back to players page
+				//const { history: { push } } = this.props;
+				//push('/players');//redirecting back to players page
+				this.props.history.push(`/players`);//not tested
 			}
 		}).catch(e => {
 			return this.onError('Niewłaściwa odpowiedź serwera');

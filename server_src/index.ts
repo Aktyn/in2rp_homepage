@@ -9,7 +9,7 @@ global.PORT = 1234;
 
 console.log(
 	'Start time:', 
-	new Date().toLocaleTimeString('en-US', {hour12: false}).replace(/([-\ :])(\d)([-\ :])/gi, '$10$2$3')
+	new Date().toLocaleString('en-US', {hour12: false}).replace(/([-\ :])(\d)([-\ :])/gi, '$10$2$3')
 );
 
 import Utils from './utils';
@@ -107,6 +107,7 @@ app.post('/get_stock_exchange', commonAPI.get_stock_exchange);
 app.post(`/upload_screenshot_request`, commonAPI.upload_screenshot);
 app.post('/add_stock_exchange_entry', commonAPI.add_stock_exchange_entry);
 app.post('/delete_stock_exchange_entry', commonAPI.delete_stock_exchange_entry);
+app.post('/edit_stock_exchange_entry', commonAPI.edit_stock_exchange_entry);
 
 app.post('/record_visit', (req, resp) => {
 	let ip = Utils.extractIP(req);

@@ -328,6 +328,14 @@ const self = {
 		return this.customQuery(`DELETE FROM Whitelist.stock_exchange_previews 
 			WHERE stock_id = ${id};`);
 	},
+
+	editStockExchangePreview: function(id: number, 
+		mark: string, capacity: number, model: string, price: string) 
+	{
+		return this.customQuery(`UPDATE Whitelist.stock_exchange 
+			SET mark='${mark}', capacity=${capacity}, model='${model}', price='${price}' 
+			WHERE id = ${id};`);
+	}
 };
 
 export default self;

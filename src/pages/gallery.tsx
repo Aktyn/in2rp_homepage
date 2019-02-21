@@ -23,7 +23,10 @@ function importAll(r: any) {
 //@ts-ignore
 const img_sources: any[] = importAll(require.context('./../img/gallery', false, /\.(png|jpe?g|svg)$/));
 //@ts-ignore
-img_sources = Object.keys(img_sources).map(key => img_sources[key]);
+img_sources = Object.keys(img_sources).map(key => img_sources[key]).sort((a: string, b: string) => {
+	//preserve numerical order
+	return parseInt(a.replace(/[^\d]/g, '')) - parseInt(b.replace(/[^\d]/g, ''));
+});
 
 //console.log(img_sources);
 

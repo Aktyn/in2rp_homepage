@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Content from './../components/content';
 import Loader from './../components/loader';
 import Cookies from './../utils/cookies';
@@ -19,6 +20,12 @@ enum STATUS {
 	SUCCESS
 }
 
+enum EDIT_STATUS {
+	DISABLED,
+	ENABLED,
+	PENDING,
+}
+
 interface SchemaJSON {
 	id: number;
 	timestamp: string;
@@ -37,7 +44,8 @@ interface StockExchangeState {
 	sending_status: STATUS;
 	deleting_status: STATUS;
 	data: SchemaJSON[];
-	focused: SchemaJSON | null;
+	edit_result: STATUS;
+	edit_status: EDIT_STATUS;
 
 	delete_target_id?: number;
 
@@ -53,7 +61,8 @@ export default class extends React.Component<any, StockExchangeState> {
 		sending_status: STATUS.UNKNOWN,
 		deleting_status: STATUS.UNKNOWN,
 		data: [],
-		focused: null,
+		edit_result: STATUS.UNKNOWN,
+		edit_status: EDIT_STATUS.DISABLED,
 		delete_target_id: undefined,
 
 		previews: [null]//determines number of possible screenshots
@@ -124,7 +133,11 @@ export default class extends React.Component<any, StockExchangeState> {
         		else if(xhr.status === 200) {//success
         			this.setState({sending_status: STATUS.SUCCESS});
         			setTimeout(() => {
-        				this.setState({adding_menu: false, sending_status: STATUS.UNKNOWN});
+        				this.setState({
+    						adding_menu: false, 
+        					sending_status: STATUS.UNKNOWN, 
+        					previews: [null]
+        				});
         				this.refresh();
         			}, 3000);
         		}
@@ -194,17 +207,102 @@ export default class extends React.Component<any, StockExchangeState> {
             reader.readAsDataURL(_file);
 	}
 
-	renderFocused(focused: SchemaJSON) {
+	editAction(status: EDIT_STATUS, _id: number) {
+		if(status === EDIT_STATUS.PENDING)
+			return;
+
+		if(status === EDIT_STATUS.DISABLED)
+			return this.setState({edit_status: EDIT_STATUS.ENABLED});
+
+		var cookie_token = Cookies.getCookie('discord_token');
+		if(cookie_token === null)
+			return this.onError('Wygląda na to, że nie jesteś zalogowany');
+
+		//here we know that status === EDIT_STATUS.ENABLED
+		this.setState({edit_status: EDIT_STATUS.PENDING, edit_result: STATUS.SENDING});
+
+		Utils.postRequest(
+			'edit_stock_exchange_entry', {
+				token: cookie_token, 
+				id: _id, 
+				mark: this.mark === null ? '' : this.mark.value,
+				capacity: this.capacity === null ? '' : this.capacity.value,
+				model: this.model === null ? '' : this.model.value,
+				price: this.price === null ? '' : this.price.value
+			}
+		).then(res => res.json()).then((res: any) => {
+			//console.log(res);
+
+			if(res['result'] !== 'SUCCESS')
+				this.setState({edit_result: STATUS.ERROR, edit_status: EDIT_STATUS.DISABLED});
+			else {
+				this.setState({edit_result: STATUS.SUCCESS, edit_status: EDIT_STATUS.DISABLED});
+				this.refresh();
+			}
+		}).catch(e => {
+			this.setState({edit_result: STATUS.ERROR, edit_status: EDIT_STATUS.DISABLED});
+			console.error(e);
+		});
+	}
+
+	renderFocused(focused?: SchemaJSON) {
+		//<button className='clean small_button' 
+		//	onClick={()=>{this.setState({focused: null})}}>Wróć</button>
+		if(!focused) {
+			return <div className='focused_container'>
+				<div>
+					Nie znaleziono&nbsp;
+					<Link className='clean small_button' to='/stock_exchange'>Wróć</Link>
+				</div>
+			</div>;
+		}
 		var preview_srcs = focused.files ? focused.files.split(';') : [];
 
 		return <div className='focused_container'>
-			<div><button className='clean small_button' 
-				onClick={()=>{this.setState({focused: null})}}>Wróć</button></div>
-			<div className='input_grid'>
-				<label>Marka:</label><div>{focused.mark}</div>
-				<label>Model:</label><div>{focused.model}</div>
-				<label>Cena:</label><div>{parseFloat(focused.price).toLocaleString('pl-PL')} PLN</div>
-				<label>Ilość osób:</label><div>{focused.capacity}</div>
+			<div>
+				<Link className='clean small_button' to='/stock_exchange' style={{
+					marginBottom: '15px', display: 'inline-block'
+				}} onClick={()=>this.setState({edit_result: STATUS.UNKNOWN})}>Wróć</Link>
+			</div>
+			{this.state.edit_status === EDIT_STATUS.DISABLED ?
+				<article className='input_grid'>
+					<label>Marka:</label><div>{focused.mark}</div>
+					<label>Model:</label><div>{focused.model}</div>
+					<label>Cena:</label><div>
+						{parseFloat(focused.price).toLocaleString('pl-PL')} PLN</div>
+					<label>Ilość osób:</label><div>{focused.capacity}</div>
+				</article>
+				:
+				<article className='input_grid'>
+					<label>Marka:</label><input ref={el => this.mark=el} type='text'
+						defaultValue={focused.mark}/>
+					<label>Model:</label><input ref={el => this.model=el} type='text'
+						defaultValue={focused.model}/>
+					<label>Cena:</label><input ref={el => this.price=el} type='number'
+						defaultValue={focused.price}/>
+					<label>Ilość osób:</label><input ref={el => this.capacity=el} type='number'
+						defaultValue={focused.capacity.toString()}/>
+				</article>
+			}
+			<div>
+				<button className='clean small_button' style={{backgroundColor: '#006064'}} 
+					onClick={() => this.editAction(this.state.edit_status, focused.id)}>{
+						this.state.edit_status === EDIT_STATUS.DISABLED ? 'Edycja' : 'Zatwierdź zmiany'
+					}
+				</button>
+				{this.state.edit_status !== EDIT_STATUS.DISABLED && 
+					<button className='clean small_button' style={{
+						backgroundColor: '#006064', 
+						marginLeft: '10px'
+					}} onClick={()=>{
+						if(this.state.edit_status !== EDIT_STATUS.PENDING)
+							this.setState({edit_status: EDIT_STATUS.DISABLED});
+					}}>Anuluj</button>
+				}
+				<div>{this.state.edit_result === STATUS.UNKNOWN ? '' : (
+					this.state.edit_result === STATUS.SENDING ? 'Zatwierdzanie zmian...' : 
+					( this.state.edit_result === STATUS.ERROR ? 'Błąd :(' : 'Sukces :)' )
+				)}</div>
 			</div>
 			<div>{preview_srcs.map((_src, i) => {
 				let path = `${Config.api_server_url}/uploaded/${_src}`;
@@ -213,15 +311,20 @@ export default class extends React.Component<any, StockExchangeState> {
 					<a href={path} target='_blank' className='open'></a>
 				</div>;
 			})}</div>
-			<div><button className='clean small_button' 
-				onClick={()=>{this.setState({focused: null})}}>Wróć</button></div>
+			<div>
+				<Link className='clean small_button' to='/stock_exchange' 
+					onClick={()=>this.setState({edit_result: STATUS.UNKNOWN})}>Wróć</Link>
+			</div>
 		</div>;
 	}
 
 	renderEntry(entry: SchemaJSON, index: number) {
 		var preview_src = (entry.files||'').split(';')[0];
 		//console.log(entry.id);
-		return <div className='entry' key={index} onClick={() => this.setState({focused: entry})}>
+		return <div className='entry' key={index} onClick={() => {
+			//this.setState({focused: entry});
+			this.props.history.push(`/stock_exchange/${entry.id}`);
+		}}>
 			<div className='mark'>{entry.mark}</div>
 			<div className='capacity'>{entry.capacity}</div>
 			<div className='preview'>
@@ -258,8 +361,8 @@ export default class extends React.Component<any, StockExchangeState> {
 					<article className='input_grid'>
 						<label>Marka:</label><input ref={el => this.mark=el} type='text'/>
 						<label>Model:</label><input ref={el => this.model=el} type='text'/>
-						<label>Ilość osób:</label><input ref={el => this.capacity=el} type='number'/>
 						<label>Cena:</label><input ref={el => this.price=el} type='number'/>
+						<label>Ilość osób:</label><input ref={el => this.capacity=el} type='number'/>
 					</article>
 					<div className='files_info'>Obrazy jpg/png, maksymalny rozmiar: 1MB.</div>
 					<div className='screens_input'>
@@ -293,7 +396,9 @@ export default class extends React.Component<any, StockExchangeState> {
 						<button className='clean small_button' style={{backgroundColor: '#33691E'}}
 							onClick={this.sendEntry.bind(this)}>Dodaj</button>
 						<button className='clean small_button' style={{backgroundColor: '#b71c1c'}}
-							onClick={()=>this.setState({adding_menu: false})}>Anuluj</button>
+							onClick={()=>this.setState({adding_menu: false, previews: [null]})}>
+							Anuluj
+						</button>
 					</div>
 					<div>{this.state.sending_status===STATUS.UNKNOWN ? '' : (
 						this.state.sending_status===STATUS.SENDING ? 'Wysyłanie...' : (
@@ -310,8 +415,10 @@ export default class extends React.Component<any, StockExchangeState> {
 				<article>
 					{this.state.error && <span className='error'>{this.state.error}</span>}
 					{this.state.loading && <Loader color='#f44336' />}
-					{!this.state.loading && (this.state.focused ? 
-							this.renderFocused(this.state.focused) :
+					{!this.state.loading && (this.props.match.params.id ? 
+							this.renderFocused(this.state.data.find(
+								d => d.id === parseInt(this.props.match.params.id)
+							)) :
 							<div className='entries_container'>
 								{this.state.data.map(this.renderEntry.bind(this))}
 							</div>

@@ -91,7 +91,7 @@
 		& .entry {
 			animation: fade_in 0.5s ease-out;
 			display: inline-grid;
-			grid-template-areas: "model price" "preview preview" "mark capacity" "options options";
+			grid-template-areas: "mark price" "preview preview" "model capacity" "options options";
 			align-items: center;
 			
 			margin: 15px 0px;
@@ -105,34 +105,36 @@
 
 			& .mark {
 				grid-area: mark;
+				font-weight: bold;
 			}
 			& .capacity {
 				grid-area: capacity;
 
-				height: 20px;
-				line-height: 20px;
+				height: 25px;
+				line-height: 25px;
 				text-align: right;
 
 				&::after {
 					content: " ";
 					float: right;
 					display: inline-block;
-					width: 20px;
-					height: 20px;
+					width: 25px;
+					height: 25px;
 					background: url('./../img/people.svg') center no-repeat;
-					background-size: 80%;
+					background-size: 70%;
 					margin: 0px 5px 0px 0px;
 				}
 			}
 
-			& .model, & .price {
+			& .mark, & .price {
 				padding: 10px 0px;
 				background-color: #37474F;
 			}
 
 			& .model {
 				grid-area: model;
-				font-weight: bold;
+				height: 25px;
+				line-height: 25px;
 			}
 			& .price {
 				grid-area: price;
@@ -145,7 +147,7 @@
 
 				min-width: 192px;
 				min-height: 108px;
-			   	line-height: 108px;
+			   	// line-height: 108px;
 
 				&, & > img {
 					max-width: 192px*1.5;
@@ -209,7 +211,7 @@
 
 	& .focused_container {
 		animation: fade_in 0.5s ease-out;
-		& button {
+		& button, & a {
 			background-color: #b71c1c;
 			margin: 10px 0px;
 		}
@@ -225,6 +227,10 @@
 			& > img {
 				width: 100%;
 				height: auto;
+			}
+
+			& > a {
+				margin: 0px;
 			}
 
 			& .open {

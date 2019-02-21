@@ -94,7 +94,8 @@ const good_links = [
 	new RegExp('https?:\/\/youtu\.be', 'i'),
 	new RegExp('https?:\/\/plays\.tv', 'i'),
 	new RegExp('https?:\/\/twitch\.tv', 'i'),
-	new RegExp('https?:\/\/i\.imgur\.com', 'i')
+	new RegExp('https?:\/\/i\.imgur\.com', 'i'),
+	new RegExp('https?:\/\/cdn\.discordapp\.com', 'i'),
 ];
 //const forbiddenPatterns = ['http://discord'];
 function isProperMessage(msg: string) {
@@ -215,7 +216,8 @@ function onLogin() {
 
 		if(message.channel instanceof Discord.TextChannel) {//non private message
 			if(!isProperMessage(message.content)) {
-				console.log('removing link:', message.content);
+				console.log('removing link:', message.content, 'user:', 
+					message.author.username, message.author.id, 'channel:', message.channel.name);
 				message.delete().catch(console.error);
 			}
 

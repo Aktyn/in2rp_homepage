@@ -99,6 +99,7 @@ render(
 	    		<Route path='/admins_mng' component={AsyncPages.AdminsManager} />
 	    		<Route path='/players/:id' component={AsyncPages.PlayerPage}/>
 	    		<Route path='/players' component={AsyncPages.Players} />
+	    		<Route path='/stock_exchange/:id' component={AsyncPages.StockExchange} />
 	    		<Route path='/stock_exchange' component={AsyncPages.StockExchange} />
 	    		<Route path='/statistics' component={AsyncPages.Statistics} />
 	    		<Route path='/gallery' component={AsyncPages.Gallery} />
