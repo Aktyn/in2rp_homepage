@@ -23,7 +23,7 @@ export default class extends React.Component<any, any> {
 				<section className='video_container'>
 					<iframe width={640} height={360} src='https://www.youtube.com/embed/YbehCmRtLvc?modestbranding=1&rel=0&controls=1&showinfo=0&fs=1&color=white'
 						allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-						frameBorder={0} allowFullScreen={true} scrolling='no'></iframe>
+						frameBorder={0} allowFullScreen={true} scrolling='no' title='trailer'></iframe>
 				</section>
 			</Content>
 		</React.Fragment>;

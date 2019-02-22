@@ -67,7 +67,7 @@ class WidgetClass extends React.Component<any, WidgetState> {
 			{
 				this.state.user.id && this.state.user.avatar &&
 				<img src={`https://cdn.discordapp.com/avatars/${id_slash_avatar}.webp?size=128`} 
-					ref={img => this.avatar_img = img}
+					ref={img => this.avatar_img = img} alt='client avatar'
 					onError={self => this.avatar_img && (this.avatar_img.style.display = 'none')} />
 			}
 			

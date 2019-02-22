@@ -92,7 +92,7 @@ export default class extends React.Component<any, FooterState> {
 						<h3>
 							Użytkownicy online ({this.state.members && this.state.members.length}):
 							{this.state.instant_invite &&
-								<a href={this.state.instant_invite} 
+								<a href={this.state.instant_invite} rel="noreferrer"
 									target='_blank' className='clean small_button'>
 									Otwórz Discord
 								</a>
@@ -126,7 +126,7 @@ export default class extends React.Component<any, FooterState> {
 						:
 						<label className='fader_in'>
 							<Link to='/snake'>Copyright &copy;</Link> 2018 - Aktyn 
-							<img src={aktyn_logo} /> - All rights reserved
+							<img alt='author logo' src={aktyn_logo} /> - All rights reserved
 						</label>
 					}
 					<button aria-label="link do githuba autora"
