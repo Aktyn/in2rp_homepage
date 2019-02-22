@@ -7,7 +7,7 @@ import DiscordSession from './../components/discord_session';
 
 import './../styles/discord_login.scss';
 
-enum STATUS {
+const enum STATUS {
 	UNKNOWN,
 	SUCCESS,
 	ERROR

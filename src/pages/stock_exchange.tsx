@@ -8,23 +8,58 @@ import Utils from './../utils/utils';
 
 import './../styles/stock_exchange.scss';
 
-enum PERMISSIONS {
+const enum PERMISSIONS {
 	ADMIN, 
 	USER
 }
 
-enum STATUS {
+const enum STATUS {
 	UNKNOWN,
 	SENDING,
 	ERROR,
 	SUCCESS
 }
 
-enum EDIT_STATUS {
+const enum EDIT_STATUS {
 	DISABLED,
 	ENABLED,
 	PENDING,
 }
+
+interface SortOption {
+	//labels for ascending and descending modes
+	labels: [string, string];
+	sort_asc: (a: SchemaJSON, b: SchemaJSON) => number;
+	sort_desc: (a: SchemaJSON, b: SchemaJSON) => number;
+}
+
+const SORT_OPTIONS: SortOption[] = [
+	{
+		labels: ['Najnowsze', 'Najstarsze'], 
+		sort_asc: (a, b) => parseInt(b.timestamp) - parseInt(a.timestamp),
+		sort_desc: (a, b) => parseInt(a.timestamp) - parseInt(b.timestamp)
+	},
+	{
+		labels: ['Ilość osób ▲', 'Ilość osób ▼'],
+		sort_asc: (a, b) => a.capacity - b.capacity,
+		sort_desc: (a, b) => b.capacity - a.capacity
+	},
+	{
+		labels: ['Cena ▲', 'Cena ▼'],
+		sort_asc: (a, b) => parseInt(a.price) - parseInt(b.price),
+		sort_desc: (a, b) => parseInt(b.price) - parseInt(a.price)
+	},
+	{
+		labels: ['Model A-Z', 'Model Z-A'],
+		sort_asc: (a, b) => a.model.localeCompare(b.model),
+		sort_desc: (a, b) => b.model.localeCompare(a.model)
+	},
+	{
+		labels: ['Marka A-Z', 'Marka Z-A'],
+		sort_asc: (a, b) => a.mark.localeCompare(b.mark),
+		sort_desc: (a, b) => b.mark.localeCompare(a.mark)
+	}
+];
 
 interface SchemaJSON {
 	id: number;
@@ -50,6 +85,9 @@ interface StockExchangeState {
 	delete_target_id?: number;
 
 	previews: ({url: string | ArrayBuffer | null; file: File} | null)[];
+
+	sorting?: SortOption;
+	sort_mode: 0 | 1;
 }
 
 export default class extends React.Component<any, StockExchangeState> {
@@ -65,7 +103,10 @@ export default class extends React.Component<any, StockExchangeState> {
 		edit_status: EDIT_STATUS.DISABLED,
 		delete_target_id: undefined,
 
-		previews: [null]//determines number of possible screenshots
+		previews: [null],//determines number of possible screenshots
+
+		sorting: undefined,
+		sort_mode: 0
 	};
 
 	private mark: HTMLInputElement | null = null;
@@ -245,6 +286,19 @@ export default class extends React.Component<any, StockExchangeState> {
 		});
 	}
 
+	applySorting(options: SortOption) {
+		let switch_mode = this.state.sorting === options;
+		let new_mode = switch_mode ? (this.state.sort_mode === 0 ? 1 : 0) as (0|1) : 0;
+
+		//apply sort on data array
+		let sorted_data = this.state.data.sort(new_mode === 1 ? options.sort_desc : options.sort_asc);
+
+		if(switch_mode) 
+			this.setState({sort_mode: new_mode, data: sorted_data});
+		else
+			this.setState({sorting: options, sort_mode: 0, data: sorted_data});
+	}
+
 	renderFocused(focused?: SchemaJSON) {
 		//<button className='clean small_button' 
 		//	onClick={()=>{this.setState({focused: null})}}>Wróć</button>
@@ -326,9 +380,8 @@ export default class extends React.Component<any, StockExchangeState> {
 
 	renderEntry(entry: SchemaJSON, index: number) {
 		var preview_src = (entry.files||'').split(';')[0];
-		//console.log(entry.id);
+		//console.log(entry);
 		return <div className='entry' key={index} onClick={() => {
-			//this.setState({focused: entry});
 			this.props.history.push(`/stock_exchange/${entry.id}`);
 		}}>
 			<div className='mark'>{entry.mark}</div>
@@ -358,6 +411,23 @@ export default class extends React.Component<any, StockExchangeState> {
 				)}</button>
 			</div>}
 		</div>;
+	}
+
+	renderControls() {
+		return <>
+			<label>SORTOWANIE</label><br/>
+			<div className='sort_controls'>
+				{SORT_OPTIONS.map((opt, i) => {
+					var is_active = this.state.sorting === opt;
+					var label = opt.labels[ is_active ? this.state.sort_mode : 0 ];
+
+					var class_name = is_active ? (this.state.sort_mode === 0 ? 'asc' : 'desc') : '';
+
+					return <button key={i} className={class_name}
+						onClick={()=>this.applySorting(opt)}>{label}</button>;
+				})}
+			</div>
+		</>;
 	}
 
 	render() {
@@ -425,9 +495,12 @@ export default class extends React.Component<any, StockExchangeState> {
 							this.renderFocused(this.state.data.find(
 								d => d.id === parseInt(this.props.match.params.id)
 							)) :
-							<div className='entries_container'>
-								{this.state.data.map(this.renderEntry.bind(this))}
-							</div>
+							<>
+								{this.renderControls()}
+								<div className='entries_container'>
+									{this.state.data.map(this.renderEntry.bind(this))}
+								</div>
+							</>
 						)
 					}
 				</article>

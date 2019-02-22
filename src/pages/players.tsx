@@ -27,7 +27,7 @@ function hexToDec(s: string) {
     return digits.reverse().join('');
 }
 
-enum ConverterState {
+const enum ConverterState {
 	HEX_TO_DEC,
 	DEC_TO_HEX
 }

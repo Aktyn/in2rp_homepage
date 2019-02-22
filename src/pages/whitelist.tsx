@@ -9,13 +9,13 @@ import Config, { QuestionType, QuestionsBlockSchema } from './../config';
 import Utils from './../utils/utils';
 import Cookies from './../utils/cookies';
 
-enum STATE {
+const enum STATE {
 	UNKNOWN,
 	UNAUTHORIZED,
 	AUTHORIZED
 };
 
-enum WL_STATUS {
+const enum WL_STATUS {
 	UNKNOWN,
 	NOTHING,//user does not send request for whitelist
 	PENDING,

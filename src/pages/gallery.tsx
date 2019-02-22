@@ -30,7 +30,7 @@ img_sources = Object.keys(img_sources).map(key => img_sources[key]).sort((a: str
 
 //console.log(img_sources);
 
-enum STATUS {
+const enum STATUS {
 	UNKNOWN,
 	SUCCESS,
 	ERROR
