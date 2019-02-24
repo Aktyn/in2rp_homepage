@@ -410,12 +410,15 @@ export default {
 	get_stock_exchange: async function(req: any, res: any) {
 		try {
 			var response = await discordAPI.getDiscordUserData(req.body.token);
+			var is_admin;
 			if(response.code === 0) {
-				res.json({ result: response.message });
-				return false;
+				//uncomment to disable for users that are not logged via discord
+				//res.json({ result: response.message });
+				//return false; 
+				is_admin = false;
 			}
-
-			let is_admin = discordAPI.Admins.isAdmin(response.id);
+			else
+				is_admin = discordAPI.Admins.isAdmin(response.id);
 
 			let entries = await Database.getStockExchangeEntries();
 

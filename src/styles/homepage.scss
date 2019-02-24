@@ -13,15 +13,20 @@ $max_w1: 768px;
     justify-content: center;
     justify-items: stretch;
 
-    @media screen and (max-width: 1000px) {
+    /*@media screen and (max-width: 1000px) {
     	grid-template-columns: repeat(2, auto);
     	grid-template-rows: repeat(2, 140px);
+    }*/
+
+    & ~ .main_links {
+        margin-top: -100px;
     }
 
     @media screen and (max-width: $max_w1) {
        	grid-auto-flow: dense;
        	grid-template-columns: auto;
        	grid-template-rows: auto;
+        margin-top: auto !important;
     }
 }
 

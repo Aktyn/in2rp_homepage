@@ -120,7 +120,7 @@ app.use(express.static(dir));
 app.use( '/uploaded', express.static(path.join(dir, '..', 'data', 'uploaded')) );
 
 const index_html = fs.readFileSync(dir + '/index.html', 'utf8');
-app.get('/main.js', express.static(path.join(__dirname, '..', 'dist', 'main.js')));
+app.get('/main.js', express.static(path.join(__dirname, '..', 'dist', 'main.js')));//TODO - try remove
 app.get('*', (req, res) => res.send(index_html));
 
 app.listen(global.PORT, () => console.log(`Homepage server runs on: ${global.PORT}!`));

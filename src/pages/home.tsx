@@ -18,7 +18,11 @@ export default class extends React.Component<any, any> {
 					<a target="_blank" href={Config.discord_invitation_link} rel="noreferrer"
 						className='fancy_button discord'>Discord</a>
 					<Link to='/wl' className='fancy_button whitelist'>Whitelista</Link>
+				</section>
+				<section className='main_links'>
 					<Link to='/rules' className='fancy_button rules'>Regulamin</Link>
+					<Link to='/gallery' className='fancy_button gallery'>Galeria</Link>
+					<Link to='/luvineri' className='fancy_button luvineri'>Luvineri</Link>
 				</section>
 				<section className='video_container'>
 					<iframe width={640} height={360} src='https://www.youtube.com/embed/YbehCmRtLvc?modestbranding=1&rel=0&controls=1&showinfo=0&fs=1&color=white'

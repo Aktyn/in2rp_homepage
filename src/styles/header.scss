@@ -435,7 +435,7 @@ h1.main_header_container.large {
 				}
 			}
 
-			@for $i from 1 through 5 {//each menu link
+			@for $i from 1 through 6 {//each menu link
 				&:nth-child(#{$i}) {
 					animation-delay: #{$i*0.1}s;
 				}

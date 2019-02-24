@@ -1,5 +1,5 @@
 import * as React from 'react';
-//import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export enum QuestionType {
 	DATE,
@@ -38,12 +38,9 @@ const CONFIG = {
 		</ul>
 	</React.Fragment>,
 
-	/*
-	<div className='news' style={{lineHeight: '30px'}}>
-		NOWOŚĆ!!! <Link to='/gallery'>GALERIA SCREENÓW</Link>
-	</div>
-	*/
-	short_info: <span></span>,
+	short_info: <div className='news' style={{lineHeight: '30px'}}>
+		NOWOŚĆ!!! <Link to='/luvineri'>LUVINERI</Link>
+	</div>,
 
 	contacs: <React.Fragment>
 		<h4>Pytania odnośnie serwera możesz kierować do administracji na <a target="_blank" href={discord_invitation_link}>discordzie</a>.</h4>

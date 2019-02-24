@@ -6,7 +6,7 @@ import Cookies from './../utils/cookies';
 import Config from './../config';
 import Utils from './../utils/utils';
 
-import './../styles/stock_exchange.scss';
+import './../styles/luvineri.scss';
 
 const enum PERMISSIONS {
 	ADMIN, 
@@ -126,8 +126,8 @@ export default class extends React.Component<any, StockExchangeState> {
 
 	refresh() {
 		var cookie_token = Cookies.getCookie('discord_token');
-		if(cookie_token === null)
-			return this.onError('Wygląda na to, że nie jesteś zalogowany');
+		//if(cookie_token === null)
+		//	return this.onError('Wygląda na to, że nie jesteś zalogowany');
 
 		this.setState({loading: true, error: undefined});
 
@@ -306,7 +306,7 @@ export default class extends React.Component<any, StockExchangeState> {
 			return <div className='focused_container'>
 				<div>
 					Nie znaleziono&nbsp;
-					<Link className='clean small_button' to='/stock_exchange'>Wróć</Link>
+					<Link className='clean small_button' to='/luvineri'>Wróć</Link>
 				</div>
 			</div>;
 		}
@@ -314,7 +314,7 @@ export default class extends React.Component<any, StockExchangeState> {
 
 		return <div className='focused_container'>
 			<div>
-				<Link className='clean small_button' to='/stock_exchange' style={{
+				<Link className='clean small_button' to='/luvineri' style={{
 					marginBottom: '15px', display: 'inline-block'
 				}} onClick={()=>this.setState({
 					edit_result: STATUS.UNKNOWN,
@@ -342,11 +342,12 @@ export default class extends React.Component<any, StockExchangeState> {
 				</article>
 			}
 			<div>
+				{this.state.permissions === PERMISSIONS.ADMIN &&
 				<button className='clean small_button' style={{backgroundColor: '#006064'}} 
 					onClick={() => this.editAction(this.state.edit_status, focused.id)}>{
 						this.state.edit_status === EDIT_STATUS.DISABLED ? 'Edycja' : 'Zatwierdź zmiany'
 					}
-				</button>
+				</button>}
 				{this.state.edit_status !== EDIT_STATUS.DISABLED && 
 					<button className='clean small_button' style={{
 						backgroundColor: '#006064', 
@@ -369,7 +370,7 @@ export default class extends React.Component<any, StockExchangeState> {
 				</div>;
 			})}</div>
 			<div>
-				<Link className='clean small_button' to='/stock_exchange' 
+				<Link className='clean small_button' to='/luvineri' 
 					onClick={()=>this.setState({
 						edit_result: STATUS.UNKNOWN, 
 						edit_status: EDIT_STATUS.DISABLED
@@ -382,7 +383,7 @@ export default class extends React.Component<any, StockExchangeState> {
 		var preview_src = (entry.files||'').split(';')[0];
 		//console.log(entry);
 		return <div className='entry' key={index} onClick={() => {
-			this.props.history.push(`/stock_exchange/${entry.id}`);
+			this.props.history.push(`/luvineri/${entry.id}`);
 		}}>
 			<div className='mark'>{entry.mark}</div>
 			<div className='capacity'>{entry.capacity}</div>

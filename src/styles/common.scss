@@ -71,7 +71,7 @@ button.clean {
 	background-repeat: no-repeat;
 	background-position: left;
 
-	opacity: 1;
+	//opacity: 1;
 
 	position: absolute;
 	left: 0px; right: 0px;
@@ -81,8 +81,9 @@ button.clean {
 	bottom: 0px;
 }
 
-.fancy_button::after {
-	transition: opacity 500ms $delay ease-in-out, height 500ms $delay cubic-bezier(.87,-.41,.19,1.44);
+.fancy_button::after {//opacity 500ms $delay ease-in-out, 
+	transition: height 500ms $delay cubic-bezier(.87,-.41,.19,1.44),
+		background-position 500ms $delay cubic-bezier(.36,.07,.19,.97);
 }
 
 .fancy_button:hover {
@@ -94,8 +95,9 @@ button.clean {
 }
 
 .fancy_button:hover::after {
-	opacity: 1;
+	//opacity: 1;
 	@media screen and (min-width: $max_w1) {
+		background-position: center;
 		height: 200px;
 	}
 }
@@ -112,25 +114,43 @@ button.clean {
 //135deg 
 
 .fancy_button.forum, .simple_button.return {
-	background: linear-gradient(135deg, #03b3f6 0%, #03b3f6 50%, #03A9F4 50%, #03A9F4 100%);
+	background: linear-gradient(135deg, #4DD0E1 0%, #00ACC1 100%);
 }
 
 .fancy_button.whitelist, .simple_button.check {
-	background: linear-gradient(135deg, #96ca54 0%, #96ca54 50%, #8BC34A 50%, #8BC34A 100%);
+	background: linear-gradient(135deg, #AED581 0%, #7CB342 100%);
 }
 
 .fancy_button.discord {
-	background: linear-gradient(135deg, #8c9eff 0%, #8c9eff 50%, #8192e9 50%, #8192e9 100%);
+	background: linear-gradient(135deg, #a8b5ff 0%, #5f75e3 100%);
 }
 
-.fancy_button.rules {
-	background: linear-gradient(135deg, #f65746 0%, #f65746 50%, #f44336 50%, #f44336 100%);
+.fancy_button.rules {/*, #e57373 50%, #ef5350 50%*/
+	background: linear-gradient(135deg, #e57373 0%, #f44336 100%);
+}
+
+.fancy_button.gallery {
+	background: linear-gradient(135deg, #4DB6AC 0%, #009688 100%);
+}
+
+.fancy_button.luvineri {
+	background: linear-gradient(135deg, #FF8A65 0%, #FF7043 100%);
 }
 
 .forum::after 		{	background-image: url('../img/forum_icon.png');			}
 .discord::after 	{	background-image: url('../img/discord_icon.png');		}
 .whitelist::after 	{	background-image: url('../img/whitelist_icon.png');		}
 .rules::after 		{	background-image: url('../img/rules_icon.png');			}
+.gallery::after 	{	
+	background-image: url('../img/gallery_icon.svg');	
+	background-size: auto 70%;
+	background-position: 5% center;
+}
+.luvineri::after 	{	
+	background-image: url('../img/luvineri_icon.svg');		
+	background-size: auto 70%;
+	background-position: 5% center;
+}
 
 .return::after 	{	background-image: url('../img/arrow_left.svg');			}
 .check::after 	{	background-image: url('../img/check_small.svg');		}

@@ -5,7 +5,7 @@ import './../styles/admin_menu.scss';
 const LINKS = [
 	{name: 'Podania', 		route: 'wl_requests'},
 	{name: 'Gracze', 		route: 'players'},
-	{name: 'Luvineri', 		route: 'stock_exchange'},
+	// {name: 'Luvineri', 		route: 'stock_exchange'},
 	{name: 'Adminostwo', 	route: 'admins_mng'},
 	{name: 'Logi', 			route: 'logs_mng'},
 	{name: 'Statystyki', 	route: 'statistics'},
