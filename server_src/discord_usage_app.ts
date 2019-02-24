@@ -10,6 +10,7 @@ const MIN_INTERVAL = 1;
 var INTERVAL = 30;//default value
 
 const SHELL_OPTIONS = {shell: true, encoding: 'ascii'};
+const hardspace = decodeURI('%F3%A0%80%80%F3%A0%80%80%20%F3%A0%80%80%F3%A0%80%80');
 
 let threads_data: number[] = new Array(_os.cpus().length).fill(0);
 let prev_total: number[] = new Array(_os.cpus().length).fill(0);
@@ -26,8 +27,17 @@ interface MessageSchema {
 	used_swap: number;
 	total_swap: number;
 
+	disk_usage: string;
+
 	//downloadMb: number;
 	//uploadMb: number;
+}
+
+function genProgressBar(percent: number, bar_len = 20) {//percent: [0; 1]
+	let out = '';
+	for(var j=0; j<bar_len; j++)
+		out += j < Math.round(percent*bar_len) ? '■' : '□';
+	return out;
 }
 
 function generateMessage(data: MessageSchema) {
@@ -42,10 +52,16 @@ function generateMessage(data: MessageSchema) {
 	var embed = new Discord.RichEmbed().setColor('#4FC3F7')//4FC3F7 - cyan
 		.addField('Ilość procesów', data.process_count)
 		.addField('Obciążenie rdzeni', data.thread_usage.map((tu, i) => {
-			return `${i+1}: ${tu|0}%`;
+			let percent_str = `${Math.round(tu)}%`;
+			let offset = 6 - percent_str.length;
+			for(var j=0; j<offset; j++)
+				percent_str += hardspace;
+			return percent_str + genProgressBar(tu/100);
 		}).join('\n'))
 		.addField('Zużycie pamięci (GB)', 
-			`RAM: ${ram_used}\nSWAP: ${swap_used}`)
+			`${genProgressBar(mem_u/mem_t)}\nRAM: ${ram_used}\nSWAP: ${swap_used}`)
+		.addField('Zużycie dysku', 
+			`${data.disk_usage}\n${genProgressBar(parseInt(data.disk_usage.replace('%', ''))/100)}`)
 		//.addField('Obciążenie sieci', 
 		//	`Download: ${data.downloadMb} Mb/s\nUpload: ${data.uploadMb} Mb/s`)
 		.addField('Ostatnia aktualizacja', new Date().toLocaleTimeString('en-US', {hour12: false}))
@@ -90,8 +106,17 @@ async function startRefreshing(msg: Discord.Message) {
 		return;
 	}
 
-	var cpus = _os.cpus();
+	var disk_info;
 
+	try {
+		disk_info = spawnSync(`df | grep /$ | awk '{print $5};'`, SHELL_OPTIONS).output
+			.filter(x => x && x.length>0).toString().trim();
+	}
+	catch(e) {
+		disk_info = '0%';
+	}
+
+	var cpus = _os.cpus();
 	
 	let ii=0;
 	for(var cpu of cpus) {
@@ -116,6 +141,7 @@ async function startRefreshing(msg: Discord.Message) {
 		total_memory: mem_info.total,
 		used_swap: swap_info.used,
 		total_swap: swap_info.total,
+		disk_usage: disk_info,
 		//downloadMb: net_info.total.inputMb,
 		//uploadMb: net_info.total.outputMb
 	};

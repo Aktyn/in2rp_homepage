@@ -192,7 +192,7 @@ function onLogin() {
 	let stat_dev = new StatusApp(bot, '546022679610785792', SERVERS_DATA.dev, 2);
 	stat_dev.hookEclipse();
 	
-	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
+	//if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		usageApp.init(bot);
 	if(process.env.NODE_ENV !== 'dev')//disabled in dev move
 		rulesApp.init(bot);
@@ -238,19 +238,24 @@ function onLogin() {
 						return mysqlApp.handleMessage(message);
 					break;
 				case stat0.channel_id:
-					return stat0.handleMessage(message);
+					if(process.env.NODE_ENV !== 'dev')
+						return stat0.handleMessage(message);
 					break;
 				case stat1.channel_id:
-					return stat1.handleMessage(message);
+					if(process.env.NODE_ENV !== 'dev')
+						return stat1.handleMessage(message);
 					break;
 				case stat2.channel_id:
-					return stat2.handleMessage(message);
+					if(process.env.NODE_ENV !== 'dev')
+						return stat2.handleMessage(message);
 					break;
 				case stat3.channel_id:
-					return stat3.handleMessage(message);
+					if(process.env.NODE_ENV !== 'dev')
+						return stat3.handleMessage(message);
 					break;
 				case stat_dev.channel_id:
-					return stat_dev.handleMessage(message);
+					if(process.env.NODE_ENV !== 'dev')
+						return stat_dev.handleMessage(message);
 					break;
 				case usageApp.CHANNEL_ID: 	
 					if(process.env.NODE_ENV !== 'dev')
