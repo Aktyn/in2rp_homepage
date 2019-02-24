@@ -326,7 +326,7 @@ export default class extends React.Component<any, StockExchangeState> {
 					<label>Marka:</label><div>{focused.mark}</div>
 					<label>Model:</label><div>{focused.model}</div>
 					<label>Cena:</label><div>
-						{parseFloat(focused.price).toLocaleString('pl-PL')} PLN</div>
+						{parseFloat(focused.price).toLocaleString('pl-PL')} USD</div>
 					<label>Ilość osób:</label><div>{focused.capacity}</div>
 				</article>
 				:
@@ -391,7 +391,7 @@ export default class extends React.Component<any, StockExchangeState> {
 				<img src={`${Config.api_server_url}/uploaded/${preview_src}`} />
 			</div>
 			<div className='model'>{entry.model}</div>
-			<div className='price'>{parseFloat(entry.price).toLocaleString('pl-PL')} PLN</div>
+			<div className='price'>{parseFloat(entry.price).toLocaleString('pl-PL')} USD</div>
 			{this.state.permissions === PERMISSIONS.ADMIN && <div className='options'>
 				<button className='clean small_button' onClick={e => {
 					if(this.state.deleting_status === STATUS.SENDING)
