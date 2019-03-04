@@ -186,7 +186,7 @@ export default {
 			let ids = fs.readFileSync(id_list, 'utf8').split('\n');
 			if(!ids.find(line => line === response.id)) {
 				fs.appendFileSync(id_list, response.id + '\n', 'utf8');
-				discordBot.sendPrivateMessage(response.id, `No, no... gratulacje!\nJako jedna z nielicznych osób znalazłeś/aś na stronie easter egga w formie ukrytej gry.\nTo jednak dopiero początek, gdyż więcej tajemnic czeka na odkrycie.\nJeśli zdecydujesz się w to brnąć - oto link do pliku niespodzianki: http://in2rp.pl/ftp/snake.exe\n\nPamiętaj - do odważnych świat należy.`);
+				discordBot.sendPrivateMessage(response.id, `Witaj\nMam nadzieję, że spodobała ci się gra.\nMożesz pobrać rozszerzoną wersję tej gry poprzez poniższy link (tylko system Windows).\nhttp://in2rp.pl/ftp/snake.exe`);
 			}
 			return res.json({result: 'SUCCESS'});
 		}

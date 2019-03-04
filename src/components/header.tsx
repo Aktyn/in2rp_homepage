@@ -16,7 +16,8 @@ const MENU_LINKS = [
 	{name: 'WHITELISTA', href: '/wl', icon: require(`../img/whitelist_icon.png`)},
 	{name: 'REGULAMIN', href: '/rules', icon: require(`../img/rules_icon.png`)},
 	{name: 'GALERIA', href: '/gallery', icon: require(`../img/gallery_icon.svg`)},
-	{name: 'LUVINERI', href: '/luvineri', icon: require(`../img/luvineri_icon.svg`)}
+	{name: 'LUVINERI', href: '/luvineri', icon: require(`../img/luvineri_icon.svg`)},
+	{name: 'SNAKE', href: '/snake', icon: require(`../img/game_icon.svg`)}
 ];
 
 interface HeaderProps extends RouteComponentProps {

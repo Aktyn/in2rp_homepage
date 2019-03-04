@@ -38,8 +38,9 @@ const CONFIG = {
 		</ul>
 	</React.Fragment>,
 
-	short_info: <div className='news' style={{lineHeight: '30px'}}>
-		NOWOŚĆ!!! <Link to='/luvineri'>LUVINERI</Link>
+	//className='news'
+	short_info: <div >
+		<span>Nudno? Zagraj w snake.</span><br/><Link className='news' to='/snake'>SNAKE</Link>
 	</div>,
 
 	contacs: <React.Fragment>
