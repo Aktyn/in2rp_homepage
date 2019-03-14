@@ -162,6 +162,11 @@ function onLogin() {
         }).catch(console.error);*/
 	}
 
+	/*let ch2 = bot.channels.get('528687303347142677');//administracja pogadanki
+	if(ch2 instanceof Discord.TextChannel) {
+		ch2.send('');
+	}*/
+
 	guild = bot.guilds.find(g => g.id === '492333108679409674');//IN2RP guild id
 
 	/*let msg = '';
