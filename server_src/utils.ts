@@ -2,6 +2,7 @@ import {spawn} from 'child_process';
 import * as path from 'path';
 import discordAPI, {DiscordUserJSON} from './discord_api';
 var prompt = require('prompt-sync')();
+import Config from './config';
 
 var RCON_PASSWORD: string;
 
@@ -24,7 +25,7 @@ const Utils = {
 		}
 	},
 	RCON_CMD_BASE: function(port = 30120) {
-		return path.join(__dirname, '..', 'tools', 'rcon') + ` 213.32.7.56 ${port} ${RCON_PASSWORD} `
+		return path.join(__dirname, '..', 'tools', 'rcon') + ` ${Config.server_ip} ${port} ${RCON_PASSWORD} `
 	},
 	SERVER_CMDS: {
 		'start': '/home/in2rp/start.sh',

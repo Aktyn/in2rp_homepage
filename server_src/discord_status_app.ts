@@ -2,6 +2,7 @@ import * as Discord from 'discord.js';
 import fetch from 'node-fetch';
 import LOG from './log';
 import Eclipse from './eclipse';
+import Config from './config';
 
 //every minute if server is online, otherwise every 5 minutes
 const REFRESH_ONLINE_SERVER_INFO_DELAY = 1000*60;
@@ -114,9 +115,9 @@ class ServerData {
 }
 
 export const SERVERS_DATA = {
-	isl1: new ServerData('213.32.7.56:30120', 0),
-	isl2: new ServerData('213.32.7.56:30121', 1),
-	dev: new ServerData('213.32.7.56:30122', 2)
+	isl1: new ServerData(`${Config.server_ip}:30120`, 0),
+	isl2: new ServerData(`${Config.server_ip}:30121`, 1),
+	dev: new ServerData(`${Config.server_ip}:30122`, 2)
 };
 
 function formatMinutes(value: number) {
