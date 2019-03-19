@@ -25,14 +25,14 @@ setTimeout(() => {
 		host: "localhost",
 		user: String(mysql_login),
 		password: String(mysql_pass),
-		database: "Whitelist"
+		database: "admin_dev"//Whitelist
 	});
 
 	fivem_connection = MySQL.createConnection({
 		host: "localhost",
 		user: String(mysql_login),
 		password: String(mysql_pass),
-		database: "admin_in2rp"
+		database: "admin_dev"
 	});
 
 	connection.connect((err) => {
