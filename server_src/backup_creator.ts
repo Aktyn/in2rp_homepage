@@ -28,6 +28,8 @@ catch(e) {
 }
 
 async function databaseBackup() {
+	console.log('Backups disabled');
+	return;
 	let dt = new Date();
 	let hh = dt.getHours();
 	let time = `${toFixed(dt.getFullYear())}-${toFixed(dt.getMonth()+1)}-${toFixed(dt.getDate())}`;
@@ -78,4 +80,4 @@ async function databaseBackup() {
 }
 
 //uncomment to enable this functionality
-//setInterval(databaseBackup, 1000*60*60 * BACKUPS_DELAY);//backup database every BACKUPS_DELAY hours
+setInterval(databaseBackup, 1000*60*60 * BACKUPS_DELAY);//backup database every BACKUPS_DELAY hours
