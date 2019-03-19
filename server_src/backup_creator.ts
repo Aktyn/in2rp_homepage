@@ -77,6 +77,5 @@ async function databaseBackup() {
 	}
 }
 
-//databaseBackup();//testing
-
-setInterval(databaseBackup, 1000*60*60 * BACKUPS_DELAY);//backup database every BACKUPS_DELAY hours
+//uncomment to enable this functionality
+//setInterval(databaseBackup, 1000*60*60 * BACKUPS_DELAY);//backup database every BACKUPS_DELAY hours
