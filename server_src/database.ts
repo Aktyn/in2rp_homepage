@@ -25,7 +25,7 @@ setTimeout(() => {
 		host: "localhost",
 		user: String(mysql_login),
 		password: String(mysql_pass),
-		database: "admin_dev"//Whitelist
+		database: "admin_dev"
 	});
 
 	fivem_connection = MySQL.createConnection({
@@ -120,8 +120,8 @@ const self = {
 	},
 
 	init: async function() {
-		await this.customQuery(//table for whitelist requests
-			"CREATE TABLE IF NOT EXISTS `Whitelist`.`requests` (\
+		await this.customQuery(//table for admin_dev requests
+			"CREATE TABLE IF NOT EXISTS `admin_dev`.`requests` (\
 			  	`id` INT(16) NOT NULL AUTO_INCREMENT,\
 			  	`status` VARCHAR(16) NOT NULL DEFAULT 'pending',\
 			  	`timestamp` VARCHAR(16) NOT NULL,\
@@ -134,8 +134,8 @@ const self = {
 		  		"PRIMARY KEY (`id`),\
 		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
 	  	);
-	  	await this.customQuery(//table for whitelist requests
-			"CREATE TABLE IF NOT EXISTS `Whitelist`.`visits` (\
+	  	await this.customQuery(//table for admin_dev requests
+			"CREATE TABLE IF NOT EXISTS `admin_dev`.`visits` (\
 			  	`id` INT(16) NOT NULL AUTO_INCREMENT,\
 			  	`timestamp` VARCHAR(16) NOT NULL,\
 			  	`user` VARCHAR(32),\
@@ -145,7 +145,7 @@ const self = {
 		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
 	  	);
 	  	await this.customQuery(//table for user agents
-			"CREATE TABLE IF NOT EXISTS `Whitelist`.`user_agents` (\
+			"CREATE TABLE IF NOT EXISTS `admin_dev`.`user_agents` (\
 			  	`id` INT(16) NOT NULL AUTO_INCREMENT,\
 			  	`agent` VARCHAR(200),\
 			  	PRIMARY KEY (`id`),\
@@ -153,7 +153,7 @@ const self = {
 		  		UNIQUE INDEX `agent_UNIQUE` (`agent` ASC));"
 	  	);
 	  	await this.customQuery(
-	  		"CREATE TABLE IF NOT EXISTS `Whitelist`.`stock_exchange` (\
+	  		"CREATE TABLE IF NOT EXISTS `admin_dev`.`stock_exchange` (\
 				`id` INT(16) NOT NULL AUTO_INCREMENT,\
 				`timestamp` VARCHAR(16) NOT NULL,\
 				`mark` VARCHAR(32) NULL DEFAULT NULL,\
@@ -164,7 +164,7 @@ const self = {
 		  		UNIQUE INDEX `id_UNIQUE` (`id` ASC));"
 	  	);
 	  	await this.customQuery(
-	  		"CREATE TABLE IF NOT EXISTS `Whitelist`.`stock_exchange_previews` (\
+	  		"CREATE TABLE IF NOT EXISTS `admin_dev`.`stock_exchange_previews` (\
 				`stock_id` INT(16) NOT NULL,\
 				`file_name` VARCHAR(64) NOT NULL,\
 				UNIQUE INDEX `file_name_UNIQUE` (`file_name` ASC),\
@@ -172,7 +172,7 @@ const self = {
 	  	);
 	},
 
-	addWhitelistRequest: function(answers: {[index: string]: string}, username: string, 
+	addadmin_devRequest: function(answers: {[index: string]: string}, username: string, 
 		discriminator: number, id: string) 
 	{
 		var answer_keys = Object.keys(answers);
@@ -191,11 +191,11 @@ const self = {
 		);
 	},
 
-	getWhitelistRequest: function(id: string) {
+	getadmin_devRequest: function(id: string) {
 		return this.customQuery("SELECT * FROM `requests` WHERE `discord_id` = '"+id+"' ORDER BY `timestamp` DESC;");
 	},
 
-	getWhitelistRequestByID: function(id: number) {
+	getadmin_devRequestByID: function(id: number) {
 		return this.customQuery("SELECT * FROM `requests` WHERE `id` = "+id+" LIMIT 1;");
 	},
 
@@ -237,30 +237,30 @@ const self = {
 				COUNT(`id`) as 'count', \
 				COUNT(distinct `ip`) as 'distinct_ip',\
 				DATE_FORMAT(from_unixtime(`timestamp`/1000), '%Y-%m-%d') as day\
-			FROM Whitelist.visits\
+			FROM admin_dev.visits\
 			GROUP BY day\
 			HAVING day >= '" + from + "' AND day <= '" + to + "'\
 			ORDER BY day ASC LIMIT 366;");
 	},
 
-	addWhitelistPlayer: function(steamhex: string) {
-		return this.customQuery(`INSERT IGNORE INTO admin_in2rp.whitelist (identifier) 
+	addadmin_devPlayer: function(steamhex: string) {
+		return this.customQuery(`INSERT IGNORE INTO admin_dev.admin_dev (identifier) 
 			VALUES ('steam:${steamhex}');`);
 	},
 
-	removeWhitelistPlayer: function(steamhex: string) {
-		return this.customQuery(`DELETE FROM admin_in2rp.whitelist 
+	removeadmin_devPlayer: function(steamhex: string) {
+		return this.customQuery(`DELETE FROM admin_dev.admin_dev 
 			WHERE identifier = 'steam:${steamhex}'`);
 	},
 
-	getWhitelistPlayers: function() {
-		return this.customQuery("SELECT users.id, whitelist.identifier, users.name, users.firstname,\
+	getadmin_devPlayers: function() {
+		return this.customQuery("SELECT users.id, admin_dev.identifier, users.name, users.firstname,\
 			    users.lastname, users.phone_number, CONCAT(users.money, ' + ', users.bank) AS 'money',\
 			    CONCAT(jobs.label, ' ', job_grades.label) AS 'job'\
-			FROM admin_in2rp.users \
-				RIGHT JOIN admin_in2rp.whitelist USING (identifier)\
-				LEFT JOIN admin_in2rp.job_grades ON users.job_grade = job_grades.id\
-			   	LEFT JOIN admin_in2rp.jobs ON jobs.name = users.job;");
+			FROM admin_dev.users \
+				RIGHT JOIN admin_dev.admin_dev USING (identifier)\
+				LEFT JOIN admin_dev.job_grades ON users.job_grade = job_grades.id\
+			   	LEFT JOIN admin_dev.jobs ON jobs.name = users.job;");
 	},
 
 	getPlayerDetails: function(user_id: number) {
@@ -269,9 +269,9 @@ const self = {
 			    users.phone_number, users.money, users.bank, users.loadout, users.status,
 			    CONCAT(jobs.label, ' ', job_grades.label) AS 'job'
 			FROM
-			    admin_in2rp.users
-			        LEFT JOIN admin_in2rp.job_grades ON users.job_grade = job_grades.id
-			        LEFT JOIN admin_in2rp.jobs ON jobs.name = users.job
+			    admin_dev.users
+			        LEFT JOIN admin_dev.job_grades ON users.job_grade = job_grades.id
+			        LEFT JOIN admin_dev.jobs ON jobs.name = users.job
 			WHERE
 			    users.id = ${user_id}
 			LIMIT 1;`);
@@ -281,7 +281,7 @@ const self = {
 		return this.customQuery(`SELECT 
 			    requests.discord_nick, requests.discord_discriminator, requests.ooc_steam_id
 			FROM
-			    Whitelist.requests
+			    admin_dev.requests
 			WHERE
 			    status = 'accepted'
 			        AND CONVERT(CONCAT('steam:',
@@ -289,13 +289,13 @@ const self = {
 			      	(SELECT 
 			            CONVERT(identifier USING utf8)
 			        FROM
-			            admin_in2rp.whitelist)
+			            admin_dev.admin_dev)
 			       	AND ((UNIX_TIMESTAMP()*1000 - \`timestamp\`)/86400000) < 28
 			ORDER BY timestamp DESC;`)
 	},
 
 	getDiscordUserFromRequest: function(steamid: string): Promise<DiscordUserJSON[]> {
-		return this.customQuery(`SELECT discord_nick, discord_discriminator, discord_id FROM Whitelist.requests where ooc_steam_id = '${steamid}' LIMIT 1;`);
+		return this.customQuery(`SELECT discord_nick, discord_discriminator, discord_id FROM admin_dev.requests where ooc_steam_id = '${steamid}' LIMIT 1;`);
 	},
 
 	getStockExchangeEntries: function() {
@@ -303,36 +303,36 @@ const self = {
 			    stock_exchange.*,\
 			    GROUP_CONCAT(file_name SEPARATOR ';') AS 'files'\
 			FROM\
-			    Whitelist.stock_exchange\
+			    admin_dev.stock_exchange\
 			        LEFT JOIN\
-			    Whitelist.stock_exchange_previews ON \
+			    admin_dev.stock_exchange_previews ON \
 			    	stock_exchange.id = stock_exchange_previews.stock_id\
 			GROUP BY id;")
 	},
 
 	addStockExchange: function(mark: string, capacity: number, model: string, price: string) {
-		return this.customQuery(`INSERT INTO Whitelist.stock_exchange (timestamp, mark, capacity, model, price)
+		return this.customQuery(`INSERT INTO admin_dev.stock_exchange (timestamp, mark, capacity, model, price)
 			VALUES ('${Date.now()}', '${mark}', ${capacity}, '${model}', '${price}');`);
 	},
 
 	addStockExchangePreview: function(stock_id: number, file_name: string) {
-		return this.customQuery(`INSERT IGNORE INTO Whitelist.stock_exchange_previews (stock_id, file_name) VALUES (${stock_id}, '${file_name}');`);
+		return this.customQuery(`INSERT IGNORE INTO admin_dev.stock_exchange_previews (stock_id, file_name) VALUES (${stock_id}, '${file_name}');`);
 	},
 
 	deleteStockExchange: function(id: number) {
-		return this.customQuery(`DELETE FROM Whitelist.stock_exchange 
+		return this.customQuery(`DELETE FROM admin_dev.stock_exchange 
 			WHERE id = ${id};`);
 	},
 
 	deleteStockExchangePreview: function(id: number) {
-		return this.customQuery(`DELETE FROM Whitelist.stock_exchange_previews 
+		return this.customQuery(`DELETE FROM admin_dev.stock_exchange_previews 
 			WHERE stock_id = ${id};`);
 	},
 
 	editStockExchangePreview: function(id: number, 
 		mark: string, capacity: number, model: string, price: string) 
 	{
-		return this.customQuery(`UPDATE Whitelist.stock_exchange 
+		return this.customQuery(`UPDATE admin_dev.stock_exchange 
 			SET mark='${mark}', capacity=${capacity}, model='${model}', price='${price}' 
 			WHERE id = ${id};`);
 	}
