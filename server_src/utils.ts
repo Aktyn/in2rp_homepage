@@ -28,19 +28,19 @@ const Utils = {
 		return path.join(__dirname, '..', 'tools', 'rcon') + ` ${Config.server_ip} ${port} ${RCON_PASSWORD} `
 	},
 	SERVER_CMDS: {
-		'start': '/home/in2rp/start.sh',
-		'stop': '/home/in2rp/stop.sh',
-		'restart': '/home/in2rp/restart.sh'
+		'start': '~/start.sh',
+		'stop': '~/stop.sh',
+		'restart': '~/restart.sh'
 	},
 	SERVER_CMDS2: {
-		'start': '/home/in2rp/start2.sh',
-		'stop': '/home/in2rp/stop2.sh',
-		'restart': '/home/in2rp/restart2.sh'
+		'start': '~/start2.sh',
+		'stop': '~/stop2.sh',
+		'restart': '~/restart2.sh'
 	},
 	SERVER_CMDS3: {
-		'start': '/home/in2rp/start3.sh',
-		'stop': '/home/in2rp/stop3.sh',
-		'restart': '/home/in2rp/restart3.sh'
+		'start': '~/start3.sh',
+		'stop': '~/stop3.sh',
+		'restart': '~/restart3.sh'
 	},
 	getServerCMDS: function(isl_index: number) {
 		switch (isl_index) {
