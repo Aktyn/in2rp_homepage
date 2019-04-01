@@ -49,7 +49,6 @@ class ServerData {
 				online: true,
 				players_online: jsondata.map((player: any) => player.name)
 			};
-			//console.log(this.data);
 		}
 		catch(e) {
 			//console.error('Cannot fetch server player\'s data');
@@ -116,8 +115,7 @@ class ServerData {
 }
 
 export const SERVERS_DATA = {
-	//isl1: new ServerData(`${Config.server_ip}:30120`, 0),
-	isl1: new ServerData(`51.77.56.204:30120`, 0),
+	isl1: new ServerData(`${Config.server_ip}:30120`, 0),
 	isl2: new ServerData(`${Config.server_ip}:30121`, 1),
 	dev: new ServerData(`${Config.server_ip}:30122`, 2)
 };
