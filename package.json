@@ -60,7 +60,7 @@
     "discord.js-musicbot-addon": "^13.4.3",
     "express": "^4.16.4",
     "express-cache-controller": "^1.1.0",
-    "express-fileupload": "^1.1.1-alpha.2",
+    "express-fileupload": "^1.1.9",
     "mysql": "^2.16.0",
     "node-fetch": "^2.3.0",
     "node-opus": "^0.3.1",
