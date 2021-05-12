@@ -55,7 +55,7 @@
     "@types/react-router-dom": "^4.3.1",
     "body-parser": "^1.18.3",
     "btoa": "^1.2.1",
-    "chart.js": "^2.7.3",
+    "chart.js": "^2.9.4",
     "discord.js": "^11.4.2",
     "discord.js-musicbot-addon": "^13.4.3",
     "express": "^4.16.4",
