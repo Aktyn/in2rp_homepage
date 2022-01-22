@@ -62,7 +62,7 @@
     "express-cache-controller": "^1.1.0",
     "express-fileupload": "^1.1.1-alpha.2",
     "mysql": "^2.16.0",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^3.1.1",
     "node-opus": "^0.3.1",
     "prompt-sync": "^4.1.6",
     "react": "^16.6.3",
